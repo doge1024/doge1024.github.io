@@ -1,0 +1,330 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>自己实现同时带有圆角和阴影的View | doge1024</title>
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591802401926">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="自己实现同时带有圆角和阴影的View | doge1024 - Atom Feed" href="https://doge1024.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-168992336-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-168992336-1');
+</script>
+
+
+    <meta name="description" content="#import &lt;UIKit/UIKit.h&gt;
+
+/**
+ *  按钮类型
+ */
+typedef NS_ENUM(NSInteger, CardLoanBaseButtonStyle) {
+    
+    // 深蓝色
+  ..." />
+    <meta name="keywords" content="iOS" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://doge1024.github.io">
+  <img class="avatar" src="https://doge1024.github.io/images/avatar.png?v=1591802401926" alt="">
+  </a>
+  <h1 class="site-title">
+    doge1024
+  </h1>
+  <p class="site-description">
+    坚持就是胜利
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://www.jianshu.com/u/a0e2f8047033" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              自己实现同时带有圆角和阴影的View
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-06-10
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="https://doge1024.github.io/t-pcqh4ec/" class="post-tag">
+                  # iOS
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <pre><code>#import &lt;UIKit/UIKit.h&gt;
+
+/**
+ *  按钮类型
+ */
+typedef NS_ENUM(NSInteger, CardLoanBaseButtonStyle) {
+    
+    // 深蓝色
+    CardLoanBaseButtonStyleBlue,
+};
+
+/**
+ 2.0 基类button
+ */
+@interface CardLoanBaseButton : UIButton
+
+/**
+ Button样式
+ */
+@property (nonatomic, assign) CardLoanBaseButtonStyle style;
+
+/**
+ Button
+ */
+@property (nonatomic, strong) UIColor *maskColor;
+
+/**
+ *  初始化 button
+ */
++ (instancetype)buttonWithFrame:(CGRect)frame buttonStyle:(CardLoanBaseButtonStyle)buttonStyle;
+
+@end
+
+</code></pre>
+<pre><code>@interface CardLoanBaseButton ()
+
+/**
+ Masklayer
+ */
+@property (nonatomic, strong) CAShapeLayer *maskLayer;
+
+@end
+
+@implementation CardLoanBaseButton
+
++ (instancetype)buttonWithFrame:(CGRect)frame buttonStyle:(CardLoanBaseButtonStyle)buttonStyle {
+    
+    CardLoanBaseButton *button = [self buttonWithType:UIButtonTypeCustom];
+    button.frame = frame;
+    button.style = buttonStyle;
+    
+    return button;
+}
+
+- (void)setStyle:(CardLoanBaseButtonStyle)style {
+    
+    _style = style;
+    
+    switch (_style) {
+        case CardLoanBaseButtonStyleBlue: {
+            
+            self.maskColor = UIColorFromRGB(0x574ef2);
+            [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [self setTitleColor:[UIColor colorWithWhite:1 alpha:.2] forState:UIControlStateDisabled];
+            
+            self.titleEdgeInsets = UIEdgeInsetsMake(0, 0, self.height * .2, 0);
+        }
+        break;
+        
+        default:
+        break;
+    }
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    [self setShandowAndCurveRect];
+}
+
+/**
+ 添加圆角和阴影
+ */
+- (void)setShandowAndCurveRect {
+    
+    CGFloat radius = self.height * .5;
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path setLineWidth:.5];
+    [path moveToPoint:CGPointMake(radius, 0)];
+    [path addLineToPoint:CGPointMake(self.width - radius, 0)];
+    [path addArcWithCenter:CGPointMake(self.width - radius, radius) radius:radius startAngle:- M_PI_2 endAngle:M_PI_2 clockwise:YES];
+    [path addLineToPoint:CGPointMake(radius, self.height)];
+    [path addArcWithCenter:CGPointMake(radius, radius) radius:radius startAngle:M_PI_2 endAngle:M_PI_2 * 3 clockwise:YES];
+    [path closePath];
+    self.maskLayer.frame = self.bounds;
+    self.maskLayer.strokeColor = self.maskColor.CGColor;
+    self.maskLayer.fillColor = self.maskColor.CGColor;
+    self.maskLayer.path = path.CGPath;
+    [self.layer insertSublayer:self.maskLayer atIndex:0];
+    
+    self.maskLayer.shadowOffset = CGSizeMake(0, self.height * .1);
+}
+
+- (CALayer *)maskLayer {
+    if (_maskLayer == nil) {
+        _maskLayer = [CAShapeLayer layer];
+        self.maskLayer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.8].CGColor;
+        self.maskLayer.shadowOpacity = 0.8;
+    }
+    return _maskLayer;
+}
+
+@end
+
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://doge1024.github.io/yue-yu-di-er-zhang-an-zhuang-revealcha-kan-ta-ren-app-de-ui/">
+              <h3 class="post-title">
+                越狱第二章：安装Reveal，查看他人App的UI
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'a715661b0132eeaa2cd2',
+    clientSecret: '295e4b923ab920b2079b423d2dbac18f535418fe',
+    repo: 'doge1024.github.io',
+    owner: 'doge1024',
+    admin: ['doge1024'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

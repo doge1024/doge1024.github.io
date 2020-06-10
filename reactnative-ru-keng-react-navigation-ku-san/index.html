@@ -1,0 +1,350 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ReactNative入坑: react-navigation库(三) | doge1024</title>
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591802401926">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="ReactNative入坑: react-navigation库(三) | doge1024 - Atom Feed" href="https://doge1024.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-168992336-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-168992336-1');
+</script>
+
+
+    <meta name="description" content="源起
+既然使用RN，跨平台必不可少，iOS 和 Android 在NavigationBar 和TabBar 方面的展示逻辑不太一样，使用RN自己的库会有写两套代码的问题。
+react-navigation在github上有五千多的Star..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://doge1024.github.io">
+  <img class="avatar" src="https://doge1024.github.io/images/avatar.png?v=1591802401926" alt="">
+  </a>
+  <h1 class="site-title">
+    doge1024
+  </h1>
+  <p class="site-description">
+    坚持就是胜利
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://www.jianshu.com/u/a0e2f8047033" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              ReactNative入坑: react-navigation库(三)
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-06-10
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h4 id="源起">源起</h4>
+<p>既然使用RN，跨平台必不可少，iOS 和 Android 在NavigationBar 和TabBar 方面的展示逻辑不太一样，使用RN自己的库会有写两套代码的问题。<br>
+react-navigation在github上有五千多的Star✨，成了我们第一选择。<br>
+暂时只用到navigationBar，所以写一下自己碰到的问题，后续会继续更新</p>
+<h4 id="react-navigation">react-navigation</h4>
+<p><a href="https://github.com/react-community/react-navigation">react-navigation</a> 的逻辑大概是自己实现了一套NavigationBar 和TabBar 的UI和动画，效果基本跟原生一样，可以根据不同平台展示不同的样式</p>
+<h5 id="1-react-navigation-自定义返回按钮">1. react-navigation-&gt;自定义返回按钮</h5>
+<p>StackNavigator的第二个参数可以传入一些通用的自定义配置，通过自定义一个按钮代替库里自己的返回控件</p>
+<figure data-type="image" tabindex="1"><img src="http://upload-images.jianshu.io/upload_images/1300265-c54675e01186aab8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="效果图.png" loading="lazy"></figure>
+<pre><code>// NavigationCustomBackMenu为自定义按钮
+const navigationConfig = {
+    navigationOptions: ({navigation}) =&gt; ({
+        headerLeft: &lt;NavigationCustomBackMenu nav = {navigation} /&gt;,
+    })
+};
+const app = StackNavigator({
+    Home: {
+        screen: Home
+        },
+}, navigationConfig);
+</code></pre>
+<p>NavigationCustomBackMenu的源码如下：</p>
+<pre><code>import React from 'react';
+import { StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
+
+export default class NavigationCustomBackMenu extends React.Component {
+
+    render() {
+        return (
+            &lt;TouchableOpacity
+                onPress={()=&gt;{
+                    this.props.nav.goBack()
+                }}
+            &gt;
+                &lt;Image style={styles.image} source={require('../../img/navigation/nav_back.png')} &gt;&lt;/Image&gt;
+            &lt;/TouchableOpacity&gt;
+        );
+    }
+}
+
+const styles = StyleSheet.create({
+    image: {
+        left: 13,
+    },
+});
+</code></pre>
+<p>但是这样搞了以后，因为是通用配置，导航的栈顶控制器的导航栏上也会有一个返回按钮，但是这个按钮不应该存在，所以还要再自定义一下栈顶控制器的返回按钮</p>
+<pre><code>const app = StackNavigator({
+    Home: {
+        screen: Home,
+        navigationOptions: ({navigation}) =&gt; ({
+            headerLeft: null,
+        })},
+    Next: {screen: NextView}
+}, navigationConfig);
+</code></pre>
+<p>这样就是最终效果了，Home位于栈顶，不会有返回按钮，，跳转到Next的时候，Next的左上角会有个返回按钮</p>
+<h5 id="2-react-navigation-自定义导航栏颜色">2. react-navigation-&gt;自定义导航栏颜色</h5>
+<h6 id="单独修改某一screen的导航栏颜色">单独修改某一Screen的导航栏颜色</h6>
+<pre><code>// （在某一Screen 内部设置）
+static navigationOptions = { 
+    title: 'Home', 
+    headerStyle: {
+         backgroundColor : 'white',
+    }
+};
+</code></pre>
+<h6 id="统一定制所有screen的导航栏颜色">统一定制所有Screen的导航栏颜色</h6>
+<pre><code>
+const navigationConfig = {
+    navigationOptions: ({navigation}) =&gt; ({
+        headerLeft: &lt;NavigationCustomBackMenu nav = {navigation} /&gt;,
+        headerStyle: {
+            backgroundColor : 'red', // 定制所有导航栏的颜色
+        }
+    }),
+};
+
+const app = StackNavigator({
+    Home: {
+        screen: Home,
+        navigationOptions: ({navigation}) =&gt; ({
+            headerLeft: null,
+        })},
+    Next: {screen: NextView}
+}, navigationConfig);
+</code></pre>
+<h5 id="3-react-navigation-拦截导航事件">3. react-navigation-&gt;拦截导航事件</h5>
+<p>代码：</p>
+<pre><code>// 创建StackNavigator
+const app = StackNavigator({
+    Home: {
+        screen: Home,
+        navigationOptions: ({navigation}) =&gt; ({
+            headerLeft: null,
+        })},
+    Next: {screen: NextView}
+}, navigationConfig);
+const defaultGetStateForAction = app.router.getStateForAction;
+app.router.getStateForAction = (action, state) =&gt; {
+    // 所有的导航事件都会走这里，可以定制一些东西，
+    // 比如我的需求，某一个TabBar的控制器集成的RN, 点击跳转到下一页的时候，需要隐藏TabBar
+    // action 是跳转动作，state是当前StackNavigator的状态
+    console.log(action);
+    console.log(state);
+    return defaultGetStateForAction(action, state);
+};
+</code></pre>
+<blockquote>
+<h6 id="其他文章">其他文章</h6>
+</blockquote>
+<p><a href="http://www.jianshu.com/p/c8550af92886">ReactNative入坑: ReactNative入门(一)</a><br>
+<a href="http://www.jianshu.com/p/af0ac940a01d">ReactNative入坑: iOS原生项目集成ReactNavite(二)</a><br>
+<a href="http://www.jianshu.com/p/27342c26f827">ReactNative入坑: react-navigation库(三)</a></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E6%BA%90%E8%B5%B7">源起</a></li>
+<li><a href="#react-navigation">react-navigation</a>
+<ul>
+<li><a href="#1-react-navigation-%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%94%E5%9B%9E%E6%8C%89%E9%92%AE">1. react-navigation-&gt;自定义返回按钮</a></li>
+<li><a href="#2-react-navigation-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AF%BC%E8%88%AA%E6%A0%8F%E9%A2%9C%E8%89%B2">2. react-navigation-&gt;自定义导航栏颜色</a>
+<ul>
+<li><a href="#%E5%8D%95%E7%8B%AC%E4%BF%AE%E6%94%B9%E6%9F%90%E4%B8%80screen%E7%9A%84%E5%AF%BC%E8%88%AA%E6%A0%8F%E9%A2%9C%E8%89%B2">单独修改某一Screen的导航栏颜色</a></li>
+<li><a href="#%E7%BB%9F%E4%B8%80%E5%AE%9A%E5%88%B6%E6%89%80%E6%9C%89screen%E7%9A%84%E5%AF%BC%E8%88%AA%E6%A0%8F%E9%A2%9C%E8%89%B2">统一定制所有Screen的导航栏颜色</a></li>
+</ul>
+</li>
+<li><a href="#3-react-navigation-%E6%8B%A6%E6%88%AA%E5%AF%BC%E8%88%AA%E4%BA%8B%E4%BB%B6">3. react-navigation-&gt;拦截导航事件</a>
+<ul>
+<li><a href="#%E5%85%B6%E4%BB%96%E6%96%87%E7%AB%A0">其他文章</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://doge1024.github.io/reactnative-ru-keng-ios-yuan-sheng-xiang-mu-ji-cheng-reactnaviteer/">
+              <h3 class="post-title">
+                ReactNative入坑: iOS原生项目集成ReactNavite(二)
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'a715661b0132eeaa2cd2',
+    clientSecret: '295e4b923ab920b2079b423d2dbac18f535418fe',
+    repo: 'doge1024.github.io',
+    owner: 'doge1024',
+    admin: ['doge1024'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

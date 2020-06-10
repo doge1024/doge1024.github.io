@@ -1,0 +1,233 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>iOS8 WKWebView 在特定情况下的崩溃 | doge1024</title>
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591802401926">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="iOS8 WKWebView 在特定情况下的崩溃 | doge1024 - Atom Feed" href="https://doge1024.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-168992336-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-168992336-1');
+</script>
+
+
+    <meta name="description" content="iOS8系统是苹果第一次引入WKWebView，所以有好多东西还不完善，下面记录一次碰到的Crash
+在iOS 8下， 先设置WKWebView的
+webView.allowsBackForwardNavigationGestures = ..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://doge1024.github.io">
+  <img class="avatar" src="https://doge1024.github.io/images/avatar.png?v=1591802401926" alt="">
+  </a>
+  <h1 class="site-title">
+    doge1024
+  </h1>
+  <p class="site-description">
+    坚持就是胜利
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://www.jianshu.com/u/a0e2f8047033" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              iOS8 WKWebView 在特定情况下的崩溃
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-06-10
+              </span>
+              <span>
+                1 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>iOS8系统是苹果第一次引入WKWebView，所以有好多东西还不完善，下面记录一次碰到的Crash</p>
+<p>在iOS 8下， 先设置WKWebView的</p>
+<pre><code>webView.allowsBackForwardNavigationGestures = YES;
+</code></pre>
+<p>然后再设置为NO的话</p>
+<pre><code>webView.allowsBackForwardNavigationGestures = NO;
+</code></pre>
+<p>只要手指一碰屏幕，就会出现Crash，日志主要如下：</p>
+<pre><code>
+#0 Thread
+NSInvalidArgumentException
+-[UIView gestureRecognizer:shouldReceiveTouch:]: unrecognized selector sent to instance 0x125da47f0
+</code></pre>
+<p>或者：</p>
+<pre><code>
+#0 Thread
+NSInvalidArgumentException
+-[WKCompositingView gestureRecognizer:shouldReceiveTouch:]: unrecognized selector sent to instance 0x12fc17550
+</code></pre>
+<h2 id="注">注</h2>
+<p>以上情况只会在iOS 8出现，在8以上版本没有问题。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%B3%A8">注</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://doge1024.github.io/viewlayermask-shu-xing-de-ying-yong-hua-yuan-jiao-hua-xin/">
+              <h3 class="post-title">
+                View.layer.mask属性的应用(画圆角，画心)
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'a715661b0132eeaa2cd2',
+    clientSecret: '295e4b923ab920b2079b423d2dbac18f535418fe',
+    repo: 'doge1024.github.io',
+    owner: 'doge1024',
+    admin: ['doge1024'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

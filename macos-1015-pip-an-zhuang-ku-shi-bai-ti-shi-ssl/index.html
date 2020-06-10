@@ -1,0 +1,241 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>macOS 10.15 pip 安装库失败提示SSL | doge1024</title>
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591802401926">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="macOS 10.15 pip 安装库失败提示SSL | doge1024 - Atom Feed" href="https://doge1024.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-168992336-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-168992336-1');
+</script>
+
+
+    <meta name="description" content="pip安装第三方库失败
+今天安装 frida-tools 时一直提示失败
+其中错误有一句:
+error: &lt;urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate veri..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://doge1024.github.io">
+  <img class="avatar" src="https://doge1024.github.io/images/avatar.png?v=1591802401926" alt="">
+  </a>
+  <h1 class="site-title">
+    doge1024
+  </h1>
+  <p class="site-description">
+    坚持就是胜利
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://www.jianshu.com/u/a0e2f8047033" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              macOS 10.15 pip 安装库失败提示SSL
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-06-10
+              </span>
+              <span>
+                1 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="pip安装第三方库失败">pip安装第三方库失败</h2>
+<p>今天安装 <code>frida-tools</code> 时一直提示失败<br>
+其中错误有一句:<br>
+<code>error: &lt;urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed</code></p>
+<p>或者：</p>
+<pre><code>$ /usr/bin/python3 -c 'import urllib.request; urllib.request.urlopen(&quot;https://www.apple.com/&quot;)'
+...
+urllib.error.URLError: &lt;urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1056)&gt;
+</code></pre>
+<blockquote>
+<p>我的系统环境：<br>
+macOS Catalina 10.15.2 (19C57)<br>
+已安装Xcode11，并且Xcode有带Python3.7</p>
+</blockquote>
+<h2 id="解决方案">解决方案</h2>
+<p>执行以下两行命令：</p>
+<pre><code>/usr/bin/sudo /bin/mkdir /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.7/etc
+/usr/bin/sudo /bin/ln -s /etc/ssl/ /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.7/etc/
+</code></pre>
+<p>我出问题时的Xcode，默认是没有<code>/etc</code>这个目录的；使用以上命令后，可以正常安装<code>frida-tools</code></p>
+<h4 id="参考文章">参考文章</h4>
+<p><a href="https://stackoverflow.com/questions/57630314/ssl-certificate-verify-failed-error-with-python3-on-macos-10-15">ssl-certificate-verify-failed-error-with-python3-on-macos-10-15</a></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#pip%E5%AE%89%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E5%A4%B1%E8%B4%A5">pip安装第三方库失败</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88">解决方案</a><br>
+*
+<ul>
+<li><a href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0">参考文章</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://doge1024.github.io/du-lesslessshi-jian-jian-shi-greatergreater-jie-shi-ni-wu-liao-shi-de-na-xie-xia-xiang/">
+              <h3 class="post-title">
+                读《时间简史》— 解释你无聊时的那些遐想
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: 'a715661b0132eeaa2cd2',
+    clientSecret: '295e4b923ab920b2079b423d2dbac18f535418fe',
+    repo: 'doge1024.github.io',
+    owner: 'doge1024',
+    admin: ['doge1024'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
