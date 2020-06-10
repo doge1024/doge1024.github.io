@@ -2,21 +2,21 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>记录一次微信分享的经历 | Gridea</title>
+<title>越狱第二章：安装Reveal，查看他人App的UI | Gridea</title>
 <link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591799844558">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="记录一次微信分享的经历 | Gridea - Atom Feed" href="https://doge1024.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="越狱第二章：安装Reveal，查看他人App的UI | Gridea - Atom Feed" href="https://doge1024.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="1.微信好友分享缩略图不显示的bug
-经过两天彻查加请教，终于发现了问题。
-微信分享要遵循一下规则：
-微信（好友、朋友圈、收藏）分享规则：
-微信三个平台中，好友的功能最完整，朋友圈不能分享表情、文件，收藏不能分享表情和应用，表格下以好友为例..." />
-    <meta name="keywords" content="iOS" />
+    <meta name="description" content="1. Reveal 1.6.2，自行百度
+2. 越狱手机安装openssh
+3. 使用openSSH拷贝Reveal的framework和dylib到手机
+** 下文中出现的192.168.1.X，请替换为自己手机的ip **
+scp -r..." />
+    <meta name="keywords" content="越狱" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -78,7 +78,7 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              记录一次微信分享的经历
+              越狱第二章：安装Reveal，查看他人App的UI
             </h2>
             <div class="post-info">
               <span>
@@ -88,46 +88,68 @@
                 2 min read
               </span>
               
-                <a href="https://doge1024.github.io/tag/t-pcqh4ec/" class="post-tag">
-                  # iOS
+                <a href="https://doge1024.github.io/tag/vsoY8KMVm/" class="post-tag">
+                  # 越狱
                 </a>
               
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <h1 id="1微信好友分享缩略图不显示的bug">1.微信好友分享缩略图不显示的bug</h1>
-<h3 id="经过两天彻查加请教终于发现了问题">经过两天彻查加请教，终于发现了问题。</h3>
-<p>微信分享要遵循一下规则：</p>
-<pre><code>微信（好友、朋友圈、收藏）分享规则：
-微信三个平台中，好友的功能最完整，朋友圈不能分享表情、文件，收藏不能分享表情和应用，表格下以好友为例子（其中分享图文消息限制10条，超过10条将会无响应）：
-参数说明
-title：512Bytes以内
-description：1KB以内
-imageData：大小不能超过10M
-imagePath：大小不能超过10M(传递的imagePath路径不能超过10KB)
-imageUrl：长度不能超过10K（图片链接，支持JPG、PNG格式，较好的效果为大图360*200，小图200*200 ）
-ThumbImage：内存大小不能超过32K的png图
-musicUrl：长度不能超过10K
-videoUrl：长度不能超过10K
-url：不能为空且长度不能超过10K
+                <h5 id="1-reveal-162自行百度">1. Reveal 1.6.2，自行百度</h5>
+<h5 id="2-越狱手机安装openssh">2. 越狱手机安装openssh</h5>
+<h5 id="3-使用openssh拷贝reveal的framework和dylib到手机">3. 使用openSSH拷贝Reveal的framework和dylib到手机</h5>
+<p>** 下文中出现的192.168.1.X，请替换为自己手机的ip **</p>
+<pre><code>scp -r /Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/Reveal.framework root@192.168.1.X:/System/Library/Frameworks
 </code></pre>
-<p>当然，以上规则什么问题都没有，<br>
-但是有的时候，明明遵守了上面规则，却还是出不来。。。</p>
-<h2 id="比如">比如：</h2>
-<h3 id="description里面不能有红包之类的关键字"><strong>description里面不能有红包之类的关键字</strong></h3>
-<p>只要描述内容里面出现<strong>红包</strong>两个字，微信好友分享出去的网页，缩略图就不见了！！！</p>
+<pre><code>scp /Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/libReveal.dylib root@192.168.1.X:/Library/MobileSubstrate/DynamicLibraries
+</code></pre>
+<h5 id="4-编辑librevealplist">4. 编辑libReveal.plist</h5>
+<p>在xcode新建一个plist文件，那文本或sublime打开，把里面的东西都删除，加入以下文字</p>
+<pre><code>{
+	Filter = {
+		Bundles = (
+			&quot;com.tencent.mqq&quot;,
+			&quot;com.apple.AppStore&quot;,
+			&quot;com.360buy.jdmobile&quot;,
+			&quot;com.alipay.iphoneclient&quot;,
+			&quot;com.taobao.taobao4iphone&quot;,
+			&quot;com.taobao.tmall&quot;,
+			&quot;com.sina.weibo&quot;,
+			&quot;com.xiaoying.cardloan&quot;,
+			&quot;com.netease.cloudmusic&quot;,
+		);
+	};
+}
+</code></pre>
+<p>** 以上是我初步写的一些应用，个人可根据自己的情况，增删Bundles数组里面的BundleID **</p>
+<p>使用以下命令拷贝到手机</p>
+<pre><code>scp /Users/lzh/Desktop/libReveal.plist(个人libReveal.plist文件路径) root@192.168.1.X:/Library/MobileSubstrate/DynamicLibraries
+</code></pre>
+<h4 id="另">另：</h4>
+<p>如果DynamicLibraries不是文件夹，说明你手机的Cydia已经不管用了，请重新越狱或google提示错误以解决 。<br>
+如果和我一样Cydia出现 status -2的错误，请按照第一章内容尝试。</p>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
-<li><a href="#1%E5%BE%AE%E4%BF%A1%E5%A5%BD%E5%8F%8B%E5%88%86%E4%BA%AB%E7%BC%A9%E7%95%A5%E5%9B%BE%E4%B8%8D%E6%98%BE%E7%A4%BA%E7%9A%84bug">1.微信好友分享缩略图不显示的bug</a><br>
-*
+<li>
 <ul>
-<li><a href="#%E7%BB%8F%E8%BF%87%E4%B8%A4%E5%A4%A9%E5%BD%BB%E6%9F%A5%E5%8A%A0%E8%AF%B7%E6%95%99%E7%BB%88%E4%BA%8E%E5%8F%91%E7%8E%B0%E4%BA%86%E9%97%AE%E9%A2%98">经过两天彻查加请教，终于发现了问题。</a></li>
-<li><a href="#%E6%AF%94%E5%A6%82">比如：</a>
+<li>
 <ul>
-<li><a href="#description%E9%87%8C%E9%9D%A2%E4%B8%8D%E8%83%BD%E6%9C%89%E7%BA%A2%E5%8C%85%E4%B9%8B%E7%B1%BB%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97"><strong>description里面不能有红包之类的关键字</strong></a></li>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-reveal-162%E8%87%AA%E8%A1%8C%E7%99%BE%E5%BA%A6">1. Reveal 1.6.2，自行百度</a></li>
+<li><a href="#2-%E8%B6%8A%E7%8B%B1%E6%89%8B%E6%9C%BA%E5%AE%89%E8%A3%85openssh">2. 越狱手机安装openssh</a></li>
+<li><a href="#3-%E4%BD%BF%E7%94%A8openssh%E6%8B%B7%E8%B4%9Dreveal%E7%9A%84framework%E5%92%8Cdylib%E5%88%B0%E6%89%8B%E6%9C%BA">3. 使用openSSH拷贝Reveal的framework和dylib到手机</a></li>
+<li><a href="#4-%E7%BC%96%E8%BE%91librevealplist">4. 编辑libReveal.plist</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%A6">另：</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -142,9 +164,9 @@ url：不能为空且长度不能超过10K
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://doge1024.github.io/post/an-zhuang-cocoapods-quan-xian-cuo-wu/">
+            <a href="https://doge1024.github.io/post/yue-yu-di-yi-zhang-ios-yue-yu/">
               <h3 class="post-title">
-                安装cocoapods权限错误
+                越狱第一章：iOS越狱
               </h3>
             </a>
           </div>

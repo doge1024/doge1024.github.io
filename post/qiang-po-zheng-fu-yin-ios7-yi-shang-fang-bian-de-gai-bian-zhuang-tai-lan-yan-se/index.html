@@ -1,0 +1,301 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>强迫症福音！iOS7以上方便的改变状态栏颜色 | Gridea</title>
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591799844558">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="强迫症福音！iOS7以上方便的改变状态栏颜色 | Gridea - Atom Feed" href="https://doge1024.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="在iOS 9以后设置状态栏颜色不建议使用UIApplication来改变了，警告⚠️不能忍
+- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://doge1024.github.io">
+  <img class="avatar" src="https://doge1024.github.io/images/avatar.png?v=1591799844558" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              强迫症福音！iOS7以上方便的改变状态栏颜色
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-06-10
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>在iOS 9以后设置状态栏颜色不建议使用UIApplication来改变了，警告⚠️不能忍<br>
+<code>- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated NS_DEPRECATED_IOS(2_0, 9_0, &quot;Use -[UIViewController preferredStatusBarStyle]&quot;)</code></p>
+<p>1.在导航控制器里面实现下面方法：</p>
+<pre><code>//一般在BaseNavigationController里面实现
+/**
+ 设置显示栈顶控制器的状态栏颜色
+ */
+- (UIViewController *)childViewControllerForStatusBarStyle {
+    return self.topViewController;
+}
+</code></pre>
+<p>2.在子控制器里面实现</p>
+<pre><code>- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
+</code></pre>
+<p>这样系统push到某个控制器的时候就会显示此控制器<code>preferredStatusBarStyle</code>方法返回状态栏style，不写默认显示黑色字体的状态栏</p>
+<h4 id="如何动态的改变状态栏颜色">如何动态的改变状态栏颜色？</h4>
+<p>项目中有业务需求需要动态的改变状态栏颜色，StatusBarStyle可能在两种状态之间替换，最简单的是拿全局变量控制，但是为了以后调用方便，就写个分类，使用runtime 动态替换方法，当做一个小练习吧，以后用着也方便</p>
+<p>贴一下代码：</p>
+<pre><code>// UIViewController+ForcedChangeStatusBarColor.h
+#import &lt;UIKit/UIKit.h&gt;
+
+@interface UIViewController (ForcedChangeStatusBarColor)
+
+@property (nonatomic, strong) NSNumber *fcsb_statusBarStyle;
+
+@property (nonatomic, strong) NSNumber *fcsb_hasChange;
+
+/**
+ @brief 控制器强制替换StatusBarStyle
+ 只对自定义系统导航栏的控制器生效
+ */
+- (void)forcedChangeStatusBarStyle:(UIStatusBarStyle)style;
+
+@end
+
+</code></pre>
+<pre><code>#import &quot;UIViewController+ForcedChangeStatusBarColor.h&quot;
+#import &quot;NSObject+CEHook.h&quot;
+
+@implementation UIViewController (ForcedChangeStatusBarColor)
+
+- (void)forcedChangeStatusBarStyle:(UIStatusBarStyle)style {
+    
+    @synchronized (self) {
+        if (self.fcsb_hasChange == nil) {
+            // 这行代码在替换方法， 可以替换
+            [self cehook_instanceMethodSwizzling:@selector(preferredStatusBarStyle) to:@selector(fcsb_preferredStatusBarStyle)];
+            self.fcsb_hasChange = @(YES);
+        }
+    }
+    
+    self.fcsb_statusBarStyle = @(style);
+    
+    // 刷新 StatusBar
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (UIStatusBarStyle)fcsb_preferredStatusBarStyle {
+    return [self.fcsb_statusBarStyle integerValue];
+}
+
+#pragma mark - get &amp; set
+static char kAssociatedObjectKey_HasChange;
+- (void)setFcsb_hasChange:(NSNumber *)fcsb_hasChange {
+    objc_setAssociatedObject(self, &amp;kAssociatedObjectKey_HasChange, fcsb_hasChange, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSNumber *)fcsb_hasChange {
+    return (NSNumber *)objc_getAssociatedObject(self, &amp;kAssociatedObjectKey_HasChange);
+}
+
+static void *FCSBOrgiKey = &amp;FCSBOrgiKey;
+ - (NSNumber *)fcsb_statusBarStyle {
+    return objc_getAssociatedObject(self, &amp;FCSBOrgiKey);
+}
+
+- (void)setFcsb_statusBarStyle:(NSNumber *)fcsb_statusBarStyle {
+    objc_setAssociatedObject(self,
+                             &amp;FCSBOrgiKey,
+                             fcsb_statusBarStyle,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+
+</code></pre>
+<pre><code>#import &quot;NSObject+CEHook.h&quot;
+
+@implementation NSObject (CEHook)
+
+- (void)cehook_instanceMethodSwizzling:(SEL)originSelector to:(SEL)swizzleSelector {
+    Class class = [self class];
+    
+    Method originMethod = class_getInstanceMethod(class, originSelector);
+    Method swizzleMethod = class_getInstanceMethod(class, swizzleSelector);
+    
+    if (!originMethod || !swizzleMethod) {
+        return;
+    }
+    
+    class_addMethod(class,
+                    originSelector,
+                    method_getImplementation(originMethod),
+                    method_getTypeEncoding(originMethod));
+    class_addMethod(class,
+                    swizzleSelector,
+                    method_getImplementation(swizzleMethod),
+                    method_getTypeEncoding(swizzleMethod));
+    
+    ///&lt; 添加完了之后要重新赋值，因为原来的两个method都是父类的。参考自见https://github.com/rentzsch/jrswizzle/blob/semver-1.x/JRSwizzle.m
+    /// addMethod 返回 true 时，需要重新取 Method
+    Method originMethod2 = class_getInstanceMethod(class, originSelector);
+    Method swizzleMethod2 = class_getInstanceMethod(class, swizzleSelector);
+    
+    // NSLog(@&quot;instanceMethodSwizzling: %p, %p, %p, %p&quot;, originMethod, originMethod2, swizzleMethod, swizzleMethod2);
+    method_exchangeImplementations(originMethod2, swizzleMethod2);
+}
+@end
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%8A%A8%E6%80%81%E7%9A%84%E6%94%B9%E5%8F%98%E7%8A%B6%E6%80%81%E6%A0%8F%E9%A2%9C%E8%89%B2">如何动态的改变状态栏颜色？</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://doge1024.github.io/post/jie-jue-charles-he-shadowsocks-chong-tu/">
+              <h3 class="post-title">
+                解决Charles和Shadowsocks冲突
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

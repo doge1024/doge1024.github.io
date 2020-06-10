@@ -2,20 +2,18 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>记录一次微信分享的经历 | Gridea</title>
+<title>处理WKContentView的crash | Gridea</title>
 <link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591799844558">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="记录一次微信分享的经历 | Gridea - Atom Feed" href="https://doge1024.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="处理WKContentView的crash | Gridea - Atom Feed" href="https://doge1024.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="1.微信好友分享缩略图不显示的bug
-经过两天彻查加请教，终于发现了问题。
-微信分享要遵循一下规则：
-微信（好友、朋友圈、收藏）分享规则：
-微信三个平台中，好友的功能最完整，朋友圈不能分享表情、文件，收藏不能分享表情和应用，表格下以好友为例..." />
+    <meta name="description" content="解决WKContentView没有isSecureTextEntry方法造成的crash
+程序中有web页面，使用WKWebView，但是有个crash一直存在：
+[WKContentView isSecureTextEntry]: unr..." />
     <meta name="keywords" content="iOS" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -78,7 +76,7 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              记录一次微信分享的经历
+              处理WKContentView的crash
             </h2>
             <div class="post-info">
               <span>
@@ -96,40 +94,60 @@
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <h1 id="1微信好友分享缩略图不显示的bug">1.微信好友分享缩略图不显示的bug</h1>
-<h3 id="经过两天彻查加请教终于发现了问题">经过两天彻查加请教，终于发现了问题。</h3>
-<p>微信分享要遵循一下规则：</p>
-<pre><code>微信（好友、朋友圈、收藏）分享规则：
-微信三个平台中，好友的功能最完整，朋友圈不能分享表情、文件，收藏不能分享表情和应用，表格下以好友为例子（其中分享图文消息限制10条，超过10条将会无响应）：
-参数说明
-title：512Bytes以内
-description：1KB以内
-imageData：大小不能超过10M
-imagePath：大小不能超过10M(传递的imagePath路径不能超过10KB)
-imageUrl：长度不能超过10K（图片链接，支持JPG、PNG格式，较好的效果为大图360*200，小图200*200 ）
-ThumbImage：内存大小不能超过32K的png图
-musicUrl：长度不能超过10K
-videoUrl：长度不能超过10K
-url：不能为空且长度不能超过10K
+                <h3 id="解决wkcontentview没有issecuretextentry方法造成的crash">解决WKContentView没有isSecureTextEntry方法造成的crash</h3>
+<p>程序中有web页面，使用WKWebView，但是有个crash一直存在：<br>
+<code>[WKContentView isSecureTextEntry]: unrecognized selector sent to instance 0x101bd5000</code><br>
+网上搜索，并没有结果，是太简单了吗？不清楚，准备使用runtime给WKContentView添加一个方法，观察下</p>
+<hr>
+<p>在程序启动的时候调用一下progressWKContentViewCrash方法就可以</p>
+<pre><code>/**
+ 处理WKContentView的crash
+ [WKContentView isSecureTextEntry]: unrecognized selector sent to instance 0x101bd5000
+ */
++ (void)progressWKContentViewCrash {
+    if (([[[UIDevice currentDevice] systemVersion] doubleValue] &gt;= 8.0)) {
+        const char *className = @&quot;WKContentView&quot;.UTF8String;
+        Class WKContentViewClass = objc_getClass(className);
+        SEL isSecureTextEntry = NSSelectorFromString(@&quot;isSecureTextEntry&quot;);
+        SEL secureTextEntry = NSSelectorFromString(@&quot;secureTextEntry&quot;);
+        BOOL addIsSecureTextEntry = class_addMethod(WKContentViewClass, isSecureTextEntry, (IMP)isSecureTextEntryIMP, &quot;B@:&quot;);
+        BOOL addSecureTextEntry = class_addMethod(WKContentViewClass, secureTextEntry, (IMP)secureTextEntryIMP, &quot;B@:&quot;);
+        if (!addIsSecureTextEntry || !addSecureTextEntry) {
+            NSLog(@&quot;WKContentView-Crash-&gt;修复失败&quot;);
+        }
+    }
+}
+
+/**
+ 实现WKContentView对象isSecureTextEntry方法
+ @return NO
+ */
+BOOL isSecureTextEntryIMP(id sender, SEL cmd) {
+    return NO;
+}
+
+/**
+ 实现WKContentView对象secureTextEntry方法
+ @return NO
+ */
+BOOL secureTextEntryIMP(id sender, SEL cmd) {
+    return NO;
+}
 </code></pre>
-<p>当然，以上规则什么问题都没有，<br>
-但是有的时候，明明遵守了上面规则，却还是出不来。。。</p>
-<h2 id="比如">比如：</h2>
-<h3 id="description里面不能有红包之类的关键字"><strong>description里面不能有红包之类的关键字</strong></h3>
-<p>只要描述内容里面出现<strong>红包</strong>两个字，微信好友分享出去的网页，缩略图就不见了！！！</p>
+<h2 id="实际使用效果">实际使用效果</h2>
+<p>在项目的新版本里加上上面处理方法以后，<code>[WKWebView isSecureTextEntry]</code>崩溃已经消失🤓</p>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
-<li><a href="#1%E5%BE%AE%E4%BF%A1%E5%A5%BD%E5%8F%8B%E5%88%86%E4%BA%AB%E7%BC%A9%E7%95%A5%E5%9B%BE%E4%B8%8D%E6%98%BE%E7%A4%BA%E7%9A%84bug">1.微信好友分享缩略图不显示的bug</a><br>
-*
+<li>
 <ul>
-<li><a href="#%E7%BB%8F%E8%BF%87%E4%B8%A4%E5%A4%A9%E5%BD%BB%E6%9F%A5%E5%8A%A0%E8%AF%B7%E6%95%99%E7%BB%88%E4%BA%8E%E5%8F%91%E7%8E%B0%E4%BA%86%E9%97%AE%E9%A2%98">经过两天彻查加请教，终于发现了问题。</a></li>
-<li><a href="#%E6%AF%94%E5%A6%82">比如：</a>
+<li>
 <ul>
-<li><a href="#description%E9%87%8C%E9%9D%A2%E4%B8%8D%E8%83%BD%E6%9C%89%E7%BA%A2%E5%8C%85%E4%B9%8B%E7%B1%BB%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97"><strong>description里面不能有红包之类的关键字</strong></a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3wkcontentview%E6%B2%A1%E6%9C%89issecuretextentry%E6%96%B9%E6%B3%95%E9%80%A0%E6%88%90%E7%9A%84crash">解决WKContentView没有isSecureTextEntry方法造成的crash</a></li>
 </ul>
 </li>
+<li><a href="#%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E6%95%88%E6%9E%9C">实际使用效果</a></li>
 </ul>
 </li>
 </ul>
@@ -142,9 +160,9 @@ url：不能为空且长度不能超过10K
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://doge1024.github.io/post/an-zhuang-cocoapods-quan-xian-cuo-wu/">
+            <a href="https://doge1024.github.io/post/yue-yu-di-san-zhang-qi-ye-wei-xin-qiang-hong-bao-cha-jian/">
               <h3 class="post-title">
-                安装cocoapods权限错误
+                越狱第三章：企业微信抢红包插件
               </h3>
             </a>
           </div>

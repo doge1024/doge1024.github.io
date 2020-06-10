@@ -2,21 +2,20 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>记录一次微信分享的经历 | Gridea</title>
+<title>越狱第三章：企业微信抢红包插件 | Gridea</title>
 <link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591799844558">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="记录一次微信分享的经历 | Gridea - Atom Feed" href="https://doge1024.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="越狱第三章：企业微信抢红包插件 | Gridea - Atom Feed" href="https://doge1024.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="1.微信好友分享缩略图不显示的bug
-经过两天彻查加请教，终于发现了问题。
-微信分享要遵循一下规则：
-微信（好友、朋友圈、收藏）分享规则：
-微信三个平台中，好友的功能最完整，朋友圈不能分享表情、文件，收藏不能分享表情和应用，表格下以好友为例..." />
-    <meta name="keywords" content="iOS" />
+    <meta name="description" content="企业微信抢红包（为年终奖做准备( ⁼̴̀ .̫ ⁼̴́ )✧）
+使用logly.pl自动编写打印方法的文件
+
+/opt/theos/bin/logify.pl /文件目录/WWKConversationRedEnvelopesBubbleV..." />
+    <meta name="keywords" content="越狱" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -78,58 +77,79 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              记录一次微信分享的经历
+              越狱第三章：企业微信抢红包插件
             </h2>
             <div class="post-info">
               <span>
                 2020-06-10
               </span>
               <span>
-                2 min read
+                1 min read
               </span>
               
-                <a href="https://doge1024.github.io/tag/t-pcqh4ec/" class="post-tag">
-                  # iOS
+                <a href="https://doge1024.github.io/tag/vsoY8KMVm/" class="post-tag">
+                  # 越狱
                 </a>
               
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <h1 id="1微信好友分享缩略图不显示的bug">1.微信好友分享缩略图不显示的bug</h1>
-<h3 id="经过两天彻查加请教终于发现了问题">经过两天彻查加请教，终于发现了问题。</h3>
-<p>微信分享要遵循一下规则：</p>
-<pre><code>微信（好友、朋友圈、收藏）分享规则：
-微信三个平台中，好友的功能最完整，朋友圈不能分享表情、文件，收藏不能分享表情和应用，表格下以好友为例子（其中分享图文消息限制10条，超过10条将会无响应）：
-参数说明
-title：512Bytes以内
-description：1KB以内
-imageData：大小不能超过10M
-imagePath：大小不能超过10M(传递的imagePath路径不能超过10KB)
-imageUrl：长度不能超过10K（图片链接，支持JPG、PNG格式，较好的效果为大图360*200，小图200*200 ）
-ThumbImage：内存大小不能超过32K的png图
-musicUrl：长度不能超过10K
-videoUrl：长度不能超过10K
-url：不能为空且长度不能超过10K
+                <h4 id="企业微信抢红包为年终奖做准备-̴̀-̫-̴́">企业微信抢红包（为年终奖做准备( ⁼̴̀ .̫ ⁼̴́ )✧）</h4>
+<h2 id="使用loglypl自动编写打印方法的文件">使用logly.pl自动编写打印方法的文件</h2>
+<ol>
+<li>/opt/theos/bin/logify.pl /文件目录/WWKConversationRedEnvelopesBubbleView.h  &gt; ./1.xm</li>
+<li>如果要跟踪多个头文件，则继续转换：/opt/theos/bin/logify.pl 其它头文件 &gt;&gt; Tweak.xm    注意中间是 &gt;&gt;（没试过）</li>
+</ol>
+<h2 id="安装到手机">安装到手机</h2>
+<p><code>export THEOS=/opt/theos</code><br>
+<code>export THEOSDEVICEIP=192.168.1.100</code><br>
+先执行以上两行命令<br>
+然后执行<br>
+<code>make package install</code><br>
+<code>make package</code> 和 <code>make install</code>可以单独使用</p>
+<h2 id="make-package报错">make package报错</h2>
+<p>有的时候会报错，不知道类名，这种情况在文件最上面写上</p>
+<pre><code>@interface WWKMessageRedEnvelopes
+@end
 </code></pre>
-<p>当然，以上规则什么问题都没有，<br>
-但是有的时候，明明遵守了上面规则，却还是出不来。。。</p>
-<h2 id="比如">比如：</h2>
-<h3 id="description里面不能有红包之类的关键字"><strong>description里面不能有红包之类的关键字</strong></h3>
-<p>只要描述内容里面出现<strong>红包</strong>两个字，微信好友分享出去的网页，缩略图就不见了！！！</p>
+<p>写上类似此种格式的代码，骗过编译</p>
+<h2 id="打印log">打印log</h2>
+<p>安装完成后，打开Xcode-&gt;Window-&gt;Device-&gt;你的设备，下面有Log显示，</p>
+<p>参考网站：</p>
+<ol>
+<li>
+<p>https://zhuanlan.zhihu.com/p/21530388</p>
+</li>
+<li>
+<p>http://www.jianshu.com/p/98642d1ea4e1</p>
+</li>
+<li>
+<p>http://www.jianshu.com/p/98642d1ea4e1</p>
+</li>
+<li>
+<p>http://www.jianshu.com/p/189afbe3b429</p>
+</li>
+</ol>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
-<li><a href="#1%E5%BE%AE%E4%BF%A1%E5%A5%BD%E5%8F%8B%E5%88%86%E4%BA%AB%E7%BC%A9%E7%95%A5%E5%9B%BE%E4%B8%8D%E6%98%BE%E7%A4%BA%E7%9A%84bug">1.微信好友分享缩略图不显示的bug</a><br>
-*
+<li>
 <ul>
-<li><a href="#%E7%BB%8F%E8%BF%87%E4%B8%A4%E5%A4%A9%E5%BD%BB%E6%9F%A5%E5%8A%A0%E8%AF%B7%E6%95%99%E7%BB%88%E4%BA%8E%E5%8F%91%E7%8E%B0%E4%BA%86%E9%97%AE%E9%A2%98">经过两天彻查加请教，终于发现了问题。</a></li>
-<li><a href="#%E6%AF%94%E5%A6%82">比如：</a>
+<li>
 <ul>
-<li><a href="#description%E9%87%8C%E9%9D%A2%E4%B8%8D%E8%83%BD%E6%9C%89%E7%BA%A2%E5%8C%85%E4%B9%8B%E7%B1%BB%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97"><strong>description里面不能有红包之类的关键字</strong></a></li>
+<li>
+<ul>
+<li><a href="#%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%8A%A2%E7%BA%A2%E5%8C%85%E4%B8%BA%E5%B9%B4%E7%BB%88%E5%A5%96%E5%81%9A%E5%87%86%E5%A4%87-%CC%B4%CC%80-%CC%AB-%CC%B4%CC%81">企业微信抢红包（为年终奖做准备( ⁼̴̀ .̫ ⁼̴́ )✧）</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#%E4%BD%BF%E7%94%A8loglypl%E8%87%AA%E5%8A%A8%E7%BC%96%E5%86%99%E6%89%93%E5%8D%B0%E6%96%B9%E6%B3%95%E7%9A%84%E6%96%87%E4%BB%B6">使用logly.pl自动编写打印方法的文件</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85%E5%88%B0%E6%89%8B%E6%9C%BA">安装到手机</a></li>
+<li><a href="#make-package%E6%8A%A5%E9%94%99">make package报错</a></li>
+<li><a href="#%E6%89%93%E5%8D%B0log">打印log</a></li>
 </ul>
 </li>
 </ul>
@@ -142,9 +162,9 @@ url：不能为空且长度不能超过10K
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://doge1024.github.io/post/an-zhuang-cocoapods-quan-xian-cuo-wu/">
+            <a href="https://doge1024.github.io/post/ios-tong-shi-hua-xu-xian-he-zhi-xian/">
               <h3 class="post-title">
-                安装cocoapods权限错误
+                iOS 同时画虚线和直线
               </h3>
             </a>
           </div>
