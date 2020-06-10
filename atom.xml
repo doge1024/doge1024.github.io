@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://doge1024.github.io</id>
     <title>Gridea</title>
-    <updated>2020-06-10T14:02:30.142Z</updated>
+    <updated>2020-06-10T14:14:18.405Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://doge1024.github.io"/>
     <link rel="self" href="https://doge1024.github.io/atom.xml"/>
@@ -11,35 +11,74 @@
     <icon>https://doge1024.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Gridea</rights>
     <entry>
-        <title type="html"><![CDATA[Hello Gridea]]></title>
-        <id>https://doge1024.github.io/post/hello-gridea/</id>
-        <link href="https://doge1024.github.io/post/hello-gridea/">
+        <title type="html"><![CDATA[@weakify的宏定义分解]]></title>
+        <id>https://doge1024.github.io/post/weakify-de-hong-ding-yi-fen-jie/</id>
+        <link href="https://doge1024.github.io/post/weakify-de-hong-ding-yi-fen-jie/">
         </link>
-        <updated>2018-12-11T16:00:00.000Z</updated>
-        <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-<!-- more -->
-<p><a href="https://github.com/getgridea/gridea">Github</a><br>
-<a href="https://gridea.dev/">Gridea 主页</a><br>
-<a href="http://fehey.com/">示例网站</a></p>
-<h2 id="特性">特性👇</h2>
-<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
-<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
-<p>🏷️  你可以对文章进行标签分组</p>
-<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
-<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
-<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
-<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
-<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
-<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
-<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
-<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
-<p>未来，它一定会成为你离不开的伙伴</p>
-<p>尽情发挥你的才华吧！</p>
-<p>😘 Enjoy~</p>
+        <updated>2020-06-10T14:04:41.000Z</updated>
+        <content type="html"><![CDATA[<p>项目中用到了@weakify的宏定义, 正好今天任务解决了, 就一步一步拆分下看看它是怎么实现的.</p>
+<p>下面就一步一步拆分@weakify<br>
+<code>object-c</code></p>
+<pre><code>@weakify(self) 中@weakify的宏定义如下
+#define weakify(...) \
+    ext_keywordify \
+    metamacro_foreach_cxt(ext_weakify_,, __weak, __VA_ARGS__)
+
+    /*
+	@weakify(self)
+	可以替换为
+	ext_keywordify \
+    metamacro_foreach_cxt(ext_weakify_,, __weak, self)
+    */
+</code></pre>
+<hr>
+<p>分段拆解</p>
+<ol>
+<li>先看<code>ext_keywordify</code>, 替换为<code>autoreleasepool {}</code>; 知道为什么weakify前面为什么要加@了吧, 是在这里用的.</li>
+</ol>
+<p><strong>效果</strong>:</p>
+<pre><code>@autoreleasepool {} 
+metamacro_foreach_cxt(ext_weakify_,, __weak, self)
+</code></pre>
+<ol start="2">
+<li>在看<code>metamacro_foreach_cxt(ext_weakify_,, __weak, self)</code><br>
+先替换 <code>metamacro_foreach_cxt</code><pre><code>#define metamacro_foreach_cxt(MACRO, SEP, CONTEXT, ...) \ 
+metamacro_concat(metamacro_foreach_cxt, metamacro_argcount(__VA_ARGS__))(MACRO, SEP, CONTEXT, __VA_ARGS__)
+</code></pre>
+</li>
+</ol>
+<p>先看<code>metamacro_argcount(__VA_ARGS__)</code><br>
+这个宏的作用是返回一共参数有多少个<br>
+工作原理是截取前二十个</p>
+<pre><code>#define metamacro_argcount(...) \
+        metamacro_at(20, __VA_ARGS__, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+        
+//这个宏的定义是拼接连个参数
+#define metamacro_at(N, ...) \
+        metamacro_concat(metamacro_at, N)(__VA_ARGS__)
+        会转换为, metamacro_at20(__VA_ARGS__), 并且参数最后20位为20到1;
+        
+#define metamacro_at20(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, ...) metamacro_head(__VA_ARGS__)
+
+metamacro_head(__VA_ARGS__) //宏的作用是取第一个参数
+
+再这样的话, 前20个参数一一对应, 最后会剩下1(以@weakify(self)为例);
+</code></pre>
+<p><strong>效果</strong>:</p>
+<pre><code>metamacro_foreach_cxt1(ext_weakify_,, __weak, self)
+</code></pre>
+<p>// 按照#define metamacro_foreach_cxt1(MACRO, SEP, CONTEXT, _0) MACRO(0, CONTEXT, _0)<br>
+进一步转化为</p>
+<p><code>ext_weakify_(0, __weak, self);</code><br>
+再带入<code>ext_weakify_</code><br>
+转化为:<br>
+<code>__weak __typeof__(self) self_weak_ = (self);</code></p>
+<p>分解完毕</p>
+<p>@strongify要在block中使用<br>
+@strongify想要看的自己完成, 最终结果为<br>
+<code>__strong __typeof__(self) self = self_weak_;</code></p>
+<p>想要具体过程的, 推荐简书文章WzxJiang的<a href="http://www.jianshu.com/p/bcd7367ea54b">剖析@weakify、@strongify</a><br>
+感谢WzxJiang在简书上的文章, 对我帮助很大, 对宏的了解又增加了许多</p>
 ]]></content>
     </entry>
 </feed>
