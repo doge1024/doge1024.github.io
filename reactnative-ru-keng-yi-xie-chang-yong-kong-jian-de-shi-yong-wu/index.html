@@ -1,13 +1,26 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" >
+
 <title>ReactNative入坑: 一些常用控件的使用(五) | doge1024</title>
-<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591802401926">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591802857487">
 <link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="ReactNative入坑: 一些常用控件的使用(五) | doge1024 - Atom Feed" href="https://doge1024.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-168992336-1"></script>
@@ -23,86 +36,85 @@
     <meta name="description" content="button外面要包一个View，才能设置样式
 这里是Button的源码， Button除了accessibilityLabel, color, onPress, title, disabled, testID, 这几个属性以外其他属性都不..." />
     <meta name="keywords" content="" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://doge1024.github.io">
-  <img class="avatar" src="https://doge1024.github.io/images/avatar.png?v=1591802401926" alt="">
-  </a>
-  <h1 class="site-title">
-    doge1024
-  </h1>
-  <p class="site-description">
-    坚持就是胜利
-  </p>
-  <div class="menu-container">
-    
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://doge1024.github.io">
+        <img src="https://doge1024.github.io/images/avatar.png?v=1591802857487" class="site-logo">
+        <h1 class="site-title">doge1024</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
       
-        <a href="/" class="menu">
-          首页
-        </a>
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
       
-    
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
       
-        <a href="/archives" class="menu">
-          归档
-        </a>
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
       
-    
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
       
-        <a href="/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="/post/about" class="menu">
-          关于
-        </a>
-      
-    
+    </div>
   </div>
-  <div class="social-container">
-    
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
       
-        <a href="https://www.jianshu.com/u/a0e2f8047033" target="_blank">
-          <i class="ri-github-line"></i>
-        </a>
+        
+          <a class="social-link" href="https://www.jianshu.com/u/a0e2f8047033" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
       
-    
+        
       
-    
+        
       
-    
+        
       
-    
+        
       
-    
+    </div>
+    <div class="site-description">
+      坚持就是胜利
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
   </div>
 </div>
 
-        <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              ReactNative入坑: 一些常用控件的使用(五)
-            </h2>
-            <div class="post-info">
-              <span>
-                2020-06-10
-              </span>
-              <span>
-                2 min read
-              </span>
-              
-            </div>
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">ReactNative入坑: 一些常用控件的使用(五)</h2>
+            <div class="post-date">2020-06-10</div>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <h5 id="button外面要包一个view才能设置样式">button外面要包一个View，才能设置样式</h5>
+            <div class="post-content" v-pre>
+              <h5 id="button外面要包一个view才能设置样式">button外面要包一个View，才能设置样式</h5>
 <p><a href="https://github.com/facebook/react-native/blob/master/Libraries/Components/Button.js">这里是Button的源码</a>， Button除了accessibilityLabel, color, onPress, title, disabled, testID, 这几个属性以外其他属性都不能生效， 需要外面套一个View 才能设置样式<br>
 再就是Button里面只有个自带的Text，自己往Button里塞的子控件不会显示的</p>
 <h5 id="touchablehighlight">TouchableHighlight</h5>
@@ -139,124 +151,79 @@
 </code></pre>
 <p>其余的属性看<a href="https://facebook.github.io/react-native/docs/sectionlist.html">官方SectionList文档</a></p>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#button%E5%A4%96%E9%9D%A2%E8%A6%81%E5%8C%85%E4%B8%80%E4%B8%AAview%E6%89%8D%E8%83%BD%E8%AE%BE%E7%BD%AE%E6%A0%B7%E5%BC%8F">button外面要包一个View，才能设置样式</a></li>
-<li><a href="#touchablehighlight">TouchableHighlight</a></li>
-<li><a href="#%E5%A6%82%E4%BD%95%E8%AE%BE%E7%BD%AE%E9%BB%98%E8%AE%A4props">如何设置默认props</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#sectionlist%E7%9A%84%E7%94%A8%E6%B3%95">SectionList的用法</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-              </div>
             </div>
-          </article>
-        </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://doge1024.github.io/hei-ping-guo-sheng-ji-1333-hou-xian-shi-qia-dun-yan-chi-jie-jue-ban-fa/">
+                  <h3 class="post-title">
+                    黑苹果升级13.3.3后，显示卡顿延迟解决办法
+                  </h3>
+                </a>
+              </div>
+            
 
-        
-          <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://doge1024.github.io/hei-ping-guo-sheng-ji-1333-hou-xian-shi-qia-dun-yan-chi-jie-jue-ban-fa/">
-              <h3 class="post-title">
-                黑苹果升级13.3.3后，显示卡顿延迟解决办法
-              </h3>
-            </a>
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
           </div>
-        
 
-        
-          
-            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-
-<div id="gitalk-container"></div>
-
-<script>
-
-  var gitalk = new Gitalk({
-    clientID: 'a715661b0132eeaa2cd2',
-    clientSecret: '295e4b923ab920b2079b423d2dbac18f535418fe',
-    repo: 'doge1024.github.io',
-    owner: 'doge1024',
-    admin: ['doge1024'],
-    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: false  // Facebook-like distraction free mode
-  })
-
-  gitalk.render('gitalk-container')
-
-</script>
-
-          
-
-          
-        
-
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
+        </div>
       </div>
     </div>
 
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
-      hljs.initHighlightingOnLoad()
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+      var gitalk = new Gitalk({
+        clientID: 'a715661b0132eeaa2cd2',
+        clientSecret: '295e4b923ab920b2079b423d2dbac18f535418fe',
+        repo: 'doge1024.github.io',
+        owner: 'doge1024',
+        admin: ['doge1024'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
 
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
-
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
-
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
+      gitalk.render('gitalk-container')
 
     </script>
+  
+
+  
+
+
+
+
   </body>
 </html>

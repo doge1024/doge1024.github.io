@@ -1,13 +1,26 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" >
+
 <title>macOS 存储空间越来越少, 删完不增加可用空间 | doge1024</title>
-<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591802401926">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591802857487">
 <link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="macOS 存储空间越来越少, 删完不增加可用空间 | doge1024 - Atom Feed" href="https://doge1024.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-168992336-1"></script>
@@ -26,86 +39,85 @@
 原因
 因为 Time Machin 的 loc..." />
     <meta name="keywords" content="" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://doge1024.github.io">
-  <img class="avatar" src="https://doge1024.github.io/images/avatar.png?v=1591802401926" alt="">
-  </a>
-  <h1 class="site-title">
-    doge1024
-  </h1>
-  <p class="site-description">
-    坚持就是胜利
-  </p>
-  <div class="menu-container">
-    
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://doge1024.github.io">
+        <img src="https://doge1024.github.io/images/avatar.png?v=1591802857487" class="site-logo">
+        <h1 class="site-title">doge1024</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
       
-        <a href="/" class="menu">
-          首页
-        </a>
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
       
-    
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
       
-        <a href="/archives" class="menu">
-          归档
-        </a>
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
       
-    
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
       
-        <a href="/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="/post/about" class="menu">
-          关于
-        </a>
-      
-    
+    </div>
   </div>
-  <div class="social-container">
-    
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
       
-        <a href="https://www.jianshu.com/u/a0e2f8047033" target="_blank">
-          <i class="ri-github-line"></i>
-        </a>
+        
+          <a class="social-link" href="https://www.jianshu.com/u/a0e2f8047033" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
       
-    
+        
       
-    
+        
       
-    
+        
       
-    
+        
       
-    
+    </div>
+    <div class="site-description">
+      坚持就是胜利
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
   </div>
 </div>
 
-        <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              macOS 存储空间越来越少, 删完不增加可用空间
-            </h2>
-            <div class="post-info">
-              <span>
-                2020-06-10
-              </span>
-              <span>
-                3 min read
-              </span>
-              
-            </div>
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">macOS 存储空间越来越少, 删完不增加可用空间</h2>
+            <div class="post-date">2020-06-10</div>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <h2 id="问题">问题</h2>
+            <div class="post-content" v-pre>
+              <h2 id="问题">问题</h2>
 <p><code># macOS Catalina 10.15 beta 1 #</code><br>
 升级 macOS Catalina 10.15 beta 1 后发现存储空间越来越少，怎么删除文件都不管用。文件越删越多。</p>
 <h2 id="原因">原因</h2>
@@ -149,119 +161,79 @@
 </ul>
 <figure data-type="image" tabindex="1"><img src="https://upload-images.jianshu.io/upload_images/1300265-11dfc80ef3a20757.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/680" alt="image.png" loading="lazy"></figure>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
-<li><a href="#%E5%8E%9F%E5%9B%A0">原因</a>
-<ul>
-<li><a href="#how-local-snapshots-use-storage-space">How local snapshots use storage space</a></li>
-</ul>
-</li>
-<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88">解决方案：</a><br>
-*<br>
-*<br>
-* <a href="#%E5%A6%82%E6%9E%9C%E4%BD%A0%E7%9A%84%E7%94%B5%E8%84%91%E5%B7%B2%E7%BB%8F%E5%89%A9%E4%BD%99%E7%A9%BA%E9%97%B4%E5%A4%AA%E5%B0%91%E5%AF%BC%E8%87%B4%E5%BC%80%E4%B8%8D%E5%BC%80%E6%9C%BA%E8%AF%B7%E4%BD%BF%E7%94%A8-time-machine-%E8%BF%9B%E8%A1%8C%E6%81%A2%E5%A4%8D-%E4%BB%A5%E4%B8%8B%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E4%BB%85%E9%80%82%E7%94%A8%E5%8F%AF%E5%BC%80%E6%9C%BA%E7%94%A8%E6%88%B7">如果你的电脑已经剩余空间太少，导致开不开机，请使用 Time Machine ，进行恢复。以下解决方案仅适用可开机用户</a><br>
-* <a href="#%E4%BD%BF%E7%94%A8%E7%BB%88%E7%AB%AF%E5%91%BD%E4%BB%A4">使用终端命令：</a></li>
-</ul>
-</li>
-</ul>
-
-              </div>
             </div>
-          </article>
-        </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://doge1024.github.io/flutter-ru-keng-wen-ti-shou-ji-geng-xin-zhong/">
+                  <h3 class="post-title">
+                    flutter 入坑问题收集(更新中)
+                  </h3>
+                </a>
+              </div>
+            
 
-        
-          <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://doge1024.github.io/flutter-ru-keng-wen-ti-shou-ji-geng-xin-zhong/">
-              <h3 class="post-title">
-                flutter 入坑问题收集(更新中)
-              </h3>
-            </a>
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
           </div>
-        
 
-        
-          
-            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-
-<div id="gitalk-container"></div>
-
-<script>
-
-  var gitalk = new Gitalk({
-    clientID: 'a715661b0132eeaa2cd2',
-    clientSecret: '295e4b923ab920b2079b423d2dbac18f535418fe',
-    repo: 'doge1024.github.io',
-    owner: 'doge1024',
-    admin: ['doge1024'],
-    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: false  // Facebook-like distraction free mode
-  })
-
-  gitalk.render('gitalk-container')
-
-</script>
-
-          
-
-          
-        
-
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
+        </div>
       </div>
     </div>
 
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
-      hljs.initHighlightingOnLoad()
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+      var gitalk = new Gitalk({
+        clientID: 'a715661b0132eeaa2cd2',
+        clientSecret: '295e4b923ab920b2079b423d2dbac18f535418fe',
+        repo: 'doge1024.github.io',
+        owner: 'doge1024',
+        admin: ['doge1024'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
 
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
-
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
-
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
+      gitalk.render('gitalk-container')
 
     </script>
+  
+
+  
+
+
+
+
   </body>
 </html>

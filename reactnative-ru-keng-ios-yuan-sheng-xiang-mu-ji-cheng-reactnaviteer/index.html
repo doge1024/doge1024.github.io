@@ -1,13 +1,26 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" >
+
 <title>ReactNative入坑: iOS原生项目集成ReactNavite(二) | doge1024</title>
-<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591802401926">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591802857487">
 <link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="ReactNative入坑: iOS原生项目集成ReactNavite(二) | doge1024 - Atom Feed" href="https://doge1024.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-168992336-1"></script>
@@ -24,86 +37,85 @@
 使用下面三个命令可以创建一个简单的ReactNative程序，并在iOS模拟器上运行 （无论是运行在安卓还是iOS模拟器上，都需要在开启模拟器的情况下运行程序）
 react-nativ..." />
     <meta name="keywords" content="" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://doge1024.github.io">
-  <img class="avatar" src="https://doge1024.github.io/images/avatar.png?v=1591802401926" alt="">
-  </a>
-  <h1 class="site-title">
-    doge1024
-  </h1>
-  <p class="site-description">
-    坚持就是胜利
-  </p>
-  <div class="menu-container">
-    
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://doge1024.github.io">
+        <img src="https://doge1024.github.io/images/avatar.png?v=1591802857487" class="site-logo">
+        <h1 class="site-title">doge1024</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
       
-        <a href="/" class="menu">
-          首页
-        </a>
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
       
-    
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
       
-        <a href="/archives" class="menu">
-          归档
-        </a>
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
       
-    
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
       
-        <a href="/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="/post/about" class="menu">
-          关于
-        </a>
-      
-    
+    </div>
   </div>
-  <div class="social-container">
-    
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
       
-        <a href="https://www.jianshu.com/u/a0e2f8047033" target="_blank">
-          <i class="ri-github-line"></i>
-        </a>
+        
+          <a class="social-link" href="https://www.jianshu.com/u/a0e2f8047033" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
       
-    
+        
       
-    
+        
       
-    
+        
       
-    
+        
       
-    
+    </div>
+    <div class="site-description">
+      坚持就是胜利
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
   </div>
 </div>
 
-        <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              ReactNative入坑: iOS原生项目集成ReactNavite(二)
-            </h2>
-            <div class="post-info">
-              <span>
-                2020-06-10
-              </span>
-              <span>
-                9 min read
-              </span>
-              
-            </div>
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">ReactNative入坑: iOS原生项目集成ReactNavite(二)</h2>
+            <div class="post-date">2020-06-10</div>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <h2 id="创建一个简单的reactnative-程序">** 创建一个简单的ReactNative 程序 **</h2>
+            <div class="post-content" v-pre>
+              <h2 id="创建一个简单的reactnative-程序">** 创建一个简单的ReactNative 程序 **</h2>
 <p>使用下面三个命令可以创建一个简单的ReactNative程序，并在iOS模拟器上运行 （无论是运行在安卓还是iOS模拟器上，都需要在开启模拟器的情况下运行程序）</p>
 <pre><code>react-native init AwesomeProject
 cd AwesomeProject
@@ -340,130 +352,79 @@ Unhandled JS Exception: Cannot read property 'string' of undefined就是报错�
 <a href="https://www.jianshu.com/p/ca199a7a0870">ReactNative入坑: codepush热更新(四)</a><br>
 <a href="https://www.jianshu.com/p/7d3bf876cbd0">ReactNative入坑: 一些常用控件的使用(五)</a></p>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84reactnative-%E7%A8%8B%E5%BA%8F">** 创建一个简单的ReactNative 程序 **</a></li>
-<li><a href="#%E9%82%A3%E4%B9%88%E5%A6%82%E4%BD%95%E5%B0%86reactnative%E7%9A%84%E7%95%8C%E9%9D%A2%E5%B5%8C%E5%85%A5%E5%88%B0ios%E7%A8%8B%E5%BA%8F%E4%B8%AD%E9%82%A3">** 那么如何将ReactNative的界面嵌入到iOS程序中那？**</a></li>
-<li><a href="#ios%E6%89%93%E5%8C%85react-native%E8%B5%84%E6%BA%90">** iOS打包React Native资源 **</a>
-<ul>
-<li><a href="#%E5%B0%86reactnative-%E5%B5%8C%E5%85%A5ios-%E4%B8%AD%E6%97%B6%E4%BC%9A%E7%A2%B0%E5%88%B0%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98">** 将ReactNative 嵌入iOS 中时，会碰到一些问题 **</a><br>
-*
-<ul>
-<li><a href="#1-%E4%B8%8D%E7%9F%A5%E9%81%93%E9%9C%80%E8%A6%81pod%E9%87%8C%E7%9A%84react%E7%9A%84subspecs%E5%A1%AB%E5%93%AA%E4%BA%9B">1. 不知道需要Pod里的React的subspecs填哪些？</a></li>
-<li><a href="#2-%E6%9B%B4%E6%96%B0pod-%E5%87%BA%E7%8E%B0-yoga-%E4%BE%9D%E8%B5%96%E9%94%99%E8%AF%AF">2. 更新pod 出现 Yoga 依赖错误</a></li>
-<li><a href="#3-%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F%E5%87%BA%E7%8E%B0-native-module-cannot-be-null">3. 运行程序出现 Native module cannot be null</a></li>
-<li><a href="#4-%E7%BC%96%E8%AF%91%E5%87%BA%E7%8E%B0-jschelpersjavascriptcoreh-file-not-found-%EF%B8%8F">4. 编译出现 jschelpers/JavaScriptCore.h file not found ❗️</a></li>
-<li><a href="#5-%E5%87%BA%E7%8E%B0-error-bundling-unabletoresolveerror-unable-to-resolve-module-accessibilityinfo">5. 出现 error: bundling: UnableToResolveError: Unable to resolve module <code>AccessibilityInfo</code></a></li>
-<li><a href="#6-%E5%87%BA%E7%8E%B0-unhandled-js-exception-cannot-read-property-string-of-undefined">6. 出现 <code>Unhandled JS Exception: Cannot read property 'string' of undefined</code></a><br>
-*
-<ul>
-<li><a href="#%E5%85%B6%E4%BB%96%E6%96%87%E7%AB%A0">其他文章</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-              </div>
             </div>
-          </article>
-        </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://doge1024.github.io/reactnative-ru-keng-reactnative-ru-men-yi/">
+                  <h3 class="post-title">
+                    ReactNative入坑: ReactNative入门(一)
+                  </h3>
+                </a>
+              </div>
+            
 
-        
-          <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://doge1024.github.io/reactnative-ru-keng-reactnative-ru-men-yi/">
-              <h3 class="post-title">
-                ReactNative入坑: ReactNative入门(一)
-              </h3>
-            </a>
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
           </div>
-        
 
-        
-          
-            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-
-<div id="gitalk-container"></div>
-
-<script>
-
-  var gitalk = new Gitalk({
-    clientID: 'a715661b0132eeaa2cd2',
-    clientSecret: '295e4b923ab920b2079b423d2dbac18f535418fe',
-    repo: 'doge1024.github.io',
-    owner: 'doge1024',
-    admin: ['doge1024'],
-    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: false  // Facebook-like distraction free mode
-  })
-
-  gitalk.render('gitalk-container')
-
-</script>
-
-          
-
-          
-        
-
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
+        </div>
       </div>
     </div>
 
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
-      hljs.initHighlightingOnLoad()
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+      var gitalk = new Gitalk({
+        clientID: 'a715661b0132eeaa2cd2',
+        clientSecret: '295e4b923ab920b2079b423d2dbac18f535418fe',
+        repo: 'doge1024.github.io',
+        owner: 'doge1024',
+        admin: ['doge1024'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
 
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
-
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
-
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
+      gitalk.render('gitalk-container')
 
     </script>
+  
+
+  
+
+
+
+
   </body>
 </html>
