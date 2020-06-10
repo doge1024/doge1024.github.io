@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>ReactNative入坑: react-navigation库(三) | doge1024</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591801849520">
+<link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="源起
+既然使用RN，跨平台必不可少，iOS 和 Android 在NavigationBar 和TabBar 方面的展示逻辑不太一样，使用RN自己的库会有写两套代码的问题。
+react-navigation在github上有五千多的Star..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://doge1024.github.io">
+        <img src="https://doge1024.github.io/images/avatar.png?v=1591801849520" class="site-logo">
+        <h1 class="site-title">doge1024</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      坚持就是胜利
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">ReactNative入坑: react-navigation库(三)</h2>
+            <div class="post-date">2020-06-10</div>
+            
+            <div class="post-content" v-pre>
+              <h4 id="源起">源起</h4>
+<p>既然使用RN，跨平台必不可少，iOS 和 Android 在NavigationBar 和TabBar 方面的展示逻辑不太一样，使用RN自己的库会有写两套代码的问题。<br>
+react-navigation在github上有五千多的Star✨，成了我们第一选择。<br>
+暂时只用到navigationBar，所以写一下自己碰到的问题，后续会继续更新</p>
+<h4 id="react-navigation">react-navigation</h4>
+<p><a href="https://github.com/react-community/react-navigation">react-navigation</a> 的逻辑大概是自己实现了一套NavigationBar 和TabBar 的UI和动画，效果基本跟原生一样，可以根据不同平台展示不同的样式</p>
+<h5 id="1-react-navigation-自定义返回按钮">1. react-navigation-&gt;自定义返回按钮</h5>
+<p>StackNavigator的第二个参数可以传入一些通用的自定义配置，通过自定义一个按钮代替库里自己的返回控件</p>
+<figure data-type="image" tabindex="1"><img src="http://upload-images.jianshu.io/upload_images/1300265-c54675e01186aab8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="效果图.png" loading="lazy"></figure>
+<pre><code>// NavigationCustomBackMenu为自定义按钮
+const navigationConfig = {
+    navigationOptions: ({navigation}) =&gt; ({
+        headerLeft: &lt;NavigationCustomBackMenu nav = {navigation} /&gt;,
+    })
+};
+const app = StackNavigator({
+    Home: {
+        screen: Home
+        },
+}, navigationConfig);
+</code></pre>
+<p>NavigationCustomBackMenu的源码如下：</p>
+<pre><code>import React from 'react';
+import { StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
+
+export default class NavigationCustomBackMenu extends React.Component {
+
+    render() {
+        return (
+            &lt;TouchableOpacity
+                onPress={()=&gt;{
+                    this.props.nav.goBack()
+                }}
+            &gt;
+                &lt;Image style={styles.image} source={require('../../img/navigation/nav_back.png')} &gt;&lt;/Image&gt;
+            &lt;/TouchableOpacity&gt;
+        );
+    }
+}
+
+const styles = StyleSheet.create({
+    image: {
+        left: 13,
+    },
+});
+</code></pre>
+<p>但是这样搞了以后，因为是通用配置，导航的栈顶控制器的导航栏上也会有一个返回按钮，但是这个按钮不应该存在，所以还要再自定义一下栈顶控制器的返回按钮</p>
+<pre><code>const app = StackNavigator({
+    Home: {
+        screen: Home,
+        navigationOptions: ({navigation}) =&gt; ({
+            headerLeft: null,
+        })},
+    Next: {screen: NextView}
+}, navigationConfig);
+</code></pre>
+<p>这样就是最终效果了，Home位于栈顶，不会有返回按钮，，跳转到Next的时候，Next的左上角会有个返回按钮</p>
+<h5 id="2-react-navigation-自定义导航栏颜色">2. react-navigation-&gt;自定义导航栏颜色</h5>
+<h6 id="单独修改某一screen的导航栏颜色">单独修改某一Screen的导航栏颜色</h6>
+<pre><code>// （在某一Screen 内部设置）
+static navigationOptions = { 
+    title: 'Home', 
+    headerStyle: {
+         backgroundColor : 'white',
+    }
+};
+</code></pre>
+<h6 id="统一定制所有screen的导航栏颜色">统一定制所有Screen的导航栏颜色</h6>
+<pre><code>
+const navigationConfig = {
+    navigationOptions: ({navigation}) =&gt; ({
+        headerLeft: &lt;NavigationCustomBackMenu nav = {navigation} /&gt;,
+        headerStyle: {
+            backgroundColor : 'red', // 定制所有导航栏的颜色
+        }
+    }),
+};
+
+const app = StackNavigator({
+    Home: {
+        screen: Home,
+        navigationOptions: ({navigation}) =&gt; ({
+            headerLeft: null,
+        })},
+    Next: {screen: NextView}
+}, navigationConfig);
+</code></pre>
+<h5 id="3-react-navigation-拦截导航事件">3. react-navigation-&gt;拦截导航事件</h5>
+<p>代码：</p>
+<pre><code>// 创建StackNavigator
+const app = StackNavigator({
+    Home: {
+        screen: Home,
+        navigationOptions: ({navigation}) =&gt; ({
+            headerLeft: null,
+        })},
+    Next: {screen: NextView}
+}, navigationConfig);
+const defaultGetStateForAction = app.router.getStateForAction;
+app.router.getStateForAction = (action, state) =&gt; {
+    // 所有的导航事件都会走这里，可以定制一些东西，
+    // 比如我的需求，某一个TabBar的控制器集成的RN, 点击跳转到下一页的时候，需要隐藏TabBar
+    // action 是跳转动作，state是当前StackNavigator的状态
+    console.log(action);
+    console.log(state);
+    return defaultGetStateForAction(action, state);
+};
+</code></pre>
+<blockquote>
+<h6 id="其他文章">其他文章</h6>
+</blockquote>
+<p><a href="http://www.jianshu.com/p/c8550af92886">ReactNative入坑: ReactNative入门(一)</a><br>
+<a href="http://www.jianshu.com/p/af0ac940a01d">ReactNative入坑: iOS原生项目集成ReactNavite(二)</a><br>
+<a href="http://www.jianshu.com/p/27342c26f827">ReactNative入坑: react-navigation库(三)</a></p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://doge1024.github.io/post/reactnative-ru-keng-ios-yuan-sheng-xiang-mu-ji-cheng-reactnaviteer/">
+                  <h3 class="post-title">
+                    ReactNative入坑: iOS原生项目集成ReactNavite(二)
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>flutter 入坑问题收集(更新中) | doge1024</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591801849520">
+<link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="
+
+💖字符号不显示
+
+You need to set uses-material-design: true in pubspec.yaml for the icons to be included in the app. stackove..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://doge1024.github.io">
+        <img src="https://doge1024.github.io/images/avatar.png?v=1591801849520" class="site-logo">
+        <h1 class="site-title">doge1024</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      坚持就是胜利
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">flutter 入坑问题收集(更新中)</h2>
+            <div class="post-date">2020-06-10</div>
+            
+            <div class="post-content" v-pre>
+              <ol>
+<li>
+<p>💖字符号不显示</p>
+<ol>
+<li>You need to set uses-material-design: true in pubspec.yaml for the icons to be included in the app. <a href="https://stackoverflow.com/questions/50786982/flutter-icons-do-not-show">stackoverflow</a></li>
+</ol>
+</li>
+<li>
+<p>执行更新库：packages get 命令，会卡住，一直lock状态</p>
+<ol>
+<li>找到自己的flutter的路径</li>
+<li>删除cache中的lockfile <code>rm /Users/xxx/development/flutter/bin/cache/lockfile</code></li>
+</ol>
+</li>
+</ol>
+<pre><code>Waiting for another flutter command to release the startup lock...
+</code></pre>
+<ol start="3">
+<li>
+<p>打开安卓模拟器提示 <code>Broken AVD system path. Check your ANDROID_SDK_ROOT value</code></p>
+<p>原因是 <code>ANDROID_HOME</code> 和 <code>ANDROID_SDK_ROOT</code> 配置的不对<br>
+在Android studio找到：File/Other Settings/Default Project Structure...<br>
+里面会有 Android sdk location, 此路径才是<code>ANDROID_HOME</code>的路径，将<code>ANDROID_HOME</code> 和 <code>ANDROID_SDK_ROOT</code>更新为此目录就可以了</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://upload-images.jianshu.io/upload_images/1300265-884d8a870c001517.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png" loading="lazy"></figure>
+<pre><code>4. flutter使用墙内加速
+</code></pre>
+<p>原文链接 ：https://flutter.dev/community/china</p>
+<pre><code>export PUB_HOSTED_URL=https://pub.flutter-io.cn
+export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+</code></pre>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://doge1024.github.io/post/ios-electra-yue-yu-hou-tweakinject-bu-jia-zai-cha-jian-de-wen-ti/">
+                  <h3 class="post-title">
+                    iOS electra 越狱后 TweakInject 不加载插件的问题
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

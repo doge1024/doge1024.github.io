@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>iOS 自定义导航栏滑动返回取消后出现三个小点(标题栏错乱)解决方案 | doge1024</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591801849520">
+<link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="同事发现在iOS10系统操作滑动返回，然后半路取消后，导航栏会多出三个小点
+
+解决方法：
+在 viewWillAppear: 方法里面加上几行代码，将title置为空字符串：
+- (void)viewWillAppear:(BOOL)ani..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://doge1024.github.io">
+        <img src="https://doge1024.github.io/images/avatar.png?v=1591801849520" class="site-logo">
+        <h1 class="site-title">doge1024</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      坚持就是胜利
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">iOS 自定义导航栏滑动返回取消后出现三个小点(标题栏错乱)解决方案</h2>
+            <div class="post-date">2020-06-10</div>
+            
+            <div class="post-content" v-pre>
+              <p>同事发现在iOS10系统操作滑动返回，然后半路取消后，导航栏会多出三个小点<br>
+<img src="https://upload-images.jianshu.io/upload_images/1300265-05e290b695fb7c13.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png" loading="lazy"></p>
+<h3 id="解决方法">解决方法：</h3>
+<p>在 <code>viewWillAppear:</code> 方法里面加上几行代码，将title置为空字符串：</p>
+<pre><code>- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.hidesBackButton = YES;
+    } else {
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@&quot;&quot; style:UIBarButtonItemStylePlain target:nil action:nil];
+        self.navigationItem.hidesBackButton = YES;
+    }
+}
+
+</code></pre>
+<h3 id="原因探究">原因探究：</h3>
+<p>查看了下图层，明显就是系统默认的返回按钮么：<br>
+<code>UINavigationBar</code> -&gt; <code>UINavigationItemButtonView</code> -&gt; <code>UILabel</code><br>
+<img src="https://upload-images.jianshu.io/upload_images/1300265-8155fe421ee9a1f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/920" alt="image.png" loading="lazy"></p>
+<p>看到<code>backBarButtonItem</code>(<code>UINavigationItemButtonView</code>) 的宽高都是0，那三个点就是内部的UILabel造成的，因为宽高不够所以显示了... ，这个label的字是系统自动取的上个控制器的title，所以不使用系统自己创建的<code>backBarButtonItem</code>, 自己创建一个没有title的就可以了</p>
+<p>#####有些文章里面写的是直接判断<code>UINavigationItemButtonView</code> 的class类型然后粗暴的隐藏掉，感觉不是最好的解决方法</p>
+<blockquote>
+<p>知识点：</p>
+<ol>
+<li>当前控制器展示的backBarButtonItem，是上个控制器的；所以看到上面的label展示的是&lt;密码管理&gt;, 这是堆栈中&lt;修改登录密码&gt;的上个页面</li>
+<li>customView在<code>backBarButtonItem</code>中是不生效的</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>系统的注释：当此属性为nil时，导航项使用其title属性中的值创建适当的后退按钮。<br>
+<img src="https://upload-images.jianshu.io/upload_images/1300265-1a27ae5fc3ffc001.png?imageMogr2/auto-orient/strip%7CimageView2/2/h/540" alt="image.png" loading="lazy"></p>
+</blockquote>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://doge1024.github.io/post/xcode100-beta-yun-xing-xiang-mu-chu-cuo/">
+                  <h3 class="post-title">
+                    Xcode10.0 beta运行项目出错
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

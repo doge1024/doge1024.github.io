@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>ReactNative入坑: iOS原生项目集成ReactNavite(二) | doge1024</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591801849520">
+<link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="** 创建一个简单的ReactNative 程序 **
+使用下面三个命令可以创建一个简单的ReactNative程序，并在iOS模拟器上运行 （无论是运行在安卓还是iOS模拟器上，都需要在开启模拟器的情况下运行程序）
+react-nativ..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://doge1024.github.io">
+        <img src="https://doge1024.github.io/images/avatar.png?v=1591801849520" class="site-logo">
+        <h1 class="site-title">doge1024</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      坚持就是胜利
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">ReactNative入坑: iOS原生项目集成ReactNavite(二)</h2>
+            <div class="post-date">2020-06-10</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="创建一个简单的reactnative-程序">** 创建一个简单的ReactNative 程序 **</h2>
+<p>使用下面三个命令可以创建一个简单的ReactNative程序，并在iOS模拟器上运行 （无论是运行在安卓还是iOS模拟器上，都需要在开启模拟器的情况下运行程序）</p>
+<pre><code>react-native init AwesomeProject
+cd AwesomeProject
+react-native run-ios
+</code></pre>
+<h2 id="那么如何将reactnative的界面嵌入到ios程序中那">** 那么如何将ReactNative的界面嵌入到iOS程序中那？**</h2>
+<ol>
+<li>首先将新创建的 AwesomeProject 程序目录下的 <code>package.json</code> 和 <code>index.ios.js</code> 文件拷贝自己的原生程序目录下面 (自己新建目录统一放置也可以)</li>
+<li>在命令行 切换到 <code>package.json</code> 所在的目录，并执行<br>
+<code>sudo npm install</code> 输入密码后回车，等待执行成功</li>
+<li>在Podfile中加入</li>
+</ol>
+<pre><code>pod 'Yoga',  :path =&gt; './node_modules/react-native/ReactCommon/yoga'
+pod 'React', :path =&gt; './node_modules/react-native', :subspecs =&gt; [
+        'Core',
+        'BatchedBridge',
+        'DevSupport',
+        'ART',
+        'RCTActionSheet',
+        'RCTAnimation',
+        'RCTImage',
+        'RCTNetwork',
+        'RCTText',
+        'RCTWebSocket',
+        'RCTLinkingIOS',
+]
+# 这是一份基础的添加库列表，其他如有需要继续添加
+</code></pre>
+<ol start="4">
+<li>执行 <code>pod update --verbose</code> 等待更新成功</li>
+</ol>
+<p>好的，已经将关于RN的准备工作做完了，下面还要对原生程序进行一点小改造：</p>
+<ul>
+<li>a. 设置程序Info.plist文件中的 <code>App Transport Security Settings</code><br>
+确保http协议可以正常通信<br>
+<img src="http://upload-images.jianshu.io/upload_images/1300265-09a352975da308d5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1024" alt="Paste_Image.png" loading="lazy"></li>
+<li>b. 在程序中添加：</li>
+</ul>
+<pre><code>    // ----------第一种方式----------
+    #import &lt;React/RCTRootView.h&gt;
+    NSString * strUrl = @&quot;http://localhost:8081/index.ios.bundle?platform=ios&quot;;
+    NSURL * jsCodeLocation = [NSURL URLWithString:strUrl];
+    
+    RCTRootView * rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                         moduleName:@&quot;AwesomeProject&quot;
+                                                  initialProperties:nil
+                                                      launchOptions:nil];
+    rootView.frame = self.view.bounds;
+    [self.view addSubview:rootView];
+    
+    // ----------第二种方式----------
+    #import &lt;React/RCTRootView.h&gt;
+    #import &lt;React/RCTBundleURLProvider.h&gt;
+    [[RCTBundleURLProvider sharedSettings] setEnableDev:YES];
+    NSURL *jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@&quot;index.ios&quot; fallbackResource:nil];
+    RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                        moduleName:@&quot;AwesomeProject&quot;
+                                                 initialProperties:nil
+                                                     launchOptions:nil];
+    rootView.frame = self.view.bounds;
+    [self.view addSubview:rootView];
+</code></pre>
+<ul>
+<li>c.  运行Packager：<br>
+跳转到包含<code>node_module</code>目录的文件夹，运行<br>
+<code>npm start</code> or <code>react-native start</code> （两个命令都可以）<br>
+命令行出现 ：** <code>Loading dependency graph, done.</code>** 即表示本地服务已成功开启</li>
+</ul>
+<blockquote>
+<ol>
+<li>如果忘记这一步会出现：Could not connect to development server</li>
+</ol>
+</blockquote>
+<ol start="2">
+<li>如果出现 <code>Packager can't listen on port 8081</code><br>
+<code>Most likely another process is already using this port</code> 或端口被占用之类的，多半是其他命令窗口已经Start服务了，检查下，找到后 <code>control + C</code> 关闭它</li>
+<li>此提示是基于以下版本，如果版本不同可能会提示不一样<br>
+<code>react-native-cli: 2.0.1</code><br>
+<code>react-native: 0.42.3</code></li>
+</ol>
+<ul>
+<li>d. 在Xcode <code>com</code>+<code>R</code> 运行项目</li>
+</ul>
+<blockquote>
+<p>请确保** cocoapods版本在1.2.0以上 ** 否则可能会出现 找不到头文件 的错误<br>
+查看cocoapods版本，在命令行执行 <code>pod --version</code></p>
+</blockquote>
+<hr>
+<h2 id="ios打包react-native资源">** iOS打包React Native资源 **</h2>
+<p>在正式测试打包的时候，就需要将RN的资源进行打包成离线资源，放到项目中，使项目在其他机器上也能正常运行<br>
+React Native的 <code>react-native bundle</code> 命令是用来进行打包的命令，<br>
+其中我们常使用的一些命令选项：</p>
+<ul>
+<li>--entry-file ,ios或者android入口的js名称，比如<code>index.ios.js</code></li>
+<li>--platform ,平台名称(ios或者android)</li>
+<li>--dev ,设置为false的时候将会对JavaScript代码进行优化处理。</li>
+<li>--bundle-output, 生成的jsbundle文件的名称，比如<code>./ios/bundle/index.ios.jsbundle</code></li>
+<li>--assets-dest 图片以及其他资源存放的目录,比如<code>./react-native/image</code></li>
+</ul>
+<p>** 打包的命令：**<br>
+<code>react-native bundle --entry-file index.ios.js --platform ios --dev false --bundle-output ./bundles/index.ios.jsbundle --assets-dest ./bundles</code><br>
+** 正式打包时候的代码：**</p>
+<pre><code>    NSURL * jsCodeLocation = [[NSBundle mainBundle] URLForResource:@&quot;index.ios&quot; withExtension:@&quot;jsbundle&quot;];
+    
+    RCTRootView * rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                         moduleName:@&quot;RNInit&quot;
+                                                  initialProperties:nil
+                                                      launchOptions:nil];
+</code></pre>
+<br>
+## ** iOS真机运行React Native **
+将刚才打包生成的bundles的文件夹，拖入iOS 工程，放到主工程下面
+<figure data-type="image" tabindex="1"><img src="http://upload-images.jianshu.io/upload_images/1300265-9e3d2bbb8388cb83.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/620" alt="image.png" loading="lazy"></figure>
+<p>iOS中导入bundle的路径需要改一下</p>
+<pre><code>    // #import &lt;React/RCTRootView.h&gt;
+    // #import &lt;React/RCTBundleURLProvider.h&gt;
+    NSURL *jsCodeLocation = [[NSBundle mainBundle] URLForResource:@&quot;index.ios&quot; withExtension:@&quot;jsbundle&quot; subdirectory:@&quot;bundles&quot;];
+    RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                        moduleName:@&quot;AwesomeProject&quot;
+                                                 initialProperties:nil
+                                                     launchOptions:nil];
+    rootView.frame = self.view.bounds;
+    [self.view addSubview:rootView];
+</code></pre>
+<p>index.ios.js 中的代码也需要改一下，才能将图片的路径搞对，不然会出现本地图片不显示的问题</p>
+<pre><code>import { AppRegistry } from 'react-native';
+import App from './js/yourapp';
+import { Platform } from 'react-native';
+import { setCustomSourceTransformer } from 'react-native/Libraries/Image/resolveAssetSource';
+
+// 更改一下图片的查找方法，以便在真机能正确查找路径
+setCustomSourceTransformer(function (resolver) {
+    if (Platform.OS === 'ios'
+        &amp;&amp; !resolver.serverUrl
+        &amp;&amp; !resolver.bundlePath
+        &amp;&amp; resolver.asset.type === 'png') {
+        resolver.bundlePath = 'bundles/';
+    }
+    return resolver.defaultAsset();
+});
+
+AppRegistry.registerComponent('test', () =&gt; App);
+</code></pre>
+<br>
+## ** iOS真机实时调试React Native **
+在调试的时候，我比较习惯使用真机运行查看，介绍下如何在真机调试React Native：
+>在项目中加入一个名字为ip.txt的文件，将自己电脑的ip地址写入文件，占用1行，记得加入target中
+剩下的和使用模拟器一样的步骤启动，npm start
+正常运行项目，即可
+<br>
+<hr>
+<h3 id="将reactnative-嵌入ios-中时会碰到一些问题">** 将ReactNative 嵌入iOS 中时，会碰到一些问题 **</h3>
+<h5 id="1-不知道需要pod里的react的subspecs填哪些">1. 不知道需要Pod里的React的subspecs填哪些？</h5>
+<p>可以去打开 <code>./node_modules/react-native/React.podspec</code> 这个文件里面有React的subspecs 的全部声明</p>
+<h5 id="2-更新pod-出现-yoga-依赖错误">2. 更新pod 出现 Yoga 依赖错误</h5>
+<p>类似于这种 <code>Yoga (= 0.42.3.React) required by React/Core (0.42.3)</code></p>
+<p>详细错误：</p>
+<pre><code>[!] Unable to satisfy the following requirements:
+
+- `Yoga (= 0.42.3.React)` required by `React/Core (0.42.3)`
+
+None of your spec sources contain a spec satisfying the dependency: `Yoga (= 0.42.3.React)`.
+
+You have either:
+ * out-of-date source repos which you can update with `pod repo update`.
+ * mistyped the name or version.
+ * not added the source repo that hosts the Podspec to your Podfile.
+
+Note: as of CocoaPods 1.0, `pod repo update` does not happen on `pod install` by default.
+</code></pre>
+<p>解决方法：<br>
+在Podfile文件加上<br>
+<code>pod 'Yoga', :path =&gt; './node_modules/react-native/ReactCommon/yoga'</code><br>
+路径中的<code>./node_modules</code>需要替换为自己项目中的<code>node_modules</code>目录路径</p>
+<h4 id="3-运行程序出现-native-module-cannot-be-null">3. 运行程序出现 Native module cannot be null</h4>
+<p>第一次将RN嵌入到iOS中后，运行程序出现 Native module cannot be null</p>
+<figure data-type="image" tabindex="2"><img src="http://upload-images.jianshu.io/upload_images/1300265-c6977233a0001a4e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/320" alt="Paste_Image.png" loading="lazy"></figure>
+<p>解决方法：<br>
+出现上述错误，是因为少引入了一个部件 <code>RCTNetwork</code> ，将 <code>RCTNetwork</code> 加入到 <code>React</code> 的 <code>subspecs</code> 中。<br>
+以下是三个基础部件，如果需要其他 <code>subspecs</code> 自己继续往下加就好了</p>
+<pre><code>pod 'React', :path =&gt; './node_modules/react-native', :subspecs =&gt; [
+        'Core',
+        'BatchedBridge',
+        'DevSupport',
+        'ART',
+        'RCTActionSheet',
+        'RCTAnimation',
+        'RCTImage',
+        'RCTNetwork',
+        'RCTText',
+        'RCTWebSocket',
+        'RCTLinkingIOS',
+]
+# 这是一份基础的添加库列表
+</code></pre>
+<p><a href="https://github.com/facebook/react-native/issues/8449"></a></p>
+<h4 id="4-编译出现-jschelpersjavascriptcoreh-file-not-found-️">4. 编译出现 jschelpers/JavaScriptCore.h file not found ❗️</h4>
+<p>第一个可能的问题：cocoapods版本低于1.2.0，去网上查找升级cocoapods的方法解决<br>
+第二个可能的问题：0.45 版本以后 React缺少依赖，更新Podfile解决</p>
+<pre><code>pod 'Yoga',  :path =&gt; '../node_modules/react-native/ReactCommon/yoga'
+pod 'React', :path =&gt; '../node_modules/react-native', :subspecs =&gt; [
+         'Core',
+         'BatchedBridge', # 0.45 版本以后需要添加
+         'RCTText',
+         'RCTWebSocket',
+         'RCTNetwork',
+    ]
+</code></pre>
+<p>(真的坑啊。。。)</p>
+<h4 id="5-出现-error-bundling-unabletoresolveerror-unable-to-resolve-module-accessibilityinfo">5. 出现 error: bundling: UnableToResolveError: Unable to resolve module <code>AccessibilityInfo</code></h4>
+<p>详细信息：</p>
+<pre><code>error: bundling: UnableToResolveError: Unable to resolve module `AccessibilityInfo` from `/Users/Test/Desktop/cardloan_react/node_modules/react-native/Libraries/react-native/react-native-implementation.js`: Module does not exist in the module map or in these directories:
+  /Users/Test/Desktop/cardloan_react/node_modules/react-native/node_modules
+,   /Users/Test/Desktop/cardloan_react/node_modules
+</code></pre>
+<p>解决办法：<br>
+调用<code>npm start -- --reset-cache</code> 重新开启服务，重新运行解决<br>
+<br></p>
+<h4 id="6-出现-unhandled-js-exception-cannot-read-property-string-of-undefined">6. 出现 <code>Unhandled JS Exception: Cannot read property 'string' of undefined</code></h4>
+<p>报错到系统的js文件：<br>
+Unhandled JS Exception: Cannot read property 'string' of undefined就是报错到系统的 <code>React.PropTypes.string</code><br>
+遇到这种情况，你需要在js文件夹下执行下 <code>npm list</code> 如果过出现 <code>ERR</code> 就表明是依赖库错误，需要删除 <code>node_modules</code> 重新 <code>install</code> 一下</p>
+<br>
+** 注意 **： 本文描述中出现的 `./node_modules/react-native` 记得替换成自己项目中的 `node_modules` 目录的路径
+** Tips **：
+`./ 为当前文件所在的文件夹`
+`../ 为当前文件所在的文件夹的上级文件夹`
+<blockquote>
+<h6 id="其他文章">其他文章</h6>
+</blockquote>
+<p><a href="http://www.jianshu.com/p/c8550af92886">ReactNative入坑: ReactNative入门(一)</a><br>
+<a href="http://www.jianshu.com/p/af0ac940a01d">ReactNative入坑: iOS原生项目集成ReactNavite(二)</a><br>
+<a href="http://www.jianshu.com/p/27342c26f827">ReactNative入坑: react-navigation库(三)</a><br>
+<a href="https://www.jianshu.com/p/ca199a7a0870">ReactNative入坑: codepush热更新(四)</a><br>
+<a href="https://www.jianshu.com/p/7d3bf876cbd0">ReactNative入坑: 一些常用控件的使用(五)</a></p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://doge1024.github.io/post/reactnative-ru-keng-reactnative-ru-men-yi/">
+                  <h3 class="post-title">
+                    ReactNative入坑: ReactNative入门(一)
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

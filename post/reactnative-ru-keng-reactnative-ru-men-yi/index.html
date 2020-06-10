@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>ReactNative入坑: ReactNative入门(一) | doge1024</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591801849520">
+<link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="初识React Native
+
+React Native (简称RN)是Facebook于2015年4月开源的跨平台移动应用开发框架，是Facebook早先开源的UI框架 React 在原生移动应用平台的衍生产物，目前支持iOS和安卓两大平..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://doge1024.github.io">
+        <img src="https://doge1024.github.io/images/avatar.png?v=1591801849520" class="site-logo">
+        <h1 class="site-title">doge1024</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      坚持就是胜利
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">ReactNative入坑: ReactNative入门(一)</h2>
+            <div class="post-date">2020-06-10</div>
+            
+            <div class="post-content" v-pre>
+              <h3 id="初识react-native">初识React Native</h3>
+<blockquote>
+<p>React Native (简称RN)是Facebook于2015年4月开源的跨平台移动应用开发框架，是Facebook早先开源的UI框架 React 在原生移动应用平台的衍生产物，目前支持iOS和安卓两大平台。RN使用Javascript语言，类似于HTML的JSX，以及CSS来开发移动应用，因此熟悉Web前端开发的技术人员只需很少的学习就可以进入移动应用开发领域。(百度百科)</p>
+</blockquote>
+<p>作为一个iOS开发人员的一些小看法：</p>
+<ol>
+<li><s>React Native的学习还是有点麻烦的，需要先学习JS、Html、ES6语法，然后可以接触React Native的开发了</s><br>
+React Native的学习还是有点麻烦的，需要先学习JS、Html、ES6语法、React 然后可以接触React Native的开发了 (当然直接跳过也是可以的，反正最后还会回来查 😂)</li>
+<li>如果使用React Native，作为主力开发可以开发一些动画效果不多，列表展示不多的App。或者当做组件开发一些两端通用的界面</li>
+<li>JS和原生的交互是异步的，一些交互通信比较麻烦，一些组件联动效果不好实现</li>
+<li>React Native仍然不完善，文档还不全，虽然Facebook推的力度不大，但是国内对这块需求比较高，对前景看好</li>
+</ol>
+<h3 id="工欲善其事必先利其器">工欲善其事，必先利其器</h3>
+<h4 id="开发环境搭建">开发环境搭建</h4>
+<p>RN的版本差异较大，下面的工具做好全部安装最新的，否则新旧版本之间的配合，可能出现始料不及的问题</p>
+<h6 id="安装node">安装Node</h6>
+<p>运行<code>brew install node</code> 使用Homebrew来安装<a href="https://nodejs.org/">Node.js</a> , 安装最新的就好</p>
+<p>安装完node后建议设置npm镜像以加速后面的过程（或使用科学上网工具）。注意：不要使用cnpm！cnpm安装的模块路径比较奇怪，packager不能正常识别！<br>
+<code>npm config set registry https://registry.npm.taobao.org --global</code><br>
+<code>npm config set disturl https://npm.taobao.org/dist --global</code></p>
+<h6 id="yarn-react-native的命令行工具">Yarn、React Native的命令行工具</h6>
+<p><a href="http://yarnpkg.com/">Yarn</a>是Facebook提供的替代npm的工具，可以加速node模块的下载。React Native的命令行工具用于执行创建、初始化、更新项目、运行打包服务（packager）等任务。<br>
+<code>npm install -g yarn react-native-cli</code></p>
+<p>安装完yarn后同理也要设置镜像源：<br>
+<code>yarn config set registry https://registry.npm.taobao.org --global</code><br>
+<code>yarn config set disturl https://npm.taobao.org/dist --global</code></p>
+<h4 id="开发reactnative自然需要编辑器">开发ReactNative自然需要编辑器</h4>
+<ol>
+<li>
+<h6 id="sublime-text-3">Sublime Text 3</h6>
+</li>
+</ol>
+<p><s>初始的练习，推荐Sublime Text 3，多敲下代码，练练手</s><br>
+首先在Sublime Text 安装 <a href="https://packagecontrol.io/installation">Package Control</a> 然后在Package Control 搜索安装插件<br>
+建议安装的插件:<br>
+<strong><a href="https://github.com/babel/babel-sublime">Babel</a></strong>：提供JSX的ES6语法格式和提示<br>
+<strong><a href="https://github.com/sergeche/emmet-sublime">Emmet</a></strong>：提供CSS和HTML的提示<br>
+<strong><a href="https://github.com/Shrugs/react-native-snippets">react-native-snippets</a></strong>：提供RN的代码片段<br>
+2. ###### WebStorm<br>
+实际开发的时候可以使用WebStorm 代码编写运行都非常方便， 调试嘛，不如atom方便 <a href="https://www.jetbrains.com/webstorm/">WebStorm下载</a><br>
+这里有两篇blog，讲如何设置WebStorm 便于开发ReactNative<br>
+<a href="https://blog.jetbrains.com/webstorm/2016/12/developing-mobile-apps-with-react-native-in-webstorm/">Developing mobile apps with React Native in WebStorm</a><br>
+<a href="https://blog.jetbrains.com/webstorm/2015/10/working-with-reactjs-in-webstorm-coding-assistance/">Working with ReactJS in WebStorm: Coding Assistance</a><br>
+3. ###### Atom<br>
+Atom是Facebook官方推荐的开发工具, <a href="https://nuclide.io/docs/quick-start/getting-started/">指导文章在这里</a>, Atom可以直接调试RN的代码，打断点Debug，这一点上还是比使用Chrome调试方便了很多<br>
+我最近开发的话也是使用的Atom</p>
+<br>   
+###### 其他文章
+ [ReactNative入坑: ReactNative入门(一)](http://www.jianshu.com/p/c8550af92886)
+[ReactNative入坑: iOS原生项目集成ReactNavite(二)](http://www.jianshu.com/p/af0ac940a01d)
+[ReactNative入坑: react-navigation库(三)](http://www.jianshu.com/p/27342c26f827)
+[ReactNative入坑: codepush热更新(四)](https://www.jianshu.com/p/ca199a7a0870)
+[ReactNative入坑: 一些常用控件的使用(五)](https://www.jianshu.com/p/7d3bf876cbd0)
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://doge1024.github.io/post/ios-gei-zi-fu-chuan-tian-jia-shan-chu-xian-xia-hua-xian-xiao-guo/">
+                  <h3 class="post-title">
+                    iOS给字符串添加删除线，下划线效果
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,255 +1,540 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>doge1024</title>
-<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591800995581">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+    <meta charset="utf-8" >
+
+<title>文章归档 | doge1024</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591801849520">
 <link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="doge1024 - Atom Feed" href="https://doge1024.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-168992336-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'UA-168992336-1');
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="坚持就是胜利">
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://doge1024.github.io">
+        <img src="https://doge1024.github.io/images/avatar.png?v=1591801849520" class="site-logo">
+        <h1 class="site-title">doge1024</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      坚持就是胜利
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          
+
+          <h2 class="archives-title">文章归档</h2>
+          <div class="archives-container">
+            
+              <h2 class="year" data-aos="fade-in" data-aos-delay="500">2020</h2>
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/webstorm-diao-shi-reactnative/">
+                      <h2 class="post-title">
+                        WebStorm调试ReactNative
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/codepush-fu-wu-bian-geng-lian-jie-bu-shang/">
+                      <h2 class="post-title">
+                        codepush服务变更，连接不上
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/xiao-mi-shou-ji-an-zhuang-linuxdeploy-peng-dao-de-wen-ti/">
+                      <h2 class="post-title">
+                        小米手机安装linuxdeploy碰到的问题
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/macos-1015-pip-an-zhuang-ku-shi-bai-ti-shi-ssl/">
+                      <h2 class="post-title">
+                        macOS 10.15 pip 安装库失败提示SSL
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/du-lesslessshi-jian-jian-shi-greatergreater-jie-shi-ni-wu-liao-shi-de-na-xie-xia-xiang/">
+                      <h2 class="post-title">
+                        读《时间简史》— 解释你无聊时的那些遐想
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/ios-jin-yong-hei-an-mo-shi/">
+                      <h2 class="post-title">
+                        iOS 禁用黑暗模式
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/macos-cun-chu-kong-jian-yue-lai-yue-shao-shan-wan-bu-zeng-jia-ke-yong-kong-jian/">
+                      <h2 class="post-title">
+                        macOS 存储空间越来越少, 删完不增加可用空间
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/flutter-ru-keng-wen-ti-shou-ji-geng-xin-zhong/">
+                      <h2 class="post-title">
+                        flutter 入坑问题收集(更新中)
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/ios-electra-yue-yu-hou-tweakinject-bu-jia-zai-cha-jian-de-wen-ti/">
+                      <h2 class="post-title">
+                        iOS electra 越狱后 TweakInject 不加载插件的问题
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/wkwebview-de-xing-neng-you-hua/">
+                      <h2 class="post-title">
+                        WKWebView 的性能优化
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/ios-zi-ding-yi-dao-hang-lan-hua-dong-fan-hui-qu-xiao-hou-chu-xian-san-ge-xiao-dian-biao-ti-lan-cuo-luan-jie-jue-fang-an/">
+                      <h2 class="post-title">
+                        iOS 自定义导航栏滑动返回取消后出现三个小点(标题栏错乱)解决方案
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/xcode100-beta-yun-xing-xiang-mu-chu-cuo/">
+                      <h2 class="post-title">
+                        Xcode10.0 beta运行项目出错
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/hei-ping-guo-sheng-ji-10134-yi-hou-usb30-bu-neng-shi-yong/">
+                      <h2 class="post-title">
+                        黑苹果升级10.13.4以后，usb3.0不能使用
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/reactnative-ru-keng-yi-xie-chang-yong-kong-jian-de-shi-yong-wu/">
+                      <h2 class="post-title">
+                        ReactNative入坑: 一些常用控件的使用(五)
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/hei-ping-guo-sheng-ji-1333-hou-xian-shi-qia-dun-yan-chi-jie-jue-ban-fa/">
+                      <h2 class="post-title">
+                        黑苹果升级13.3.3后，显示卡顿延迟解决办法
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/yue-yu-di-si-zhang-mian-yue-yu-qi-ye-wei-xin-qiang-hong-bao-gong-neng/">
+                      <h2 class="post-title">
+                        越狱第四章：免越狱企业微信抢红包功能
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/gua-pei-ios-11-yu-iphone-x/">
+                      <h2 class="post-title">
+                        适配iOS 11 与 iPhone X
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/reactnative-ru-keng-codepush-re-geng-xin-si/">
+                      <h2 class="post-title">
+                        ReactNative入坑: codepush热更新(四)
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/jie-jue-pod-lib-lintrepo-push-bu-zhi-chi-i386-bian-yi-andzhi-neng-zhen-ji-yun-xing-de-ku/">
+                      <h2 class="post-title">
+                        解决pod lib lint/repo push不支持i386编译&amp;只能真机运行的库
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/reactnative-ru-keng-react-navigation-ku-san/">
+                      <h2 class="post-title">
+                        ReactNative入坑: react-navigation库(三)
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/reactnative-ru-keng-ios-yuan-sheng-xiang-mu-ji-cheng-reactnaviteer/">
+                      <h2 class="post-title">
+                        ReactNative入坑: iOS原生项目集成ReactNavite(二)
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/reactnative-ru-keng-reactnative-ru-men-yi/">
+                      <h2 class="post-title">
+                        ReactNative入坑: ReactNative入门(一)
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/ios-gei-zi-fu-chuan-tian-jia-shan-chu-xian-xia-hua-xian-xiao-guo/">
+                      <h2 class="post-title">
+                        iOS给字符串添加删除线，下划线效果
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/ios-shi-yong-oclint-zuo-jing-tai-dai-ma-fen-xi/">
+                      <h2 class="post-title">
+                        iOS使用OCLint做静态代码分析
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/uibarbuttonitem-dian-ji-fan-wei-guo-da/">
+                      <h2 class="post-title">
+                        UIBarButtonItem点击范围过大
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/h5-ye-mian-bu-xiang-ying-webview-dai-li-fang-fa/">
+                      <h2 class="post-title">
+                        H5页面不响应WebView代理方法
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/ios8-wkwebview-zai-te-ding-qing-kuang-xia-de-beng-kui/">
+                      <h2 class="post-title">
+                        iOS8 WKWebView 在特定情况下的崩溃
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/viewlayermask-shu-xing-de-ying-yong-hua-yuan-jiao-hua-xin/">
+                      <h2 class="post-title">
+                        View.layer.mask属性的应用(画圆角，画心)
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/qiang-po-zheng-fu-yin-ios7-yi-shang-fang-bian-de-gai-bian-zhuang-tai-lan-yan-se/">
+                      <h2 class="post-title">
+                        强迫症福音！iOS7以上方便的改变状态栏颜色
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/jie-jue-charles-he-shadowsocks-chong-tu/">
+                      <h2 class="post-title">
+                        解决Charles和Shadowsocks冲突
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/masonry-zi-gua-ying-cell-gao-du-tong-shi-shi-xian-cell-zhe-die-he-zhan-kai/">
+                      <h2 class="post-title">
+                        Masonry自适应cell高度，同时实现cell折叠和展开
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/chu-li-wkcontentview-de-crash/">
+                      <h2 class="post-title">
+                        处理WKContentView的crash
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/yue-yu-di-san-zhang-qi-ye-wei-xin-qiang-hong-bao-cha-jian/">
+                      <h2 class="post-title">
+                        越狱第三章：企业微信抢红包插件
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/ios-tong-shi-hua-xu-xian-he-zhi-xian/">
+                      <h2 class="post-title">
+                        iOS 同时画虚线和直线
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/zi-ji-shi-xian-tong-shi-dai-you-yuan-jiao-he-yin-ying-de-view/">
+                      <h2 class="post-title">
+                        自己实现同时带有圆角和阴影的View
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/yue-yu-di-er-zhang-an-zhuang-revealcha-kan-ta-ren-app-de-ui/">
+                      <h2 class="post-title">
+                        越狱第二章：安装Reveal，查看他人App的UI
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/yue-yu-di-yi-zhang-ios-yue-yu/">
+                      <h2 class="post-title">
+                        越狱第一章：iOS越狱
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/js-he-ios-jiao-hu-zhong-de-yi-xie-bi-ji/">
+                      <h2 class="post-title">
+                        js和ios交互中的一些笔记
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/ji-lu-yi-ci-wei-xin-fen-xiang-de-jing-li/">
+                      <h2 class="post-title">
+                        记录一次微信分享的经历
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/an-zhuang-cocoapods-quan-xian-cuo-wu/">
+                      <h2 class="post-title">
+                        安装cocoapods权限错误
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://doge1024.github.io/post/weakify-de-hong-ding-yi-fen-jie/">
+                      <h2 class="post-title">
+                        @weakify的宏定义分解
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+            
+          </div>
+
+          <div class="pagination-container">
+  
+  
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
 </script>
 
 
-    <meta name="description" content="坚持就是胜利" />
-  </head>
-  <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://doge1024.github.io">
-  <img class="avatar" src="https://doge1024.github.io/images/avatar.png?v=1591800995581" alt="">
-  </a>
-  <h1 class="site-title">
-    doge1024
-  </h1>
-  <p class="site-description">
-    坚持就是胜利
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="/" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="/archives" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="/post/about" class="menu">
-          关于
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-        <a href="https://www.jianshu.com/u/a0e2f8047033" target="_blank">
-          <i class="ri-github-line"></i>
-        </a>
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-</div>
 
-    
-        
 
-<div class="archives-container">
-  
-    <h2 class="year">2020</h2>
-    
-      
-        <a href="https://doge1024.github.io/post/h5-ye-mian-bu-xiang-ying-webview-dai-li-fang-fa/" class="post">
-          <h2 class="post-title">
-            H5页面不响应WebView代理方法
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/ios8-wkwebview-zai-te-ding-qing-kuang-xia-de-beng-kui/" class="post">
-          <h2 class="post-title">
-            iOS8 WKWebView 在特定情况下的崩溃
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/viewlayermask-shu-xing-de-ying-yong-hua-yuan-jiao-hua-xin/" class="post">
-          <h2 class="post-title">
-            View.layer.mask属性的应用(画圆角，画心)
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/qiang-po-zheng-fu-yin-ios7-yi-shang-fang-bian-de-gai-bian-zhuang-tai-lan-yan-se/" class="post">
-          <h2 class="post-title">
-            强迫症福音！iOS7以上方便的改变状态栏颜色
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/jie-jue-charles-he-shadowsocks-chong-tu/" class="post">
-          <h2 class="post-title">
-            解决Charles和Shadowsocks冲突
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/masonry-zi-gua-ying-cell-gao-du-tong-shi-shi-xian-cell-zhe-die-he-zhan-kai/" class="post">
-          <h2 class="post-title">
-            Masonry自适应cell高度，同时实现cell折叠和展开
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/chu-li-wkcontentview-de-crash/" class="post">
-          <h2 class="post-title">
-            处理WKContentView的crash
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/yue-yu-di-san-zhang-qi-ye-wei-xin-qiang-hong-bao-cha-jian/" class="post">
-          <h2 class="post-title">
-            越狱第三章：企业微信抢红包插件
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/ios-tong-shi-hua-xu-xian-he-zhi-xian/" class="post">
-          <h2 class="post-title">
-            iOS 同时画虚线和直线
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/zi-ji-shi-xian-tong-shi-dai-you-yuan-jiao-he-yin-ying-de-view/" class="post">
-          <h2 class="post-title">
-            自己实现同时带有圆角和阴影的View
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/yue-yu-di-er-zhang-an-zhuang-revealcha-kan-ta-ren-app-de-ui/" class="post">
-          <h2 class="post-title">
-            越狱第二章：安装Reveal，查看他人App的UI
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/yue-yu-di-yi-zhang-ios-yue-yu/" class="post">
-          <h2 class="post-title">
-            越狱第一章：iOS越狱
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/js-he-ios-jiao-hu-zhong-de-yi-xie-bi-ji/" class="post">
-          <h2 class="post-title">
-            js和ios交互中的一些笔记
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/ji-lu-yi-ci-wei-xin-fen-xiang-de-jing-li/" class="post">
-          <h2 class="post-title">
-            记录一次微信分享的经历
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/an-zhuang-cocoapods-quan-xian-cuo-wu/" class="post">
-          <h2 class="post-title">
-            安装cocoapods权限错误
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-      
-        <a href="https://doge1024.github.io/post/weakify-de-hong-ding-yi-fen-jie/" class="post">
-          <h2 class="post-title">
-            @weakify的宏定义分解
-          </h2>
-          <div class="time">2020-06-10</div>
-        </a>
-      
-    
-  
-</div>
 
-    
-        <div class="pagination-container">
-  
-  
-</div>
 
-    
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
-      </div>
-    </div>
   </body>
 </html>

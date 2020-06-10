@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>适配iOS 11 与 iPhone X | doge1024</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591801849520">
+<link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="
+我的项目不是个性化的特别厉害，做一些简单的操作基本上就完成了新系统和机型的适配工作，碰到问题会持续更新此文章
+
+适配iOS 11
+Xcode 9 增加了@available(iOS 11, *) 的用法，很方便
+if (@availabl..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://doge1024.github.io">
+        <img src="https://doge1024.github.io/images/avatar.png?v=1591801849520" class="site-logo">
+        <h1 class="site-title">doge1024</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      坚持就是胜利
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">适配iOS 11 与 iPhone X</h2>
+            <div class="post-date">2020-06-10</div>
+            
+            <div class="post-content" v-pre>
+              <blockquote>
+<p>我的项目不是个性化的特别厉害，做一些简单的操作基本上就完成了新系统和机型的适配工作，碰到问题会持续更新此文章</p>
+</blockquote>
+<h3 id="适配ios-11">适配iOS 11</h3>
+<p>Xcode 9 增加了<code>@available(iOS 11, *)</code> 的用法，很方便</p>
+<pre><code>if (@available(iOS 11, *)) {
+        NSLog(@&quot;这是iOS 11&quot;);
+    }
+</code></pre>
+<pre><code>    // 适配 iOS 11， 如果打包的 Xcode 版本是9的话，可以替换为@available(iOS 11, *) 来判断
+    if ([[[UIDevice currentDevice] systemVersion] doubleValue] &gt;= 11.0) {
+        // 不主动设置此处为0的话，cell 和 SectionHeader、 SectionFooter 的高度 会不走代理方法
+        self.tableView.estimatedSectionHeaderHeight = 0;
+        self.tableView.estimatedSectionFooterHeight = 0;
+        self.tableView.estimatedRowHeight = 0;
+        // UIViewController 的 automaticallyAdjustsScrollViewInsets 属性已经不使用，换为下面属性
+        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+</code></pre>
+<h3 id="如何适配iphone-x">如何适配iPhone X</h3>
+<blockquote>
+<p>注意：iPhone X 的导航栏高度为44， 状态栏高度44， Tabbar 高度83</p>
+</blockquote>
+<ol>
+<li>叫UI设计师帮你切一张 <code>1125x2436</code> 的图</li>
+<li>将原先项目Assets中的LaunchImage保存一下</li>
+<li>新建一个LaunchImage，将原LaunchImage中的图拖回原位，然后将 <code>1125x2436</code> 的图放入 <code>iPhone X Portrait iOS 11+</code> 的位置</li>
+<li>如果你使用的是原生的Tabbar和导航控制器，此时基本已经适配完成</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="http://upload-images.jianshu.io/upload_images/1300265-fbbe41cd52c03118.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/620" alt="image.png" loading="lazy"></figure>
+<h6 id="大家可能碰到-iphone-x-的模拟器打印-uiscreen-mainscreenboundssizeheight-的值为-667-的问题">大家可能碰到 iPhone X 的模拟器打印 [UIScreen mainScreen].bounds.size.height 的值为 667 的问题</h6>
+<p>这种问题就是 LaunchImage 中没有 <code>iPhone X Portrait iOS 11+</code> 图片导致的，大家添加上，即可恢复正常</p>
+<h3 id="常用的宏定义">常用的宏定义</h3>
+<p>判断iPhone X<br>
+<code>#define IS_IPHONEX (([[UIScreen mainScreen] bounds].size.height - 812) ? NO : YES)</code></p>
+<p>Tabbar默认高度<br>
+<code>#define kTabBarHeight ((IS_IPHONEX) ? 83 : 49)</code></p>
+<p>状态栏默认高度<br>
+<code>#define kStatusBarHeight ((IS_IPHONEX) ? (44) : (20))</code></p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://doge1024.github.io/post/reactnative-ru-keng-codepush-re-geng-xin-si/">
+                  <h3 class="post-title">
+                    ReactNative入坑: codepush热更新(四)
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>ReactNative入坑: 一些常用控件的使用(五) | doge1024</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591801849520">
+<link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="button外面要包一个View，才能设置样式
+这里是Button的源码， Button除了accessibilityLabel, color, onPress, title, disabled, testID, 这几个属性以外其他属性都不..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://doge1024.github.io">
+        <img src="https://doge1024.github.io/images/avatar.png?v=1591801849520" class="site-logo">
+        <h1 class="site-title">doge1024</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      坚持就是胜利
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">ReactNative入坑: 一些常用控件的使用(五)</h2>
+            <div class="post-date">2020-06-10</div>
+            
+            <div class="post-content" v-pre>
+              <h5 id="button外面要包一个view才能设置样式">button外面要包一个View，才能设置样式</h5>
+<p><a href="https://github.com/facebook/react-native/blob/master/Libraries/Components/Button.js">这里是Button的源码</a>， Button除了accessibilityLabel, color, onPress, title, disabled, testID, 这几个属性以外其他属性都不能生效， 需要外面套一个View 才能设置样式<br>
+再就是Button里面只有个自带的Text，自己往Button里塞的子控件不会显示的</p>
+<h5 id="touchablehighlight">TouchableHighlight</h5>
+<p>TouchableHighlight只能有一个子控件，如果既有文字又有图片等多个控件需要使用View包装一层</p>
+<h5 id="如何设置默认props">如何设置默认props</h5>
+<h3 id="sectionlist的用法">SectionList的用法</h3>
+<pre><code>
+&lt;SectionList
+                ListHeaderComponent={&lt;View style={{backgroundColor: &quot;red&quot;, height: 40}} &gt;&lt;/View&gt;}
+                ListFooterComponent={&lt;View style={{backgroundColor: &quot;green&quot;, height: 40}} &gt;&lt;/View&gt;}
+                renderItem={({item, index, section}) =&gt; &lt;Text style={{flex: 1, height: 50}}&gt;section:{section.key}----{item.title}----{index}&lt;/Text&gt;}
+                renderSectionHeader={({section}) =&gt; &lt;Text style={{backgroundColor: 'yellow'}}&gt;Header：{section.key}&lt;/Text&gt;}
+                renderSectionFooter={({section}) =&gt; &lt;Text style={{backgroundColor: 'purple'}}&gt;Footer：{section.key}&lt;/Text&gt;}
+                stickySectionHeadersEnabled={false}
+                sections={[
+                    {
+                        key: 's1',
+                        data: [
+                            {title: '0 item', key: '0'},
+                            {title: '1 item', key: '1'},
+                            {title: '2 item', key: '2'},
+                    ]},
+                    {
+                        key: 's2',
+                        data: [
+                            {title: '0 item', key: '0'},
+                            {title: '1 item', key: '1'},
+                            {title: '2 item', key: '2'},
+                            {title: '3 item', key: '3'},
+                    ]},
+                ]}
+            /&gt;
+
+</code></pre>
+<p>其余的属性看<a href="https://facebook.github.io/react-native/docs/sectionlist.html">官方SectionList文档</a></p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://doge1024.github.io/post/hei-ping-guo-sheng-ji-1333-hou-xian-shi-qia-dun-yan-chi-jie-jue-ban-fa/">
+                  <h3 class="post-title">
+                    黑苹果升级13.3.3后，显示卡顿延迟解决办法
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

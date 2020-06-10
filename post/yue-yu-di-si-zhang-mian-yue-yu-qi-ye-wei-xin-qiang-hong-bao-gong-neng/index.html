@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>越狱第四章：免越狱企业微信抢红包功能 | doge1024</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591801849520">
+<link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="免越狱企业微信抢红包功能
+写这个，主要是为了：认真工作的时候却错过了老板的红包，心里不爽😂
+
+点击去 仓库地址 Star 和 运行
+使用
+- 测试使用
+
+将脱壳后的企业微信ipa解压取得.app文件放到MyWeWork/TargetApp..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://doge1024.github.io">
+        <img src="https://doge1024.github.io/images/avatar.png?v=1591801849520" class="site-logo">
+        <h1 class="site-title">doge1024</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      坚持就是胜利
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">越狱第四章：免越狱企业微信抢红包功能</h2>
+            <div class="post-date">2020-06-10</div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="免越狱企业微信抢红包功能">免越狱企业微信抢红包功能</h1>
+<p>写这个，主要是为了：认真工作的时候却错过了老板的红包，心里不爽😂</p>
+<figure data-type="image" tabindex="1"><img src="http://upload-images.jianshu.io/upload_images/1300265-176ca5d79f1358ee.gif?imageMogr2/auto-orient/strip" alt="红包测试" loading="lazy"></figure>
+<h2 id="点击去-仓库地址-star-和-运行">点击去 <a href="https://github.com/doge1024/MyWeWork.git">仓库地址</a> Star 和 运行</h2>
+<h3 id="使用">使用</h3>
+<h6 id="-测试使用">- 测试使用</h6>
+<ol>
+<li>将脱壳后的企业微信ipa解压取得.app文件放到<code>MyWeWork/TargetApp/wework.app</code></li>
+<li>选择自己的BundleID和证书</li>
+<li>插上手机，<code>cmd+R</code></li>
+<li>聊天会话页面右上角有个开关，打开后，如果人发红包红包的话，会自动抢（默认打开）</li>
+</ol>
+<h6 id="-正式使用">- 正式使用</h6>
+<ol>
+<li>编译Release版<code>cmd+shift+i</code>，待编译完成</li>
+<li>双击<code>LatestBuild/createIPA.command</code>，待进程完成后，文件夹下面会多一个ipa文件，拿去用吧</li>
+</ol>
+<h3 id="效果">效果</h3>
+<ol>
+<li>自动打开红包，功能只能在聊天会话页面使用，但是可以在后台，继续抢</li>
+<li>仔细想了想应该不会封号，还能把你开除企业么？🤔</li>
+</ol>
+<h3 id="注意">注意</h3>
+<ol>
+<li>非越狱手机推送是不可能推送的，这辈子都不会有推送</li>
+<li><a href="https://github.com/harddog/MyWeWork">MyWeWork仓库地址</a></li>
+</ol>
+<h3 id="感谢">感谢</h3>
+<ol>
+<li>感谢 <a href="https://github.com/AloneMonkey/MonkeyDev">MonkeyDev</a>，在没有越狱机的情况下还能简单的调试编写</li>
+<li>感谢同事的1分钱测试红包</li>
+</ol>
+<p>抢红包算是完成了，issue随机更新ヽ(^o^)丿</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://doge1024.github.io/post/gua-pei-ios-11-yu-iphone-x/">
+                  <h3 class="post-title">
+                    适配iOS 11 与 iPhone X
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>ReactNative入坑: codepush热更新(四) | doge1024</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591801849520">
+<link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="如何使用Debug环境调试code-push
+code-push可以在Debug环境调试（** 真机、模拟器都可以奥**），下面介绍一下方法：
+配置CODEPUSH_KEY
+在测试环境手动设置deploymentKey，需要加载Stagin..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://doge1024.github.io">
+        <img src="https://doge1024.github.io/images/avatar.png?v=1591801849520" class="site-logo">
+        <h1 class="site-title">doge1024</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      坚持就是胜利
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">ReactNative入坑: codepush热更新(四)</h2>
+            <div class="post-date">2020-06-10</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="如何使用debug环境调试code-push">如何使用Debug环境调试code-push</h2>
+<p><code>code-push</code>可以在Debug环境调试（** 真机、模拟器都可以奥**），下面介绍一下方法：</p>
+<h4 id="配置codepush_key">配置CODEPUSH_KEY</h4>
+<p>在测试环境手动设置deploymentKey，需要加载Staging的更新，就设置Staging的key；</p>
+<pre><code>// 在测试环境添加下面这行代码，更改测试环境的deploymentKey
+[CodePushConfig current].deploymentKey = @&quot;your_Staging_deploymentKey&quot;;
+// 加载你的jsbundle地址
+NSURL *jsCodeLocation = [CodePush bundleURLForResource:@&quot;index.ios&quot; withExtension:@&quot;jsbundle&quot; subdirectory:@&quot;bundles&quot;];
+</code></pre>
+<p>在不需要测试的时候将代码注释掉就好了， 简单方便</p>
+<h4 id="使用打包好的jsbundle进行调试">使用打包好的jsbundle进行调试</h4>
+<p>大家要记住，如果使用本地服务进行调试的话，无论什么时候加载的都是本地<code>localhost:8081</code>服务的代码，更新的jsbundle代码是一定不会被加载的。所以要使用打包好的jsbundle，然后运行 真机 / 模拟器 ,就可以在Dev环境检测到<code>Staging</code>的更新，并下载</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://doge1024.github.io/post/jie-jue-pod-lib-lintrepo-push-bu-zhi-chi-i386-bian-yi-andzhi-neng-zhen-ji-yun-xing-de-ku/">
+                  <h3 class="post-title">
+                    解决pod lib lint/repo push不支持i386编译&amp;只能真机运行的库
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

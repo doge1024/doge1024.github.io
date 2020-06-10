@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://doge1024.github.io</id>
     <title>doge1024</title>
-    <updated>2020-06-10T14:56:39.414Z</updated>
+    <updated>2020-06-10T15:10:57.861Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://doge1024.github.io"/>
     <link rel="self" href="https://doge1024.github.io/atom.xml"/>
@@ -11,560 +11,400 @@
     <icon>https://doge1024.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, doge1024</rights>
     <entry>
-        <title type="html"><![CDATA[H5页面不响应WebView代理方法]]></title>
-        <id>https://doge1024.github.io/post/h5-ye-mian-bu-xiang-ying-webview-dai-li-fang-fa/</id>
-        <link href="https://doge1024.github.io/post/h5-ye-mian-bu-xiang-ying-webview-dai-li-fang-fa/">
+        <title type="html"><![CDATA[WebStorm调试ReactNative]]></title>
+        <id>https://doge1024.github.io/post/webstorm-diao-shi-reactnative/</id>
+        <link href="https://doge1024.github.io/post/webstorm-diao-shi-reactnative/">
         </link>
-        <updated>2020-06-10T14:35:14.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="问题">问题</h2>
-<p>在项目中接入了WKWebView，在调试网页的过程中碰到一个问题：<br>
-在点击a标签的时候，不会触发webView的<code>navigationDelegate</code>代理方法，如：<br>
-<code>webView:decidePolicyForNavigationAction:decisionHandler:</code><br>
-<code>webView:decidePolicyForNavigationResponse:decisionHandler:</code>等等，<br>
-原本我是在网页加载完成后更新下网页的返回按钮的，这下不起作用了。</p>
-<h4 id="a标签的代码">a标签的代码</h4>
-<h6 id="a标签的事件已经被拦截网页使用的是vue">（a标签的事件已经被拦截，网页使用的是vue）</h6>
-<pre><code>&lt;a class=&quot;activity-item-wrapper&quot; href=&quot;/activity-detail/588425470926a819f7b8d61d&quot;&gt;  &lt;/a&gt;
-</code></pre>
-<h2 id="曲线救国">曲线救国</h2>
-<p>虽然代理方法不会响应，但是经过尝试<code>canGoBack</code>这个属性的值还是会随着页面的变化而变化的，所以我直接监听这个属性，也可以达到我想要的效果</p>
-<pre><code>[self.webView.realWebView addObserver:self forKeyPath:@&quot;canGoBack&quot; options:NSKeyValueObservingOptionNew context:nil];
-</code></pre>
-<h2 id="为什么会出现这种问题">为什么会出现这种问题</h2>
-<p>经过请教我司前端的同学后，了解到原网页使用的是H5的History Api，应该是在不刷新页面的情况下切换Url，导致WKWebView没有Call代理方法，但是canGoBack和canGoForward属性是可以检测到的。现在H5的体验越来越好，许多SPA应用都是采用的这种方法。</p>
-<blockquote>
-<p>大概流程：</p>
-</blockquote>
+        <updated>2020-06-10T15:10:36.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="如何使用webstorm调试">如何使用webstorm调试：</h3>
 <ol>
-<li>在A页面 通过发AJAX请求 请求页面中的B数据。</li>
-<li>在页面A中通过JS装载相应的信息到相应的位置来。</li>
-<li>通过History API在不刷新页面的情况下在浏览器的地址栏中从页面A的URL地址切换到页面B的URL地址。</li>
+<li>在任意位置添加debug的红点</li>
 </ol>
+<figure data-type="image" tabindex="1"><img src="https://upload-images.jianshu.io/upload_images/1300265-eba5096825329dfb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png" loading="lazy"></figure>
+<ol start="2">
+<li>
+<p>添加debug配置<br>
+<img src="https://upload-images.jianshu.io/upload_images/1300265-439ddd59f9ecf888.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png" loading="lazy"></p>
+</li>
+<li>
+<p>按照图示设置debug配置<br>
+<img src="https://upload-images.jianshu.io/upload_images/1300265-3f1e5ef486d17e12.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png" loading="lazy"></p>
+<ul>
+<li><code>Bundler host</code> 可以调整，看自己的RN是从哪个地址加载的，从localhost加载，就设置为localhost，从ip加载就填ip</li>
+<li>这个配置会帮你自动<code>start</code>RN的服务，请先终止其他地方占用8081端口的服务</li>
+</ul>
+</li>
+<li>
+<p>打开debug<br>
+<img src="https://upload-images.jianshu.io/upload_images/1300265-39308d40048971e3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png" loading="lazy"></p>
+</li>
+<li>
+<p>在手机上摇一摇，打开<code>Debug JS Remotely</code> 就可以打断点调试了, 之前的断点也可以暂停到了<br>
+<img src="https://upload-images.jianshu.io/upload_images/1300265-e16c96bffff93a01.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png" loading="lazy"></p>
+</li>
+</ol>
+<h5 id="我的-webstorm-版本">我的 webstorm 版本：</h5>
+<figure data-type="image" tabindex="2"><img src="https://upload-images.jianshu.io/upload_images/1300265-8d6e1fca99bc9267.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png" loading="lazy"></figure>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[iOS8 WKWebView 在特定情况下的崩溃]]></title>
-        <id>https://doge1024.github.io/post/ios8-wkwebview-zai-te-ding-qing-kuang-xia-de-beng-kui/</id>
-        <link href="https://doge1024.github.io/post/ios8-wkwebview-zai-te-ding-qing-kuang-xia-de-beng-kui/">
+        <title type="html"><![CDATA[codepush服务变更，连接不上]]></title>
+        <id>https://doge1024.github.io/post/codepush-fu-wu-bian-geng-lian-jie-bu-shang/</id>
+        <link href="https://doge1024.github.io/post/codepush-fu-wu-bian-geng-lian-jie-bu-shang/">
         </link>
-        <updated>2020-06-10T14:34:48.000Z</updated>
-        <content type="html"><![CDATA[<p>iOS8系统是苹果第一次引入WKWebView，所以有好多东西还不完善，下面记录一次碰到的Crash</p>
-<p>在iOS 8下， 先设置WKWebView的</p>
-<pre><code>webView.allowsBackForwardNavigationGestures = YES;
+        <updated>2020-06-10T15:10:10.000Z</updated>
+        <content type="html"><![CDATA[<p>后台codepush的服务器地址变了，连接不上，不能退出<br>
+删除本地<code>./.code-push.config</code>文件解决</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[小米手机安装linuxdeploy碰到的问题]]></title>
+        <id>https://doge1024.github.io/post/xiao-mi-shou-ji-an-zhuang-linuxdeploy-peng-dao-de-wen-ti/</id>
+        <link href="https://doge1024.github.io/post/xiao-mi-shou-ji-an-zhuang-linuxdeploy-peng-dao-de-wen-ti/">
+        </link>
+        <updated>2020-06-10T15:09:52.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="发生的错误">发生的错误</h3>
+<p>设置好配置，进行安装时报以下错误</p>
+<pre><code>Mounting partitions :
+/ ... fail
 </code></pre>
-<p>然后再设置为NO的话</p>
-<pre><code>webView.allowsBackForwardNavigationGestures = NO;
+<p>打开调试模式后</p>
+<pre><code>Mounting partitions:  
+/ ... mount: mounting /dev/loop0 on /data/local/mnt failed: invalid argument
+fail 
 </code></pre>
-<p>只要手指一碰屏幕，就会出现Crash，日志主要如下：</p>
-<pre><code>
-#0 Thread
-NSInvalidArgumentException
--[UIView gestureRecognizer:shouldReceiveTouch:]: unrecognized selector sent to instance 0x125da47f0
-</code></pre>
+<h3 id="解决方法">解决方法</h3>
+<p>点击右下角设置按钮，将安装类型设置为 &quot;目录&quot;，返回重新安装可以成功</p>
+<p>参考文章：<br>
+<a href="https://cloud.tencent.com/developer/article/1159800">https://cloud.tencent.com/developer/article/1159800</a><br>
+<a href="https://pluhuxc.github.io/2020/10/23/linuxdeploy-guide.html">https://pluhuxc.github.io/2020/10/23/linuxdeploy-guide.html</a><br>
+<a href="https://www.tkdcz.top/post/48.html">https://www.tkdcz.top/post/48.html</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[macOS 10.15 pip 安装库失败提示SSL]]></title>
+        <id>https://doge1024.github.io/post/macos-1015-pip-an-zhuang-ku-shi-bai-ti-shi-ssl/</id>
+        <link href="https://doge1024.github.io/post/macos-1015-pip-an-zhuang-ku-shi-bai-ti-shi-ssl/">
+        </link>
+        <updated>2020-06-10T15:09:37.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="pip安装第三方库失败">pip安装第三方库失败</h2>
+<p>今天安装 <code>frida-tools</code> 时一直提示失败<br>
+其中错误有一句:<br>
+<code>error: &lt;urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed</code></p>
 <p>或者：</p>
-<pre><code>
-#0 Thread
-NSInvalidArgumentException
--[WKCompositingView gestureRecognizer:shouldReceiveTouch:]: unrecognized selector sent to instance 0x12fc17550
+<pre><code>$ /usr/bin/python3 -c 'import urllib.request; urllib.request.urlopen(&quot;https://www.apple.com/&quot;)'
+...
+urllib.error.URLError: &lt;urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1056)&gt;
 </code></pre>
-<h2 id="注">注</h2>
-<p>以上情况只会在iOS 8出现，在8以上版本没有问题。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[View.layer.mask属性的应用(画圆角，画心)]]></title>
-        <id>https://doge1024.github.io/post/viewlayermask-shu-xing-de-ying-yong-hua-yuan-jiao-hua-xin/</id>
-        <link href="https://doge1024.github.io/post/viewlayermask-shu-xing-de-ying-yong-hua-yuan-jiao-hua-xin/">
-        </link>
-        <updated>2020-06-10T14:34:30.000Z</updated>
-        <content type="html"><![CDATA[<h4 id="前言">前言</h4>
-<p>看到什么app，脑子里都会不自觉的想这个东西是怎么实现的。哔哩哔哩作为我用来偶尔看看鬼畜，追追新番的一个应用，感觉它某些细节的设计确实不错。例如下图中的标注<strong>①</strong>处的圆角</p>
-<figure data-type="image" tabindex="1"><img src="http://upload-images.jianshu.io/upload_images/1300265-b6424aac39015512.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/310" alt="哔哩哔哩的iOS客户端首页截图" loading="lazy"></figure>
-<h4 id="设置view的四个角都为圆角">设置View的四个角都为圆角</h4>
-<p>像图中<strong>②</strong>处的4个角都为圆角，这都是一些基础的东西感觉就没必要写了，什么你还不知道？特别简单，只需要设置下面的属性就可以了，产生圆角引发的性能问题此处不做讨论，这样写一般应用是没有问题的</p>
-<pre><code>view.layer.cornerRadius = 10;
-view.layer.masksToBounds = YES;
-</code></pre>
-<h4 id="设置view的两个角都为圆角">设置View的两个角都为圆角</h4>
-<p>像图<strong>①</strong>中的两个圆角，当然就实现效果来说，方法有很多种，此处讲一个，使用CALayer的mask属性：</p>
-<pre><code>UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
-                                                   byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight
-                                                         cornerRadii:CGSizeMake(15, 15)];
-CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-maskLayer.frame = self.bounds;
-maskLayer.path = maskPath.CGPath;
-self.layer.mask = maskLayer;
-</code></pre>
-<h4 id="设置view显示一个心形️">设置View显示一个心形❤️</h4>
-<p>其实和显示两个圆角的方法差不多，只不过就是绘制图形的路径不一样<br>
-下图的图片上使用两根贝塞尔曲线绘制了一个心形❤️，曲线的算式，想要看的可以看下<a href="https://github.com/harddog/Test-LayerDrawMask">github的工程</a><br>
-<img src="http://upload-images.jianshu.io/upload_images/1300265-025bc1bf98319863.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/310" alt="各个形状的展示" loading="lazy"></p>
-<h4 id="总结">总结</h4>
-<p><strong>mask属性是做什么的？</strong><br>
-看下苹果文档的描述：</p>
-<pre><code>The layer’s alpha channel determines how much of the layer’s content and background shows through. Fully or partially opaque pixels allow the underlying content to show through but fully transparent pixels block that content.
-
-The default value of this property is nil nil. When configuring a mask, remember to set the size and position of the mask layer to ensure it is aligned properly with the layer it masks.
-</code></pre>
-<p>翻译成中文就是：</p>
 <blockquote>
-<p>这个layer的alpha通道决定展示多少layer的内容和背景，完全或部分不透明的像素允许下面的内容展示出来，但是完全透明的像素会阻碍内容</p>
+<p>我的系统环境：<br>
+macOS Catalina 10.15.2 (19C57)<br>
+已安装Xcode11，并且Xcode有带Python3.7</p>
 </blockquote>
-<p><strong>为什么用<code>CAShapeLayer</code> + <code>UIBezierPath</code>哪？</strong></p>
+<h2 id="解决方案">解决方案</h2>
+<p>执行以下两行命令：</p>
+<pre><code>/usr/bin/sudo /bin/mkdir /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.7/etc
+/usr/bin/sudo /bin/ln -s /etc/ssl/ /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.7/etc/
+</code></pre>
+<p>我出问题时的Xcode，默认是没有<code>/etc</code>这个目录的；使用以上命令后，可以正常安装<code>frida-tools</code></p>
+<h4 id="参考文章">参考文章</h4>
+<p><a href="https://stackoverflow.com/questions/57630314/ssl-certificate-verify-failed-error-with-python3-on-macos-10-15">ssl-certificate-verify-failed-error-with-python3-on-macos-10-15</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[读《时间简史》— 解释你无聊时的那些遐想]]></title>
+        <id>https://doge1024.github.io/post/du-lesslessshi-jian-jian-shi-greatergreater-jie-shi-ni-wu-liao-shi-de-na-xie-xia-xiang/</id>
+        <link href="https://doge1024.github.io/post/du-lesslessshi-jian-jian-shi-greatergreater-jie-shi-ni-wu-liao-shi-de-na-xie-xia-xiang/">
+        </link>
+        <updated>2020-06-10T15:09:23.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="读时间简史-解释你无聊时的那些遐想">读《时间简史》— 解释你无聊时的那些遐想</h1>
+<p>《时间简史》讲述是探索时间和空间核心秘密的故事，是关于宇宙本性的最前沿知识，包括我们的宇宙图像、空间和时间、膨胀的宇宙不确定性原理、基本粒子和自然的力、黑洞、黑洞不是这么黑、时间箭头等内容。</p>
+<p>原先看过一点但是感觉有点枯燥，跟视频比起来缺少了些生动震撼的场面，不太好理解，这次看的是插画版的，会容易接受很多。所以如果想看的话，推荐看插画版的。</p>
+<p>如果不太喜欢文字的描述，这里推荐一部视频 <a href="https://www.bilibili.com/video/av1935063/">《宇宙的构造》</a>，看完视频后会激起你对宇宙探索的欲望，再来看书会好些。视频里面讲解的也很好。</p>
+<h2 id="有几个孩子能抵御星空的诱惑呢-~">有几个孩子，能抵御星空的诱惑呢 ~</h2>
+<p>小时候特喜欢去房顶上躺着，微风，虫鸣，不知不觉眼镜就看向了天空：天这么大，这么远，天上有云有星，但是天是什么？天的外面又是什么？经常看的《走进科学》里面的那些事是不是真的？51区又有多少外星生命来过？</p>
+<p>前些日子无聊又看了一遍(我自封的)古装情景喜剧的巅峰《武林外传》，里面吕秀才有句台词：“我和宇宙有必然的联系吗？宇宙是否有尽头，时间是否有长短，过去的时间在哪里消失了，未来的时间又在何处停止，我在这一刻提出的问题，还是你刚才听到的问题吗？”。这句话第一次看的时候可能感叹编剧的厉害，对秀才这个读书人刻画的太好了，一笑而过，但是这次看却让我心里一颤，这不就是我小时候对世界的疑问么。</p>
+<p>解决自己一直以来的疑问，解释自己无聊时的那些遐想，这就是我读这本书的原因。</p>
+<h2 id="书中的答案">书中的答案</h2>
+<p>“四方上下曰宇，往古来今曰宙”，这句话太经典了，作为比较朴素的对宇宙的解释，可以帮助我们了解宇宙，但是还是有点笼统，有些哲学意味。</p>
+<p>下面简单写一些问题在书中的答案。一切了解均是在学习，所以引用原文来解答。</p>
+<h4 id="宇宙是如何诞生的">宇宙是如何诞生的？</h4>
+<p>引书中言：</p>
 <blockquote>
-<p>UIBezierPath是系统对画图方法的封装，可以很方便的调用，获取路径path<br>
-<code>@property(nonatomic) CGPathRef CGPath;</code></p>
+<p>1983年，林德提出了一个更好的所谓混沌暴胀模型。这里没有相变和过冷，而代之以存在一个自旋为0的场，由于它的量子涨落，在早期宇宙的某些区域有大的场值。在那些区域中，场的能量起到宇宙常数的作用，它具有排斥的引力效应，而使这些区域以暴胀的形式膨胀。随着它们膨胀，它们中的场的能量慢慢地减小，直到暴胀改变到犹如热大爆炸模型中的膨胀时为止。这些区域之一就成为可观察的宇宙让我们看到。</p>
+</blockquote>
+<p>量子涨落，是从真空中爆发能量，在空间生成了由粒子和反粒子组成的虚粒子对。粒子对借取能量而生成，又在短时间内湮灭归还能量。这些产生的虚粒子的物理效应是可以被测量和观测的。也就是说真空不是真的空无一物</p>
+<h4 id="宇宙的的外面是什么">宇宙的的外面是什么？</h4>
+<p>引书中言：</p>
+<blockquote>
+<p>人们可以说：“宇宙的边界条件是它没有边界。”宇宙便是完全自足的，而不受任何外在于它的东西影响。它既不被创生，也不被消灭。它就是存在。</p>
+</blockquote>
+<h4 id="是否存在造物主">是否存在造物主？</h4>
+<p>引书中言：</p>
+<blockquote>
+<p>只要宇宙有一个开端，我们就可以设想存在一个造物主。但是，如果宇宙的的确确是完全自足的，没有边界或边缘，它就既没有开端也没有终结：它就是存在。那么，还会有造物主存身之处吗？</p>
+</blockquote>
+<h4 id="时间是否有起点">时间是否有起点？</h4>
+<p>引书中言：</p>
+<blockquote>
+<p>所有的弗里德曼解都具有一个特点，即在过去的某一时刻（约100亿至200亿年之前）邻近星系之间的距离一定为零。在这被我们称之为大爆炸的那一时刻，宇宙的密度和时空曲率都是无限大。因为数学不能真正地处理无限大的数，这意味着，广义相对论（弗里德曼解以此为基础）预言，在宇宙中存在一点，在该处理论本身崩溃。这样的点正是数学中称为奇点的一个例子。事实上，我们所有的科学理论都是基于时空是光滑的和几乎平坦的基础上表述的，所以它们在时空曲率为无限大的大爆炸奇点处崩溃。这意味着，即使在大爆炸前存在事件，人们也不能用它们去确定其后所要发生的事件，因为可预见性在大爆炸处崩溃了。</p>
 </blockquote>
 <blockquote>
-<p>CAShapeLayer有path属性<br>
-<code>@property(nullable) CGPathRef path;</code><br>
-可以很方便的将你画的path绘制到layer上</p>
+<p>我们只知道在大爆炸后发生的事件，我们就不能确定在这之前发生什么。就我们而言，大爆炸之前的事件不能有后果，所以并不构成我们宇宙的科学模型的一部分。因此，我们应将它们从模型中割除掉，并宣称时间是从大爆炸开始的。</p>
 </blockquote>
-<p>这两个搭配简直就是珠连璧合、相得益彰、相辅相成、不好意思没词了。。。</p>
+<h4 id="宇宙是否有终点">宇宙是否有终点？</h4>
+<p>引书中言：</p>
+<blockquote>
+<p>1915年之前，空间和时间被认为是事件在其中发生的固定舞台，而它们不受在其中发生的事件的影响。即便在狭义相对论中，这也是对的。物体运动，力吸引并排斥，但时间和空间则完全不受影响地延伸着。空间和时间很自然地被认为无限地向前延伸。<br>
+然而在广义相对论中，情况则完全不同。这时，空间和时间变成为动力量：当物体运动，或者力作用时，它影响了空间和时间的曲率；反过来，时空的结构影响了物体运动和力作用的方式。空间和时间不仅去影响、而且被发生在宇宙中的每一件事影响。正如人们没有空间和时间的概念不能谈论宇宙的事件一样，同样地，在广义相对论中，在宇宙界限之外讲空间和时间也是没有意义的。</p>
+</blockquote>
+<blockquote>
+<p>罗杰·彭罗斯和我证明了，爱因斯坦广义相对论意味着，宇宙必须有个开端，并且可能有个终结。</p>
+</blockquote>
+<h4 id="可否实现时间旅行">可否实现时间旅行？</h4>
+<p>如果可以进行时间旅行，为什么没有未来的人来告诉我们如何做呢？为什么地球没有被从未来旅行来的人挤爆？<br>
+到写文时间为止，时间旅行机器应该都没有被发明出来。</p>
+<blockquote>
+<p>任何时间旅行都被限制于未来。</p>
+</blockquote>
+<blockquote>
+<p>黑洞辐射表明，量子理论在微观尺度上允许在时间中的往回运动，而且这种时间旅行能产生可观测的效应。</p>
+</blockquote>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[强迫症福音！iOS7以上方便的改变状态栏颜色]]></title>
-        <id>https://doge1024.github.io/post/qiang-po-zheng-fu-yin-ios7-yi-shang-fang-bian-de-gai-bian-zhuang-tai-lan-yan-se/</id>
-        <link href="https://doge1024.github.io/post/qiang-po-zheng-fu-yin-ios7-yi-shang-fang-bian-de-gai-bian-zhuang-tai-lan-yan-se/">
+        <title type="html"><![CDATA[iOS 禁用黑暗模式]]></title>
+        <id>https://doge1024.github.io/post/ios-jin-yong-hei-an-mo-shi/</id>
+        <link href="https://doge1024.github.io/post/ios-jin-yong-hei-an-mo-shi/">
         </link>
-        <updated>2020-06-10T14:27:28.000Z</updated>
-        <content type="html"><![CDATA[<p>在iOS 9以后设置状态栏颜色不建议使用UIApplication来改变了，警告⚠️不能忍<br>
-<code>- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated NS_DEPRECATED_IOS(2_0, 9_0, &quot;Use -[UIViewController preferredStatusBarStyle]&quot;)</code></p>
-<p>1.在导航控制器里面实现下面方法：</p>
-<pre><code>//一般在BaseNavigationController里面实现
-/**
- 设置显示栈顶控制器的状态栏颜色
- */
-- (UIViewController *)childViewControllerForStatusBarStyle {
-    return self.topViewController;
-}
+        <updated>2020-06-10T15:09:07.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="ios-禁用黑暗模式">iOS 禁用黑暗模式</h1>
+<p>如果你的公司没有设计黑暗模式，在iOS13到来之际，你需要在应用内禁止一下黑暗模式的显示：<br>
+在程序的Info.plist文件中加入:</p>
+<p>key: <code>UIUserInterfaceStyle</code><br>
+value: <code>Light</code></p>
+<figure data-type="image" tabindex="1"><img src="https://upload-images.jianshu.io/upload_images/1300265-6b528dd2af04f202.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1249" alt="image.png" loading="lazy"></figure>
+<p>参考：<br>
+<a href="https://developer.apple.com/documentation/appkit/supporting_dark_mode_in_your_interface/choosing_a_specific_interface_style_for_your_ios_app">苹果文档，只支持正常模式</a><br>
+<a href="https://developer.apple.com/documentation/appkit/supporting_dark_mode_in_your_interface">想去支持黑暗模式，查看文档</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[macOS 存储空间越来越少, 删完不增加可用空间]]></title>
+        <id>https://doge1024.github.io/post/macos-cun-chu-kong-jian-yue-lai-yue-shao-shan-wan-bu-zeng-jia-ke-yong-kong-jian/</id>
+        <link href="https://doge1024.github.io/post/macos-cun-chu-kong-jian-yue-lai-yue-shao-shan-wan-bu-zeng-jia-ke-yong-kong-jian/">
+        </link>
+        <updated>2020-06-10T15:08:49.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="问题">问题</h2>
+<p><code># macOS Catalina 10.15 beta 1 #</code><br>
+升级 macOS Catalina 10.15 beta 1 后发现存储空间越来越少，怎么删除文件都不管用。文件越删越多。</p>
+<h2 id="原因">原因</h2>
+<p>因为 Time Machin 的 <code>local snapshots</code>(本地快照功能)，在你打开自动备份，但是没有接入任何硬盘的时候，系统会从本地创建并存储快照。<br>
+按道理来说此项功能很好，可以帮一些没有或者忘记带硬盘的人自动备份，而且对用户来说应该是不占用存储空间的。<br>
+<strong>但是</strong> 显然新系统出现了bug，导致了存储空间不能得到及时释放的情况。</p>
+<p>从苹果官网的解释是：</p>
+<blockquote>
+<h3 id="how-local-snapshots-use-storage-space">How local snapshots use storage space</h3>
+<p>You don't need to think about how much storage space local snapshots are using, because they don't use space needed for tasks like downloading files, copying files, or installing new software.</p>
+<p>Your Mac counts the space used by snapshots as available storage. Even so, Time Machine stores snapshots only on disks that have plenty of free space, and it automatically deletes snapshots as they age or as space is needed for other things.</p>
+</blockquote>
+<p>google 翻译：</p>
+<blockquote>
+<p>###本地快照如何使用存储空间<br>
+您无需考虑本地快照正在使用多少存储空间，因为它们不会使用下载文件，复制文件或安装新软件等任务所需的空间。</p>
+<p>您的Mac将快照使用的空间计为可用存储空间。即便如此，Time Machine仅将快照存储在具有足够可用空间的磁盘上，并且在它们老化或其他内容需要空间时自动删除快照。搜索</p>
+</blockquote>
+<p>可以google自己搜索关键字 <a href="https://www.google.com/search?newwindow=1&amp;rlz=1C5CHFA_enUS691US691&amp;ei=xyMLXcTkHMqU-gSQrZ2YDw&amp;q=About+Time+Machine+local+snapshots&amp;oq=About+Time+Machine+local+snapshots&amp;gs_l=psy-ab.3...0.0..231404...0.0..0.0.0.......0......gws-wiz.kx7n-Vqtt_M">About Time Machine local snapshots</a>，苹果官网的<a href="https://support.apple.com/en-us/HT204015">文章</a>已经删除，可以通过网页快照查看。</p>
+<h2 id="解决方案">解决方案：</h2>
+<h5 id="如果你的电脑已经剩余空间太少导致开不开机请使用-time-machine-进行恢复-以下解决方案仅适用可开机用户">如果你的电脑已经剩余空间太少，导致开不开机，请使用 Time Machine ，进行恢复。以下解决方案仅适用可开机用户</h5>
+<ul>
+<li>
+<p>######小白大神皆可使用：</p>
+<ol>
+<li>从菜单栏中的 Time Machine 菜单打开 Time Machine 偏好设置  。或者选择 Apple菜单&gt;系统偏好设置，然后单击 Time Machine。</li>
+<li>取消选择“自动备份”或单击“关闭/打开”开关，具体取决于您在 Time Machine 偏好设置中看到的内容。</li>
+<li>等待几分钟以允许删除本地快照。然后再次打开 Time Machine 。它会记的使用您的备份磁盘。</li>
+<li><em>此方案未经本人验证，我使用的是下面的方法</em></li>
+</ol>
+</li>
+<li>
+<h6 id="使用终端命令">使用终端命令：</h6>
+<ol>
+<li>使用 tmutil 命令， <code>tmutil listlocalsnapshotdates</code> 列出所以本地快照</li>
+<li>使用 <code>tmutil deletelocalsnapshots xxx</code> 删除对应快照</li>
+<li>删除了三个快照后，本地剩余空间从 2G 升为 77G</li>
+<li>可选 <code>sudo tmutil disable localsnapshots</code> 从终端关闭本地快照备份功能，和手动关闭 “自动备份” 功能效果一样</li>
+</ol>
+</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://upload-images.jianshu.io/upload_images/1300265-11dfc80ef3a20757.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/680" alt="image.png" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[flutter 入坑问题收集(更新中)]]></title>
+        <id>https://doge1024.github.io/post/flutter-ru-keng-wen-ti-shou-ji-geng-xin-zhong/</id>
+        <link href="https://doge1024.github.io/post/flutter-ru-keng-wen-ti-shou-ji-geng-xin-zhong/">
+        </link>
+        <updated>2020-06-10T15:08:35.000Z</updated>
+        <content type="html"><![CDATA[<ol>
+<li>
+<p>💖字符号不显示</p>
+<ol>
+<li>You need to set uses-material-design: true in pubspec.yaml for the icons to be included in the app. <a href="https://stackoverflow.com/questions/50786982/flutter-icons-do-not-show">stackoverflow</a></li>
+</ol>
+</li>
+<li>
+<p>执行更新库：packages get 命令，会卡住，一直lock状态</p>
+<ol>
+<li>找到自己的flutter的路径</li>
+<li>删除cache中的lockfile <code>rm /Users/xxx/development/flutter/bin/cache/lockfile</code></li>
+</ol>
+</li>
+</ol>
+<pre><code>Waiting for another flutter command to release the startup lock...
 </code></pre>
-<p>2.在子控制器里面实现</p>
-<pre><code>- (UIStatusBarStyle)preferredStatusBarStyle {
-    return UIStatusBarStyleLightContent;
-}
+<ol start="3">
+<li>
+<p>打开安卓模拟器提示 <code>Broken AVD system path. Check your ANDROID_SDK_ROOT value</code></p>
+<p>原因是 <code>ANDROID_HOME</code> 和 <code>ANDROID_SDK_ROOT</code> 配置的不对<br>
+在Android studio找到：File/Other Settings/Default Project Structure...<br>
+里面会有 Android sdk location, 此路径才是<code>ANDROID_HOME</code>的路径，将<code>ANDROID_HOME</code> 和 <code>ANDROID_SDK_ROOT</code>更新为此目录就可以了</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://upload-images.jianshu.io/upload_images/1300265-884d8a870c001517.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png" loading="lazy"></figure>
+<pre><code>4. flutter使用墙内加速
 </code></pre>
-<p>这样系统push到某个控制器的时候就会显示此控制器<code>preferredStatusBarStyle</code>方法返回状态栏style，不写默认显示黑色字体的状态栏</p>
-<h4 id="如何动态的改变状态栏颜色">如何动态的改变状态栏颜色？</h4>
-<p>项目中有业务需求需要动态的改变状态栏颜色，StatusBarStyle可能在两种状态之间替换，最简单的是拿全局变量控制，但是为了以后调用方便，就写个分类，使用runtime 动态替换方法，当做一个小练习吧，以后用着也方便</p>
-<p>贴一下代码：</p>
-<pre><code>// UIViewController+ForcedChangeStatusBarColor.h
-#import &lt;UIKit/UIKit.h&gt;
-
-@interface UIViewController (ForcedChangeStatusBarColor)
-
-@property (nonatomic, strong) NSNumber *fcsb_statusBarStyle;
-
-@property (nonatomic, strong) NSNumber *fcsb_hasChange;
-
-/**
- @brief 控制器强制替换StatusBarStyle
- 只对自定义系统导航栏的控制器生效
- */
-- (void)forcedChangeStatusBarStyle:(UIStatusBarStyle)style;
-
-@end
-
-</code></pre>
-<pre><code>#import &quot;UIViewController+ForcedChangeStatusBarColor.h&quot;
-#import &quot;NSObject+CEHook.h&quot;
-
-@implementation UIViewController (ForcedChangeStatusBarColor)
-
-- (void)forcedChangeStatusBarStyle:(UIStatusBarStyle)style {
-    
-    @synchronized (self) {
-        if (self.fcsb_hasChange == nil) {
-            // 这行代码在替换方法， 可以替换
-            [self cehook_instanceMethodSwizzling:@selector(preferredStatusBarStyle) to:@selector(fcsb_preferredStatusBarStyle)];
-            self.fcsb_hasChange = @(YES);
-        }
-    }
-    
-    self.fcsb_statusBarStyle = @(style);
-    
-    // 刷新 StatusBar
-    [self setNeedsStatusBarAppearanceUpdate];
-}
-
-- (UIStatusBarStyle)fcsb_preferredStatusBarStyle {
-    return [self.fcsb_statusBarStyle integerValue];
-}
-
-#pragma mark - get &amp; set
-static char kAssociatedObjectKey_HasChange;
-- (void)setFcsb_hasChange:(NSNumber *)fcsb_hasChange {
-    objc_setAssociatedObject(self, &amp;kAssociatedObjectKey_HasChange, fcsb_hasChange, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (NSNumber *)fcsb_hasChange {
-    return (NSNumber *)objc_getAssociatedObject(self, &amp;kAssociatedObjectKey_HasChange);
-}
-
-static void *FCSBOrgiKey = &amp;FCSBOrgiKey;
- - (NSNumber *)fcsb_statusBarStyle {
-    return objc_getAssociatedObject(self, &amp;FCSBOrgiKey);
-}
-
-- (void)setFcsb_statusBarStyle:(NSNumber *)fcsb_statusBarStyle {
-    objc_setAssociatedObject(self,
-                             &amp;FCSBOrgiKey,
-                             fcsb_statusBarStyle,
-                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-@end
-
-</code></pre>
-<pre><code>#import &quot;NSObject+CEHook.h&quot;
-
-@implementation NSObject (CEHook)
-
-- (void)cehook_instanceMethodSwizzling:(SEL)originSelector to:(SEL)swizzleSelector {
-    Class class = [self class];
-    
-    Method originMethod = class_getInstanceMethod(class, originSelector);
-    Method swizzleMethod = class_getInstanceMethod(class, swizzleSelector);
-    
-    if (!originMethod || !swizzleMethod) {
-        return;
-    }
-    
-    class_addMethod(class,
-                    originSelector,
-                    method_getImplementation(originMethod),
-                    method_getTypeEncoding(originMethod));
-    class_addMethod(class,
-                    swizzleSelector,
-                    method_getImplementation(swizzleMethod),
-                    method_getTypeEncoding(swizzleMethod));
-    
-    ///&lt; 添加完了之后要重新赋值，因为原来的两个method都是父类的。参考自见https://github.com/rentzsch/jrswizzle/blob/semver-1.x/JRSwizzle.m
-    /// addMethod 返回 true 时，需要重新取 Method
-    Method originMethod2 = class_getInstanceMethod(class, originSelector);
-    Method swizzleMethod2 = class_getInstanceMethod(class, swizzleSelector);
-    
-    // NSLog(@&quot;instanceMethodSwizzling: %p, %p, %p, %p&quot;, originMethod, originMethod2, swizzleMethod, swizzleMethod2);
-    method_exchangeImplementations(originMethod2, swizzleMethod2);
-}
-@end
+<p>原文链接 ：https://flutter.dev/community/china</p>
+<pre><code>export PUB_HOSTED_URL=https://pub.flutter-io.cn
+export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 </code></pre>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[解决Charles和Shadowsocks冲突]]></title>
-        <id>https://doge1024.github.io/post/jie-jue-charles-he-shadowsocks-chong-tu/</id>
-        <link href="https://doge1024.github.io/post/jie-jue-charles-he-shadowsocks-chong-tu/">
+        <title type="html"><![CDATA[iOS electra 越狱后 TweakInject 不加载插件的问题]]></title>
+        <id>https://doge1024.github.io/post/ios-electra-yue-yu-hou-tweakinject-bu-jia-zai-cha-jian-de-wen-ti/</id>
+        <link href="https://doge1024.github.io/post/ios-electra-yue-yu-hou-tweakinject-bu-jia-zai-cha-jian-de-wen-ti/">
         </link>
-        <updated>2020-06-10T14:26:21.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="问题">问题：</h2>
-<p>由于没有买iOS上的番(fan)茄(qiang)App，有的时候电脑打开Charles，想走电脑的Shadow<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>o</mi><mi>c</mi><mi>k</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">socks</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault">o</span><span class="mord mathdefault">c</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord mathdefault">s</span></span></span></span>的代理，百度是没有问题的，但是google就走不通了。</p>
-<h3 id="解决方法">解决方法：</h3>
-<h6 id="第一步">第一步</h6>
-<figure data-type="image" tabindex="1"><img src="http://upload-images.jianshu.io/upload_images/1300265-5f2d48c4790abbb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png" loading="lazy"></figure>
-<h6 id="第二步">第二步</h6>
-<figure data-type="image" tabindex="2"><img src="http://upload-images.jianshu.io/upload_images/1300265-308962058ff45bce.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png" loading="lazy"></figure>
-<h2 id="环境">环境：</h2>
-<p>Shadow<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>o</mi><mi>c</mi><mi>k</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">socks</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault">o</span><span class="mord mathdefault">c</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord mathdefault">s</span></span></span></span>X v2.6.3<br>
-Charles v4.0</p>
-<h6 id="文章参考">文章参考 :</h6>
-<p><a href="http://www.wangjiawen.com/skill/shadowsocks-work-with-charles">Charles和Shadow<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>o</mi><mi>c</mi><mi>k</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">socks</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault">o</span><span class="mord mathdefault">c</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord mathdefault">s</span></span></span></span>共同使用</a></p>
+        <updated>2020-06-10T15:08:19.000Z</updated>
+        <content type="html"><![CDATA[<ol>
+<li>使用ssh链接手机，'ssh root@192.168.0.4', 默认密码 <code>alpine</code></li>
+<li>执行下面命令<br>
+<code>mv /Library/TweakInject /Library/TweakInject.bak &amp;&amp; ln -s /Library/MobileSubstrate/DynamicLibraries /Library/TweakInject</code></li>
+</ol>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Masonry自适应cell高度，同时实现cell折叠和展开]]></title>
-        <id>https://doge1024.github.io/post/masonry-zi-gua-ying-cell-gao-du-tong-shi-shi-xian-cell-zhe-die-he-zhan-kai/</id>
-        <link href="https://doge1024.github.io/post/masonry-zi-gua-ying-cell-gao-du-tong-shi-shi-xian-cell-zhe-die-he-zhan-kai/">
+        <title type="html"><![CDATA[WKWebView 的性能优化]]></title>
+        <id>https://doge1024.github.io/post/wkwebview-de-xing-neng-you-hua/</id>
+        <link href="https://doge1024.github.io/post/wkwebview-de-xing-neng-you-hua/">
         </link>
-        <updated>2020-06-10T14:25:27.000Z</updated>
-        <content type="html"><![CDATA[<p>这都2017年了还在用frame布局实在是有点low了。。。<br>
-Autolayout自iOS6开始引入，到现在基本上也没什么坑了，就算有，前辈们也都填好了( ⁼̴̀ .̫ ⁼̴́ )✧</p>
-<h2 id="自动计算cell高度">自动计算cell高度</h2>
-<p>我理解的自动计算cell高度，有两个注意点：<br>
-第一： 设置tableView.estimatedRowHeight<br>
-<code>self.tableView.estimatedRowHeight = 20</code></p>
-<p>第二： 设置约束，保证cell的contentView的高度可以根据子控件算出来<br>
-例如以下只有一个label填充的cell（cell的结构-&gt;cell--contentView--label）<br>
-只需要给label添加以下约束：</p>
-<pre><code>// 布局
-    [_contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(_contentLabel.superview.mas_left).with.offset(20);
-        make.top.equalTo(_contentLabel.superview.mas_top).with.offset(20);
-        make.right.equalTo(_contentLabel.superview.mas_right).with.offset(-20);
-        make.bottom.equalTo(_contentLabel.superview.mas_bottom).with.offset(-20);
-    }];
-</code></pre>
-<p>cell就可以自动计算自己的高度</p>
-<figure data-type="image" tabindex="1"><img src="http://upload-images.jianshu.io/upload_images/1300265-f401b0e911ac27e4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="内容高度不固定的cell" loading="lazy"></figure>
-<h2 id="实现cell的折叠和展开">实现cell的折叠和展开</h2>
-<h6 id="先说我觉的比较好的实现方法上面约束不用变改变label的numberoflines就可以需要展开的时候设置为0折叠的时候设置为3">先说我觉的比较好的实现方法：上面约束不用变改变Label的numberOfLines就可以，需要展开的时候设置为0，折叠的时候设置为3。</h6>
-<p>下面的是我的想法过程，大家可以略过：<br>
-一开始的时候想的是给label一个高度小于等于120的约束，并且持有它<br>
-<code>make.height.lessThanOrEqualTo(@120)</code><br>
-折叠的时候，把约束install，展开的时候uninstall。</p>
-<p>实现起来：每次在TableView的cell点击代理方法里面 调用cell的方法使label高度的约束install和uninstall，然后调用<code>[tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];</code></p>
-<p>后来发现和这个约束有冲突<br>
-<code>make.bottom.equalTo(_contentLabel.superview.mas_bottom).with.offset(-20)</code> ，作为强迫症患者这能忍？。<br>
-然后突然想到label的numberOfLines可以限制行数......这不就是现成的实现折叠/展开的最好方法吗...</p>
-<h6 id="效果">效果：</h6>
-<figure data-type="image" tabindex="2"><img src="http://upload-images.jianshu.io/upload_images/1300265-ee51a6ed2ffb3776.gif?imageMogr2/auto-orient/strip" alt="可以折叠的cell的效果图" loading="lazy"></figure>
-<h5 id="demo">Demo ：</h5>
-<p><a href="https://github.com/harddog/test-autolayoutcell.git">test-autolayoutcell</a></p>
-<h6 id="文章参考">文章参考 :</h6>
-<p>1.<a href="https://github.com/SnapKit/Masonry">Masonry</a><br>
-2.<a href="http://blog.sunnyxx.com/2015/05/17/cell-height-calculation">优化UITableViewCell高度计算的那些事</a><br>
-3.<a href="http://www.jianshu.com/p/cef485a9ce36">iOS7和iOS8下的自适应cell</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[处理WKContentView的crash]]></title>
-        <id>https://doge1024.github.io/post/chu-li-wkcontentview-de-crash/</id>
-        <link href="https://doge1024.github.io/post/chu-li-wkcontentview-de-crash/">
-        </link>
-        <updated>2020-06-10T14:25:00.000Z</updated>
-        <content type="html"><![CDATA[<h3 id="解决wkcontentview没有issecuretextentry方法造成的crash">解决WKContentView没有isSecureTextEntry方法造成的crash</h3>
-<p>程序中有web页面，使用WKWebView，但是有个crash一直存在：<br>
-<code>[WKContentView isSecureTextEntry]: unrecognized selector sent to instance 0x101bd5000</code><br>
-网上搜索，并没有结果，是太简单了吗？不清楚，准备使用runtime给WKContentView添加一个方法，观察下</p>
+        <updated>2020-06-10T15:07:56.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="wkwebview-的性能优化">WKWebView 的性能优化</h1>
+<h2 id="起因">起因</h2>
+<p>随着移动设备性能不断增强，web 页面的性能体验逐渐变得可以接受，又因为 web 开发模式的诸多好处(跨平台，动态更新，减体积，无限扩展)，APP 客户端里出现越来越多内嵌 web 页面），很多 APP 把一些功能模块改成用 H5 实现。</p>
+<p>虽然说 H5 页面性能变好了，但如果没针对性地做一些优化，体验还是很糟糕的，主要两部分体验：</p>
+<ol>
+<li>页面启动白屏时间：打开一个 H5 页面需要做一系列处理，会有一段白屏时间，体验糟糕。</li>
+<li>响应流畅度：由于 webkit 的渲染机制，单线程，历史包袱等原因，页面刷新/交互的性能体验不如原生。</li>
+</ol>
+<p>由于以上原因，公司准备从第一点入手，做 webview 的优化项目(达到秒开         webview )。因为<code>UIWebView</code>在 iOS12 就被标记废弃了，所以决定先从<code>WKWebView</code>入手研究。</p>
+<h2 id="思路">思路</h2>
+<h3 id="webview-加载过程">webview 加载过程</h3>
+<figure data-type="image" tabindex="1"><img src="https://upload-images.jianshu.io/upload_images/1300265-984e4c17d42b38a6.png?imageMogr2/auto-orient/strip%7CimageView2/2/" alt="webview展示流程.png" loading="lazy"></figure>
+<p>打开一个页面的过程有很多优化点，包括前端和客户端，常规的前端和后端的性能优化已有前辈们总结过最佳实践，主要的是：</p>
+<ul>
+<li>降低请求量：合并资源，减少 HTTP 请求数，minify / gzip 压缩，webP，lazyLoad。</li>
+<li>加快请求速度：预解析DNS，减少域名数，并行加载，CDN 分发。</li>
+<li>缓存：HTTP 协议缓存请求，离线缓存 manifest，离线数据缓存 localStorage。</li>
+<li>渲染：JS/CSS优化，加载顺序，服务端渲染模板直出。</li>
+<li>客户端：预请求web所需数据<br>
+大家可以看出，主要是第三阶段之前，用户看到的页面一直处于白屏。首先要优化的就是这段时间。<br>
+打开一个页面的过程有很多优化点，包括前端和客户端，常规的前端和后端的性能优化已有前辈们总结过最佳实践，主要的是：</li>
+</ul>
+<p>下面只讲客户端优化部分：</p>
+<h4 id="减少第一阶段耗时">减少第一阶段耗时</h4>
+<ol>
+<li>在使用前预先初始化好 webView，从而减小耗时。</li>
+<li>在初始化的同时，通过 Native 来完成一些网络请求等过程，使得 webView 初始化不是完全的阻塞后续过程。</li>
+<li>webview 池，可以用两个或多个 webview 重复使用，而不是每次打开 H5 都新建 webview。</li>
+</ol>
+<h4 id="减少第二阶段耗时">减少第二阶段耗时</h4>
+<ol>
+<li>离线包
+<ol>
+<li>预先下载离线包，可以达到立即展示的效果。</li>
+<li>离线包可以很方便地根据版本做增量更新。</li>
+<li>离线包以压缩包的方式下发，同时会经过加密和校验，防止运营商和第三方对其劫持篡改。</li>
+</ol>
+</li>
+<li>数据缓存
+<ol>
+<li>第一次打开会有延迟，但是后续打开就会很快</li>
+<li>可以自己控制缓存，方便管理</li>
+</ol>
+</li>
+<li>客户端代替请求
+<ol>
+<li>客户端可以在网络请求上做像 DNS 预解析/ IP 直连/长连接/并行请求等更细致的优化</li>
+</ol>
+</li>
+</ol>
+<h2 id="难点">难点</h2>
+<p>方案是通用的，不区分 UIWebView  和 WKWebView，但是目前很少有以 WKWebView 为目标的方案，那么以上技术方案在 WKWebView 中实现有什么难点呢？<br>
+难点在 <a href="%5Bhttps://developer.apple.com/documentation/foundation/nsurlprotocol%5D(https://developer.apple.com/documentation/foundation/nsurlprotocol)">NSURLProtocol</a></p>
+<h4 id="wkwebview-无法使用-nsurlprotocol-拦截-http-请求">WKWebView 无法使用 NSURLProtocol 拦截 http 请求</h4>
+<p>这个问题网上早有方案：<br>
+<code>[WKBrowsingContextController registerSchemeForCustomProtocol:@&quot;schemes&quot;];</code></p>
+<h4 id="wkwebview-使用-nsurlprotocol-拦截后httpbody的数据会丢失">WKWebView 使用 NSURLProtocol 拦截后，HTTPBody的数据会丢失</h4>
+<p>从网上克隆了 webkit 进行编译调试，尝试解决 Body 丢失的问题（体验到了啥叫大型项目的编译速度）<br>
+<img src="https://upload-images.jianshu.io/upload_images/1300265-3196befb8d12731e.png?imageMogr2/auto-orient/strip%7CimageView2/2/" alt="image.png" loading="lazy"><br>
+从图上重点标注的地方可以看到：</p>
+<ol>
+<li>
+<p>WKWebView 的网络请求是在另外一个进程中操作的，然后如果 app 主进程需要拦截请求的话，通过 XPC 来进行两个进程间的通信。</p>
+</li>
+<li>
+<p>苹果出于性能或其他考虑，会在给主进程的 URLProtocol 传输请求时将 <code>HTTPBody</code> 和 <code>HTTPBodyStream</code> 置为 nil 。<br>
+<a href="https://github.com/doge1024/webkit/blob/ce05715c8e1034db2e1ac99dde920c41b47b9534/Source/WebKit/Shared/mac/WebCoreArgumentCodersMac.mm#L195-L201">源代码</a></p>
+</li>
+</ol>
+<h5 id="尝试解决方案">尝试解决方案：</h5>
+<ol>
+<li>使用 runtime 黑魔法，在其将 HTTPBody 置为 nil 之前，先保存下来？<br>
+因为网络请求是在其他进程中操作，没有办法在主进程使用 runtime 进行拦截。也就是说在 app 中决定拦截 http 请求的那一刻起，拦截到的请求注定是没有 HTTPBody 的。</li>
+<li>使用 任何方式进入到 Networking 进程做一些操作 ？<br>
+尝试了 Mac 端的 XPC demo，XPC 的回调是在各自进程，是不能操作其他进程的。</li>
+<li>在 <code>HTTPBody</code> 置为 nil 之前，是否会有代码走到主进程，然后拿到 request 进行操作？<br>
+抱歉，经过测试，在 <code>HTTPBody</code> 置为 nil 之前，主进程不会收到关于 request 的调用</li>
+</ol>
+<figure data-type="image" tabindex="2"><img src="https://upload-images.jianshu.io/upload_images/1300265-1e1b75719d7f736d.png?imageMogr2/auto-orient/strip%7CimageView2/2" alt="xpc 的 demo" loading="lazy"></figure>
+<h2 id="解决">解决</h2>
+<p>难到就没有任何方法解决了么？无意中看到一个特别有趣的想法又点燃了我的希望。</p>
+<p>既然 Networking 进程会将  <code>HTTPBody</code> 置为 nil ，那我要做的就是两点：<br>
+1. 不让其置为 nil<br>
+2. 或者在其置为 nil 之前，先将 <code>HTTPBody</code> 保存下来</p>
+<p>第一点：上面已经尝试失败；第二点：在 native 端也尝试失败，那在 H5 侧做保存操作呢？<br>
+要拦截的是 H5 的请求，那说明 H5 侧肯定是知道请求参数的。</p>
+<h4 id="尝试-h5-与-native-结合来解决-httpbody-丢失问题">尝试 H5 与 native 结合来解决 <code>HTTPBody</code> 丢失问题</h4>
+<p>H5 发起发起请求有三种方式：<br>
+1. <strong><a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement"><code>Form</code></a></strong><br>
+2. <strong><a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest"><code>XMLHttpRequest</code></a></strong><br>
+3. <strong><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API"><code>Fetch</code></a></strong></p>
+<p><code>Fetch</code>是在 iOS10 以后支持的，从通用场景看，只需要处理 <code>Form</code> 和 <code>XMLHttpRequest</code> 发起的带 <code>HTTPBody</code> 的请求就可以.</p>
+<p>基本所有 H5 开发者，肯定知道 H5 里面也有黑魔法，就是原型：<br>
+<code>XMLHttpRequest</code> 对应的是 <code>XMLHttpRequest.prototype.send</code> 方法<br>
+<code>Form</code> 对应的是 <code>HTMLFormElement.prototype.submit</code> 方法</p>
+<p>我们对以上方法使用 <code>WKUserScript</code> 在 <code>WKUserScriptInjectionTimeAtDocumentStart</code> 时机做对应拦截。这样 H5 在发起请求前，先将 POST 的数据发送给 native 存储(<code>WKScriptMessageHandler</code>)。然后在 native 拦截到匹配到的请求，尝试接管，并重新设置 <code>HTTPBody</code>，而且由于拦截到的是 request ，只需要补齐<code>HTTPBody</code>，其他在 h5 中原本对 request 做的各种操作也是存在的，这样就能解决问题了</p>
+<p>这个方法提供了一种解决<code>HTTPBody</code> 丢失问题的可能，并且大部分 app，使用应该完全够用。本人已经按照上述方案实现，并接入到 app 中，在解决了一些细节问题后，将各个流程中的 H5 页面走了一遍，目前没有发现不支持的请求。</p>
 <hr>
-<p>在程序启动的时候调用一下progressWKContentViewCrash方法就可以</p>
-<pre><code>/**
- 处理WKContentView的crash
- [WKContentView isSecureTextEntry]: unrecognized selector sent to instance 0x101bd5000
- */
-+ (void)progressWKContentViewCrash {
-    if (([[[UIDevice currentDevice] systemVersion] doubleValue] &gt;= 8.0)) {
-        const char *className = @&quot;WKContentView&quot;.UTF8String;
-        Class WKContentViewClass = objc_getClass(className);
-        SEL isSecureTextEntry = NSSelectorFromString(@&quot;isSecureTextEntry&quot;);
-        SEL secureTextEntry = NSSelectorFromString(@&quot;secureTextEntry&quot;);
-        BOOL addIsSecureTextEntry = class_addMethod(WKContentViewClass, isSecureTextEntry, (IMP)isSecureTextEntryIMP, &quot;B@:&quot;);
-        BOOL addSecureTextEntry = class_addMethod(WKContentViewClass, secureTextEntry, (IMP)secureTextEntryIMP, &quot;B@:&quot;);
-        if (!addIsSecureTextEntry || !addSecureTextEntry) {
-            NSLog(@&quot;WKContentView-Crash-&gt;修复失败&quot;);
-        }
-    }
-}
-
-/**
- 实现WKContentView对象isSecureTextEntry方法
- @return NO
- */
-BOOL isSecureTextEntryIMP(id sender, SEL cmd) {
-    return NO;
-}
-
-/**
- 实现WKContentView对象secureTextEntry方法
- @return NO
- */
-BOOL secureTextEntryIMP(id sender, SEL cmd) {
-    return NO;
-}
-</code></pre>
-<h2 id="实际使用效果">实际使用效果</h2>
-<p>在项目的新版本里加上上面处理方法以后，<code>[WKWebView isSecureTextEntry]</code>崩溃已经消失🤓</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[越狱第三章：企业微信抢红包插件]]></title>
-        <id>https://doge1024.github.io/post/yue-yu-di-san-zhang-qi-ye-wei-xin-qiang-hong-bao-cha-jian/</id>
-        <link href="https://doge1024.github.io/post/yue-yu-di-san-zhang-qi-ye-wei-xin-qiang-hong-bao-cha-jian/">
-        </link>
-        <updated>2020-06-10T14:24:36.000Z</updated>
-        <content type="html"><![CDATA[<h4 id="企业微信抢红包为年终奖做准备-̴̀-̫-̴́">企业微信抢红包（为年终奖做准备( ⁼̴̀ .̫ ⁼̴́ )✧）</h4>
-<h2 id="使用loglypl自动编写打印方法的文件">使用logly.pl自动编写打印方法的文件</h2>
-<ol>
-<li>/opt/theos/bin/logify.pl /文件目录/WWKConversationRedEnvelopesBubbleView.h  &gt; ./1.xm</li>
-<li>如果要跟踪多个头文件，则继续转换：/opt/theos/bin/logify.pl 其它头文件 &gt;&gt; Tweak.xm    注意中间是 &gt;&gt;（没试过）</li>
-</ol>
-<h2 id="安装到手机">安装到手机</h2>
-<p><code>export THEOS=/opt/theos</code><br>
-<code>export THEOSDEVICEIP=192.168.1.100</code><br>
-先执行以上两行命令<br>
-然后执行<br>
-<code>make package install</code><br>
-<code>make package</code> 和 <code>make install</code>可以单独使用</p>
-<h2 id="make-package报错">make package报错</h2>
-<p>有的时候会报错，不知道类名，这种情况在文件最上面写上</p>
-<pre><code>@interface WWKMessageRedEnvelopes
-@end
-</code></pre>
-<p>写上类似此种格式的代码，骗过编译</p>
-<h2 id="打印log">打印log</h2>
-<p>安装完成后，打开Xcode-&gt;Window-&gt;Device-&gt;你的设备，下面有Log显示，</p>
-<p>参考网站：</p>
-<ol>
-<li>
-<p>https://zhuanlan.zhihu.com/p/21530388</p>
-</li>
-<li>
-<p>http://www.jianshu.com/p/98642d1ea4e1</p>
-</li>
-<li>
-<p>http://www.jianshu.com/p/98642d1ea4e1</p>
-</li>
-<li>
-<p>http://www.jianshu.com/p/189afbe3b429</p>
-</li>
-</ol>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[iOS 同时画虚线和直线]]></title>
-        <id>https://doge1024.github.io/post/ios-tong-shi-hua-xu-xian-he-zhi-xian/</id>
-        <link href="https://doge1024.github.io/post/ios-tong-shi-hua-xu-xian-he-zhi-xian/">
-        </link>
-        <updated>2020-06-10T14:24:18.000Z</updated>
-        <content type="html"><![CDATA[<pre><code>- (void)drawRect:(CGRect)rect {
-    [super drawRect:rect];
-    
-    CGFloat y1 = _textField.bottom;
-    CGFloat y2 = _monthPayLabel.bottom;
-    
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetStrokeColorWithColor(context, UIColorFromRGB(0xd7dadf).CGColor);
-    
-    //画两根线，虚线
-    CGContextSetLineWidth(context,1);//线宽度
-    CGFloat lengths[] = {10,5};//先画4个点再画2个点
-    CGContextSetLineDash(context, 0, lengths, 2);
-    CGContextMoveToPoint(context, AutoSize(12), y1);
-    CGContextAddLineToPoint(context, SCREEN_WIDTH, y1);
-    CGContextStrokePath(context);
-    //实线
-    CGContextSetLineDash(context, 0, NULL, 0);
-    CGContextMoveToPoint(context, AutoSize(12), y2);
-    CGContextAddLineToPoint(context, SCREEN_WIDTH, y2);
-    CGContextStrokePath(context);
-    
-    CGContextClosePath(context);
-}
-</code></pre>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[自己实现同时带有圆角和阴影的View]]></title>
-        <id>https://doge1024.github.io/post/zi-ji-shi-xian-tong-shi-dai-you-yuan-jiao-he-yin-ying-de-view/</id>
-        <link href="https://doge1024.github.io/post/zi-ji-shi-xian-tong-shi-dai-you-yuan-jiao-he-yin-ying-de-view/">
-        </link>
-        <updated>2020-06-10T14:23:23.000Z</updated>
-        <content type="html"><![CDATA[<pre><code>#import &lt;UIKit/UIKit.h&gt;
-
-/**
- *  按钮类型
- */
-typedef NS_ENUM(NSInteger, CardLoanBaseButtonStyle) {
-    
-    // 深蓝色
-    CardLoanBaseButtonStyleBlue,
-};
-
-/**
- 2.0 基类button
- */
-@interface CardLoanBaseButton : UIButton
-
-/**
- Button样式
- */
-@property (nonatomic, assign) CardLoanBaseButtonStyle style;
-
-/**
- Button
- */
-@property (nonatomic, strong) UIColor *maskColor;
-
-/**
- *  初始化 button
- */
-+ (instancetype)buttonWithFrame:(CGRect)frame buttonStyle:(CardLoanBaseButtonStyle)buttonStyle;
-
-@end
-
-</code></pre>
-<pre><code>@interface CardLoanBaseButton ()
-
-/**
- Masklayer
- */
-@property (nonatomic, strong) CAShapeLayer *maskLayer;
-
-@end
-
-@implementation CardLoanBaseButton
-
-+ (instancetype)buttonWithFrame:(CGRect)frame buttonStyle:(CardLoanBaseButtonStyle)buttonStyle {
-    
-    CardLoanBaseButton *button = [self buttonWithType:UIButtonTypeCustom];
-    button.frame = frame;
-    button.style = buttonStyle;
-    
-    return button;
-}
-
-- (void)setStyle:(CardLoanBaseButtonStyle)style {
-    
-    _style = style;
-    
-    switch (_style) {
-        case CardLoanBaseButtonStyleBlue: {
-            
-            self.maskColor = UIColorFromRGB(0x574ef2);
-            [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [self setTitleColor:[UIColor colorWithWhite:1 alpha:.2] forState:UIControlStateDisabled];
-            
-            self.titleEdgeInsets = UIEdgeInsetsMake(0, 0, self.height * .2, 0);
-        }
-        break;
-        
-        default:
-        break;
-    }
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    [self setShandowAndCurveRect];
-}
-
-/**
- 添加圆角和阴影
- */
-- (void)setShandowAndCurveRect {
-    
-    CGFloat radius = self.height * .5;
-    UIBezierPath *path = [UIBezierPath bezierPath];
-    [path setLineWidth:.5];
-    [path moveToPoint:CGPointMake(radius, 0)];
-    [path addLineToPoint:CGPointMake(self.width - radius, 0)];
-    [path addArcWithCenter:CGPointMake(self.width - radius, radius) radius:radius startAngle:- M_PI_2 endAngle:M_PI_2 clockwise:YES];
-    [path addLineToPoint:CGPointMake(radius, self.height)];
-    [path addArcWithCenter:CGPointMake(radius, radius) radius:radius startAngle:M_PI_2 endAngle:M_PI_2 * 3 clockwise:YES];
-    [path closePath];
-    self.maskLayer.frame = self.bounds;
-    self.maskLayer.strokeColor = self.maskColor.CGColor;
-    self.maskLayer.fillColor = self.maskColor.CGColor;
-    self.maskLayer.path = path.CGPath;
-    [self.layer insertSublayer:self.maskLayer atIndex:0];
-    
-    self.maskLayer.shadowOffset = CGSizeMake(0, self.height * .1);
-}
-
-- (CALayer *)maskLayer {
-    if (_maskLayer == nil) {
-        _maskLayer = [CAShapeLayer layer];
-        self.maskLayer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.8].CGColor;
-        self.maskLayer.shadowOpacity = 0.8;
-    }
-    return _maskLayer;
-}
-
-@end
-
-</code></pre>
+<p>感兴趣的可以自己下载编译 <a href="https://github.com/doge1024/webkit">webkit</a><br>
+<a href="https://github.com/doge1024/XPCDemo.git">XPCDemo</a></p>
+<hr>
+<p>参考：<br>
+<a href="https://tech.meituan.com/2017/06/09/webviewperf.html">WebView性能、体验分析与优化</a><br>
+<a href="https://blog.cnbang.net/tech/3477/">移动 H5 首屏秒开优化方案探讨<br>
+</a> <a href="https://github.com/li6185377/IMYWebLoader.git">IMYWebLoader</a><br>
+<a href="https://github.com/Tencent/VasSonic.git">VasSonic</a></p>
 ]]></content>
     </entry>
 </feed>
