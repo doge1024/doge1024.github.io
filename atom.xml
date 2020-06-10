@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://doge1024.github.io</id>
     <title>Gridea</title>
-    <updated>2020-06-10T14:14:18.405Z</updated>
+    <updated>2020-06-10T14:20:01.196Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://doge1024.github.io"/>
     <link rel="self" href="https://doge1024.github.io/atom.xml"/>
@@ -10,6 +10,67 @@
     <logo>https://doge1024.github.io/images/avatar.png</logo>
     <icon>https://doge1024.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Gridea</rights>
+    <entry>
+        <title type="html"><![CDATA[js和ios交互中的一些笔记]]></title>
+        <id>https://doge1024.github.io/post/js-he-ios-jiao-hu-zhong-de-yi-xie-bi-ji/</id>
+        <link href="https://doge1024.github.io/post/js-he-ios-jiao-hu-zhong-de-yi-xie-bi-ji/">
+        </link>
+        <updated>2020-06-10T14:17:43.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="所用框架webviewjavascriptbridge">所用框架WebViewJavascriptBridge</h3>
+<h5 id="关于webview的delegate">关于webView的delegate</h5>
+<p>如果使用WebViewJavascriptBridge， webview的delegate不能直接设置，需要通过下面方法</p>
+<pre><code>[self.bridge setWebViewDelegate:self] 
+</code></pre>
+<h5 id="nullundefinednsnullnil">null，undefined，NSNull，nil</h5>
+<pre><code>js中的null，转到ios会变成NSNull类的实例
+js中字典取不到的值，或者未声明的属性，会为undefined
+js中的undefined，传到ios会变为nil
+</code></pre>
+<pre><code>ios中的NSNull， 转到js会变成null
+ios中的responseCallback(nil)时， 框架会转成NSNull再进行传递
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[记录一次微信分享的经历]]></title>
+        <id>https://doge1024.github.io/post/ji-lu-yi-ci-wei-xin-fen-xiang-de-jing-li/</id>
+        <link href="https://doge1024.github.io/post/ji-lu-yi-ci-wei-xin-fen-xiang-de-jing-li/">
+        </link>
+        <updated>2020-06-10T14:16:10.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1微信好友分享缩略图不显示的bug">1.微信好友分享缩略图不显示的bug</h1>
+<h3 id="经过两天彻查加请教终于发现了问题">经过两天彻查加请教，终于发现了问题。</h3>
+<p>微信分享要遵循一下规则：</p>
+<pre><code>微信（好友、朋友圈、收藏）分享规则：
+微信三个平台中，好友的功能最完整，朋友圈不能分享表情、文件，收藏不能分享表情和应用，表格下以好友为例子（其中分享图文消息限制10条，超过10条将会无响应）：
+参数说明
+title：512Bytes以内
+description：1KB以内
+imageData：大小不能超过10M
+imagePath：大小不能超过10M(传递的imagePath路径不能超过10KB)
+imageUrl：长度不能超过10K（图片链接，支持JPG、PNG格式，较好的效果为大图360*200，小图200*200 ）
+ThumbImage：内存大小不能超过32K的png图
+musicUrl：长度不能超过10K
+videoUrl：长度不能超过10K
+url：不能为空且长度不能超过10K
+</code></pre>
+<p>当然，以上规则什么问题都没有，<br>
+但是有的时候，明明遵守了上面规则，却还是出不来。。。</p>
+<h2 id="比如">比如：</h2>
+<h3 id="description里面不能有红包之类的关键字"><strong>description里面不能有红包之类的关键字</strong></h3>
+<p>只要描述内容里面出现<strong>红包</strong>两个字，微信好友分享出去的网页，缩略图就不见了！！！</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[安装cocoapods权限错误]]></title>
+        <id>https://doge1024.github.io/post/an-zhuang-cocoapods-quan-xian-cuo-wu/</id>
+        <link href="https://doge1024.github.io/post/an-zhuang-cocoapods-quan-xian-cuo-wu/">
+        </link>
+        <updated>2020-06-10T14:14:58.000Z</updated>
+        <content type="html"><![CDATA[<p><em><strong>错误ERROR:  While executing gem ... (Errno::EPERM)</strong></em><br>
+***    Operation not permitted - /usr/bin/pod ***<br>
+<strong>解决方法</strong>: 命令行输入sudo gem install -n /usr/local/bin cocoapods</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[@weakify的宏定义分解]]></title>
         <id>https://doge1024.github.io/post/weakify-de-hong-ding-yi-fen-jie/</id>

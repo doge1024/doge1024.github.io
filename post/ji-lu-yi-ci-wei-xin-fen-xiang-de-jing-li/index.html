@@ -2,21 +2,21 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>@weakify的宏定义分解 | Gridea</title>
+<title>记录一次微信分享的经历 | Gridea</title>
 <link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591798795555">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="@weakify的宏定义分解 | Gridea - Atom Feed" href="https://doge1024.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="记录一次微信分享的经历 | Gridea - Atom Feed" href="https://doge1024.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="项目中用到了@weakify的宏定义, 正好今天任务解决了, 就一步一步拆分下看看它是怎么实现的.
-下面就一步一步拆分@weakify
-object-c
-@weakify(self) 中@weakify的宏定义如下
-#define weak..." />
-    <meta name="keywords" content="iOS" />
+    <meta name="description" content="1.微信好友分享缩略图不显示的bug
+经过两天彻查加请教，终于发现了问题。
+微信分享要遵循一下规则：
+微信（好友、朋友圈、收藏）分享规则：
+微信三个平台中，好友的功能最完整，朋友圈不能分享表情、文件，收藏不能分享表情和应用，表格下以好友为例..." />
+    <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -78,7 +78,7 @@ object-c
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              @weakify的宏定义分解
+              记录一次微信分享的经历
             </h2>
             <div class="post-info">
               <span>
@@ -88,86 +88,62 @@ object-c
                 2 min read
               </span>
               
-                <a href="https://doge1024.github.io/tag/t-pcqh4ec/" class="post-tag">
-                  # iOS
-                </a>
-              
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>项目中用到了@weakify的宏定义, 正好今天任务解决了, 就一步一步拆分下看看它是怎么实现的.</p>
-<p>下面就一步一步拆分@weakify<br>
-<code>object-c</code></p>
-<pre><code>@weakify(self) 中@weakify的宏定义如下
-#define weakify(...) \
-    ext_keywordify \
-    metamacro_foreach_cxt(ext_weakify_,, __weak, __VA_ARGS__)
-
-    /*
-	@weakify(self)
-	可以替换为
-	ext_keywordify \
-    metamacro_foreach_cxt(ext_weakify_,, __weak, self)
-    */
+                <h1 id="1微信好友分享缩略图不显示的bug">1.微信好友分享缩略图不显示的bug</h1>
+<h3 id="经过两天彻查加请教终于发现了问题">经过两天彻查加请教，终于发现了问题。</h3>
+<p>微信分享要遵循一下规则：</p>
+<pre><code>微信（好友、朋友圈、收藏）分享规则：
+微信三个平台中，好友的功能最完整，朋友圈不能分享表情、文件，收藏不能分享表情和应用，表格下以好友为例子（其中分享图文消息限制10条，超过10条将会无响应）：
+参数说明
+title：512Bytes以内
+description：1KB以内
+imageData：大小不能超过10M
+imagePath：大小不能超过10M(传递的imagePath路径不能超过10KB)
+imageUrl：长度不能超过10K（图片链接，支持JPG、PNG格式，较好的效果为大图360*200，小图200*200 ）
+ThumbImage：内存大小不能超过32K的png图
+musicUrl：长度不能超过10K
+videoUrl：长度不能超过10K
+url：不能为空且长度不能超过10K
 </code></pre>
-<hr>
-<p>分段拆解</p>
-<ol>
-<li>先看<code>ext_keywordify</code>, 替换为<code>autoreleasepool {}</code>; 知道为什么weakify前面为什么要加@了吧, 是在这里用的.</li>
-</ol>
-<p><strong>效果</strong>:</p>
-<pre><code>@autoreleasepool {} 
-metamacro_foreach_cxt(ext_weakify_,, __weak, self)
-</code></pre>
-<ol start="2">
-<li>在看<code>metamacro_foreach_cxt(ext_weakify_,, __weak, self)</code><br>
-先替换 <code>metamacro_foreach_cxt</code><pre><code>#define metamacro_foreach_cxt(MACRO, SEP, CONTEXT, ...) \ 
-metamacro_concat(metamacro_foreach_cxt, metamacro_argcount(__VA_ARGS__))(MACRO, SEP, CONTEXT, __VA_ARGS__)
-</code></pre>
-</li>
-</ol>
-<p>先看<code>metamacro_argcount(__VA_ARGS__)</code><br>
-这个宏的作用是返回一共参数有多少个<br>
-工作原理是截取前二十个</p>
-<pre><code>#define metamacro_argcount(...) \
-        metamacro_at(20, __VA_ARGS__, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
-        
-//这个宏的定义是拼接连个参数
-#define metamacro_at(N, ...) \
-        metamacro_concat(metamacro_at, N)(__VA_ARGS__)
-        会转换为, metamacro_at20(__VA_ARGS__), 并且参数最后20位为20到1;
-        
-#define metamacro_at20(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, ...) metamacro_head(__VA_ARGS__)
-
-metamacro_head(__VA_ARGS__) //宏的作用是取第一个参数
-
-再这样的话, 前20个参数一一对应, 最后会剩下1(以@weakify(self)为例);
-</code></pre>
-<p><strong>效果</strong>:</p>
-<pre><code>metamacro_foreach_cxt1(ext_weakify_,, __weak, self)
-</code></pre>
-<p>// 按照#define metamacro_foreach_cxt1(MACRO, SEP, CONTEXT, _0) MACRO(0, CONTEXT, _0)<br>
-进一步转化为</p>
-<p><code>ext_weakify_(0, __weak, self);</code><br>
-再带入<code>ext_weakify_</code><br>
-转化为:<br>
-<code>__weak __typeof__(self) self_weak_ = (self);</code></p>
-<p>分解完毕</p>
-<p>@strongify要在block中使用<br>
-@strongify想要看的自己完成, 最终结果为<br>
-<code>__strong __typeof__(self) self = self_weak_;</code></p>
-<p>想要具体过程的, 推荐简书文章WzxJiang的<a href="http://www.jianshu.com/p/bcd7367ea54b">剖析@weakify、@strongify</a><br>
-感谢WzxJiang在简书上的文章, 对我帮助很大, 对宏的了解又增加了许多</p>
+<p>当然，以上规则什么问题都没有，<br>
+但是有的时候，明明遵守了上面规则，却还是出不来。。。</p>
+<h2 id="比如">比如：</h2>
+<h3 id="description里面不能有红包之类的关键字"><strong>description里面不能有红包之类的关键字</strong></h3>
+<p>只要描述内容里面出现<strong>红包</strong>两个字，微信好友分享出去的网页，缩略图就不见了！！！</p>
 
               </div>
               <div class="toc-container">
-                
+                <ul class="markdownIt-TOC">
+<li><a href="#1%E5%BE%AE%E4%BF%A1%E5%A5%BD%E5%8F%8B%E5%88%86%E4%BA%AB%E7%BC%A9%E7%95%A5%E5%9B%BE%E4%B8%8D%E6%98%BE%E7%A4%BA%E7%9A%84bug">1.微信好友分享缩略图不显示的bug</a><br>
+*
+<ul>
+<li><a href="#%E7%BB%8F%E8%BF%87%E4%B8%A4%E5%A4%A9%E5%BD%BB%E6%9F%A5%E5%8A%A0%E8%AF%B7%E6%95%99%E7%BB%88%E4%BA%8E%E5%8F%91%E7%8E%B0%E4%BA%86%E9%97%AE%E9%A2%98">经过两天彻查加请教，终于发现了问题。</a></li>
+<li><a href="#%E6%AF%94%E5%A6%82">比如：</a>
+<ul>
+<li><a href="#description%E9%87%8C%E9%9D%A2%E4%B8%8D%E8%83%BD%E6%9C%89%E7%BA%A2%E5%8C%85%E4%B9%8B%E7%B1%BB%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97"><strong>description里面不能有红包之类的关键字</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
               </div>
             </div>
           </article>
         </div>
 
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://doge1024.github.io/post/an-zhuang-cocoapods-quan-xian-cuo-wu/">
+              <h3 class="post-title">
+                安装cocoapods权限错误
+              </h3>
+            </a>
+          </div>
         
 
         
