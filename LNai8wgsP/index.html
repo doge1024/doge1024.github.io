@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>js和ios交互中的一些笔记 | doge1024</title>
+<title>Flutter | doge1024</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -11,12 +11,6 @@
 <link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1592143919971">
 <link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
 
-
-  
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
-  
-
-  
 
 
 <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
@@ -33,11 +27,7 @@
 </script>
 
 
-    <meta name="description" content="所用框架WebViewJavascriptBridge
-关于webView的delegate
-如果使用WebViewJavascriptBridge， webview的delegate不能直接设置，需要通过下面方法
-[self.bridge..." />
-    <meta name="keywords" content="iOS" />
+    <meta name="description" content="坚持就是胜利">
   </head>
   <body>
     <div id="app" class="main">
@@ -113,55 +103,28 @@
 
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
-          <div class="post-detail">
-            <h2 class="post-title">js和ios交互中的一些笔记</h2>
-            <div class="post-date">2020-06-10</div>
-            
-            <div class="post-content" v-pre>
-              <h3 id="所用框架webviewjavascriptbridge">所用框架WebViewJavascriptBridge</h3>
-<h5 id="关于webview的delegate">关于webView的delegate</h5>
-<p>如果使用WebViewJavascriptBridge， webview的delegate不能直接设置，需要通过下面方法</p>
-<pre><code>[self.bridge setWebViewDelegate:self] 
-</code></pre>
-<h5 id="nullundefinednsnullnil">null，undefined，NSNull，nil</h5>
-<pre><code>js中的null，转到ios会变成NSNull类的实例
-js中字典取不到的值，或者未声明的属性，会为undefined
-js中的undefined，传到ios会变为nil
-</code></pre>
-<pre><code>ios中的NSNull， 转到js会变成null
-ios中的responseCallback(nil)时， 框架会转成NSNull再进行传递
-</code></pre>
-
-            </div>
-            
-              <div class="tag-container">
-                
-                  <a href="https://doge1024.github.io/t-pcqh4ec/" class="tag">
-                    iOS
-                  </a>
-                
-              </div>
-            
-            
-              <div class="next-post">
-                <div class="next">下一篇</div>
-                <a href="https://doge1024.github.io/ji-lu-yi-ci-wei-xin-fen-xiang-de-jing-li/">
-                  <h3 class="post-title">
-                    记录一次微信分享的经历
-                  </h3>
+          <h2 class="current-tag">标签: Flutter</h2>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://doge1024.github.io/flutter-ru-keng-wen-ti-shou-ji-geng-xin-zhong/">
+                  <h2 class="post-title">flutter 入坑问题收集(更新中)</h2>
                 </a>
+                <div class="post-date">
+                  2020-06-10
+                </div>
+                <div class="post-abstract">
+                  
+                </div>
               </div>
-            
-
-            
               
-                <div id="gitalk-container" data-aos="fade-in"></div>
-              
+            </article>
+          
 
-              
-            
-
-          </div>
+          <div class="pagination-container">
+  
+  
+</div>
 
         </div>
       </div>
@@ -187,29 +150,6 @@ var app = new Vue({
     hljs.initHighlightingOnLoad()
   </script>
 
-
-
-
-  
-    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-    <script>
-
-      var gitalk = new Gitalk({
-        clientID: 'a715661b0132eeaa2cd2',
-        clientSecret: '295e4b923ab920b2079b423d2dbac18f535418fe',
-        repo: 'doge1024.github.io',
-        owner: 'doge1024',
-        admin: ['doge1024'],
-        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-        distractionFreeMode: false  // Facebook-like distraction free mode
-      })
-
-      gitalk.render('gitalk-container')
-
-    </script>
-  
-
-  
 
 
 
