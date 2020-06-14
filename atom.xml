@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://doge1024.github.io</id>
     <title>doge1024</title>
-    <updated>2020-06-14T14:12:37.152Z</updated>
+    <updated>2020-06-14T14:59:04.352Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://doge1024.github.io"/>
     <link rel="self" href="https://doge1024.github.io/atom.xml"/>
@@ -15,7 +15,7 @@
         <id>https://doge1024.github.io/webstorm-diao-shi-reactnative/</id>
         <link href="https://doge1024.github.io/webstorm-diao-shi-reactnative/">
         </link>
-        <updated>2020-06-10T15:10:36.000Z</updated>
+        <updated>2020-05-27T02:54:36.000Z</updated>
         <content type="html"><![CDATA[<h3 id="如何使用webstorm调试">如何使用webstorm调试：</h3>
 <ol>
 <li>在任意位置添加debug的红点</li>
@@ -52,7 +52,7 @@
         <id>https://doge1024.github.io/codepush-fu-wu-bian-geng-lian-jie-bu-shang/</id>
         <link href="https://doge1024.github.io/codepush-fu-wu-bian-geng-lian-jie-bu-shang/">
         </link>
-        <updated>2020-06-10T15:10:10.000Z</updated>
+        <updated>2020-05-27T02:45:10.000Z</updated>
         <content type="html"><![CDATA[<p>后台codepush的服务器地址变了，连接不上，不能退出<br>
 删除本地<code>./.code-push.config</code>文件解决</p>
 ]]></content>
@@ -62,7 +62,7 @@
         <id>https://doge1024.github.io/xiao-mi-shou-ji-an-zhuang-linuxdeploy-peng-dao-de-wen-ti/</id>
         <link href="https://doge1024.github.io/xiao-mi-shou-ji-an-zhuang-linuxdeploy-peng-dao-de-wen-ti/">
         </link>
-        <updated>2020-06-10T15:09:52.000Z</updated>
+        <updated>2020-03-28T06:20:52.000Z</updated>
         <content type="html"><![CDATA[<h3 id="发生的错误">发生的错误</h3>
 <p>设置好配置，进行安装时报以下错误</p>
 <pre><code>Mounting partitions :
@@ -86,7 +86,7 @@ fail
         <id>https://doge1024.github.io/macos-1015-pip-an-zhuang-ku-shi-bai-ti-shi-ssl/</id>
         <link href="https://doge1024.github.io/macos-1015-pip-an-zhuang-ku-shi-bai-ti-shi-ssl/">
         </link>
-        <updated>2020-06-10T15:09:37.000Z</updated>
+        <updated>2020-01-18T17:09:37.000Z</updated>
         <content type="html"><![CDATA[<h2 id="pip安装第三方库失败">pip安装第三方库失败</h2>
 <p>今天安装 <code>frida-tools</code> 时一直提示失败<br>
 其中错误有一句:<br>
@@ -116,7 +116,7 @@ macOS Catalina 10.15.2 (19C57)<br>
         <id>https://doge1024.github.io/du-lesslessshi-jian-jian-shi-greatergreater-jie-shi-ni-wu-liao-shi-de-na-xie-xia-xiang/</id>
         <link href="https://doge1024.github.io/du-lesslessshi-jian-jian-shi-greatergreater-jie-shi-ni-wu-liao-shi-de-na-xie-xia-xiang/">
         </link>
-        <updated>2020-06-10T15:09:23.000Z</updated>
+        <updated>2019-08-05T17:24:23.000Z</updated>
         <content type="html"><![CDATA[<h1 id="读时间简史-解释你无聊时的那些遐想">读《时间简史》— 解释你无聊时的那些遐想</h1>
 <p>《时间简史》讲述是探索时间和空间核心秘密的故事，是关于宇宙本性的最前沿知识，包括我们的宇宙图像、空间和时间、膨胀的宇宙不确定性原理、基本粒子和自然的力、黑洞、黑洞不是这么黑、时间箭头等内容。</p>
 <p>原先看过一点但是感觉有点枯燥，跟视频比起来缺少了些生动震撼的场面，不太好理解，这次看的是插画版的，会容易接受很多。所以如果想看的话，推荐看插画版的。</p>
@@ -177,7 +177,7 @@ macOS Catalina 10.15.2 (19C57)<br>
         <id>https://doge1024.github.io/ios-jin-yong-hei-an-mo-shi/</id>
         <link href="https://doge1024.github.io/ios-jin-yong-hei-an-mo-shi/">
         </link>
-        <updated>2020-06-10T15:09:07.000Z</updated>
+        <updated>2019-07-10T03:10:07.000Z</updated>
         <content type="html"><![CDATA[<h1 id="ios-禁用黑暗模式">iOS 禁用黑暗模式</h1>
 <p>如果你的公司没有设计黑暗模式，在iOS13到来之际，你需要在应用内禁止一下黑暗模式的显示：<br>
 在程序的Info.plist文件中加入:</p>
@@ -194,7 +194,7 @@ value: <code>Light</code></p>
         <id>https://doge1024.github.io/macos-cun-chu-kong-jian-yue-lai-yue-shao-shan-wan-bu-zeng-jia-ke-yong-kong-jian/</id>
         <link href="https://doge1024.github.io/macos-cun-chu-kong-jian-yue-lai-yue-shao-shan-wan-bu-zeng-jia-ke-yong-kong-jian/">
         </link>
-        <updated>2020-06-10T15:08:49.000Z</updated>
+        <updated>2019-06-20T06:44:49.000Z</updated>
         <content type="html"><![CDATA[<h2 id="问题">问题</h2>
 <p><code># macOS Catalina 10.15 beta 1 #</code><br>
 升级 macOS Catalina 10.15 beta 1 后发现存储空间越来越少，怎么删除文件都不管用。文件越删越多。</p>
@@ -245,7 +245,7 @@ value: <code>Light</code></p>
         <id>https://doge1024.github.io/flutter-ru-keng-wen-ti-shou-ji-geng-xin-zhong/</id>
         <link href="https://doge1024.github.io/flutter-ru-keng-wen-ti-shou-ji-geng-xin-zhong/">
         </link>
-        <updated>2020-06-10T15:08:35.000Z</updated>
+        <updated>2019-06-14T02:16:35.000Z</updated>
         <content type="html"><![CDATA[<ol>
 <li>
 <p>💖字符号不显示</p>
@@ -285,7 +285,7 @@ export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
         <id>https://doge1024.github.io/ios-electra-yue-yu-hou-tweakinject-bu-jia-zai-cha-jian-de-wen-ti/</id>
         <link href="https://doge1024.github.io/ios-electra-yue-yu-hou-tweakinject-bu-jia-zai-cha-jian-de-wen-ti/">
         </link>
-        <updated>2020-06-10T15:08:19.000Z</updated>
+        <updated>2019-05-16T11:13:19.000Z</updated>
         <content type="html"><![CDATA[<ol>
 <li>使用ssh链接手机，'ssh root@192.168.0.4', 默认密码 <code>alpine</code></li>
 <li>执行下面命令<br>
@@ -298,7 +298,7 @@ export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
         <id>https://doge1024.github.io/wkwebview-de-xing-neng-you-hua/</id>
         <link href="https://doge1024.github.io/wkwebview-de-xing-neng-you-hua/">
         </link>
-        <updated>2020-06-10T15:07:56.000Z</updated>
+        <updated>2019-03-21T07:46:56.000Z</updated>
         <content type="html"><![CDATA[<h1 id="wkwebview-的性能优化">WKWebView 的性能优化</h1>
 <h2 id="起因">起因</h2>
 <p>随着移动设备性能不断增强，web 页面的性能体验逐渐变得可以接受，又因为 web 开发模式的诸多好处(跨平台，动态更新，减体积，无限扩展)，APP 客户端里出现越来越多内嵌 web 页面），很多 APP 把一些功能模块改成用 H5 实现。</p>
