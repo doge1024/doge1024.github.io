@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1591802220136">
+<link rel="shortcut icon" href="https://doge1024.github.io/favicon.ico?v=1592792861864">
 <link rel="stylesheet" href="https://doge1024.github.io/styles/main.css">
 
 
@@ -23,12 +23,21 @@
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
 
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-168992336-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-168992336-1');
+</script>
+
 
     <meta name="description" content="解决NavgationBar里面UIBarButtonItem点击范围过大的问题
 问题
 大家肯定都自定义过NavgationBar的返回按钮吧，按照下面方法设置的时候，会有点击范围过大的问题
     UIButton *leftButton..." />
-    <meta name="keywords" content="" />
+    <meta name="keywords" content="iOS" />
   </head>
   <body>
     <div id="app" class="main">
@@ -37,7 +46,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://doge1024.github.io">
-        <img src="https://doge1024.github.io/images/avatar.png?v=1591802220136" class="site-logo">
+        <img src="https://doge1024.github.io/images/avatar.png?v=1592792861864" class="site-logo">
         <h1 class="site-title">doge1024</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -70,6 +79,12 @@
           </a>
         
       
+        
+          <a href="https://www.jianshu.com/u/a0e2f8047033" class="site-nav" target="_blank">
+            简书主页
+          </a>
+        
+      
     </div>
   </div>
   <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
@@ -90,7 +105,10 @@
       坚持就是胜利
     </div>
     <div class="site-footer">
-      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css"/>
+<script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget/autoload.js"></script> | <a class="rss" href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
     </div>
   </div>
 </div>
@@ -100,7 +118,7 @@
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
             <h2 class="post-title">UIBarButtonItem点击范围过大</h2>
-            <div class="post-date">2020-06-10</div>
+            <div class="post-date">2017-03-24</div>
             
             <div class="post-content" v-pre>
               <h2 id="解决navgationbar里面uibarbuttonitem点击范围过大的问题">解决NavgationBar里面UIBarButtonItem点击范围过大的问题</h2>
@@ -132,6 +150,14 @@
 <p>尝试了好多应用，基本上都有这个现象，不是很细心的人根本发现不了，但是我开发的APP返回按钮给的图片太小了😂    效果十分明显的，找到解决方法以后，发现按钮太小了，button的frame是根据图片大小来的，不打算改成正常的了  (;￢＿￢)</p>
 
             </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://doge1024.github.io/tag/t-pcqh4ec/" class="tag">
+                    iOS
+                  </a>
+                
+              </div>
             
             
               <div class="next-post">
@@ -172,6 +198,11 @@ var app = new Vue({
 
 </script>
 
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
 
 
 
