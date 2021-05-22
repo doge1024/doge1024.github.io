@@ -1,0 +1,3494 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="keywords" content="iOS mac ReactNative">
+<meta name="description" content="坚持">
+<meta name="theme-color" content="#000">
+<title>iOS8 WKWebView 在特定情况下的崩溃 | doge1024</title>
+<link rel="shortcut icon" href="/favicon.ico?v=1621653017655">
+<link rel="stylesheet" href="/media/css/gemini.css">
+<link rel="stylesheet" href="/media/fonts/font-awesome.css">
+<link
+  href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Rosario:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext"
+  rel="stylesheet" type="text/css">
+
+<link href="/media/hljs/styles/androidstudio.css"
+  rel="stylesheet">
+
+<link rel="stylesheet" href="/styles/main.css">
+
+<script src="/media/hljs/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.0/velocity.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.0/velocity.ui.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+  integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+  integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+  integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+
+
+
+
+<script>
+  var _hmt = _hmt || [];
+  (function () {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?16b021d0fa607c5f96a7ca227a835999";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+
+  <meta name="description" content="iOS8 WKWebView 在特定情况下的崩溃" />
+  <meta name="keywords" content="iOS" />
+</head>
+
+<body>
+  <div class="head-top-line"></div>
+  <div class="header-box">
+    
+<div class="gemini">
+  <header class="header  ">
+    <div class="blog-header box-shadow-wrapper bg-color " id="header">
+      <div class="nav-toggle" id="nav_toggle">
+        <div class="toggle-box">
+          <div class="line line-top"></div>
+          <div class="line line-center"></div>
+          <div class="line line-bottom"></div>
+        </div>
+      </div>
+      <div class="site-meta">       
+        <div class="site-title">
+          
+            <a href="/" class="brand">
+              <span>doge1024</span>
+            </a>  
+          
+        </div>
+        
+          <p class="subtitle">坚持总会不留遗憾</p>
+        
+      </div>
+      <nav class="site-nav" id="site_nav">
+        <ul id="nav_ul">
+          
+            
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/" target="_self">
+                  <i class="fa fa-home"></i> 首页
+                </a>
+              
+            </li>
+          
+            
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/archives/" target="_self">
+                  <i class="fa fa-archive"></i> 归档
+                </a>
+              
+            </li>
+          
+            
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/tags/" target="_self">
+                  <i class="fa fa-tags"></i> 标签
+                </a>
+              
+            </li>
+          
+            
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/post/about/" target="_self">
+                  <i class="fa fa-user"></i> 关于
+                </a>
+              
+            </li>
+          
+            
+            
+            <li class="nav-item ">
+              
+              
+                <a href="https://www.jianshu.com/u/a0e2f8047033/" target="_blank">
+                  <i class="fa fa-globe"></i> 简书主页
+                </a>
+              
+            </li>
+          
+          
+          
+            <li id="fa_search" class="nav-item">
+              <a href="javascript:void(0);">
+                <i class="fa fa-search"></i> <span class="language" data-lan="search">搜索</span>
+              </a>
+            </li>
+          
+        </ul>
+      </nav>
+    </div>
+  </header>
+</div>
+
+<script type="text/javascript"> 
+ 
+  let showNav = true;
+
+  let navToggle = document.querySelector('#nav_toggle'),
+  siteNav = document.querySelector('#site_nav');
+  
+  function navClick() {
+    let sideBar = document.querySelector('.sidebar');
+    let navUl = document.querySelector('#nav_ul');
+    navToggle.classList.toggle('nav-toggle-active');
+    siteNav.classList.toggle('nav-menu-active');
+    if (siteNav.classList.contains('nav-menu-active')) {
+      siteNav.style = "height: " + (navUl.children.length * 42) +"px !important";
+    } else {
+      siteNav.style = "";
+    }
+  }
+
+  navToggle.addEventListener('click',navClick);  
+</script>
+  </div>
+  <div class="main-continer">
+    
+    <div
+      class="section-layout gemini ">
+      <div class="section-layout-wrapper">
+        
+
+<div class="sidebar">
+  
+    <div class="sidebar-box box-shadow-wrapper bg-color right-motion" id="sidebar">
+      
+        <div class="post-list-sidebar">
+          <div class="sidebar-title">
+            <span id="tocSideBar" class="sidebar-title-item sidebar-title-active language" data-lan="index">文章目录</span>
+            <span id="metaSideBar" class="sidebar-title-item language" data-lan="preview">站点概览</span>
+          </div>
+        </div>
+      
+      <div class="sidebar-body gemini" id="sidebar_body">
+        
+          
+            <div class="post-side-meta" id="post_side_meta">
+              
+<div class="sidebar-wrapper box-shadow-wrapper bg-color">
+  <div class="sidebar-item">
+    <img class="site-author-image right-motion" src="/images/avatar.png"/>
+    <p class="site-author-name">doge1024</p>
+    
+  </div>
+  <div class="sidebar-item side-item-stat right-motion">
+    <div class="sidebar-item-box">
+      <a href="/archives/">
+        
+        <span class="site-item-stat-count">41</span>
+        <span class="site-item-stat-name language" data-lan="article">文章</span>
+      </a>
+    </div>
+    <div class="sidebar-item-box">
+      <a href="">
+        <span class="site-item-stat-count">9</span>
+        <span class="site-item-stat-name language" data-lan="category">分类</span>
+      </a>
+    </div>
+    <div class="sidebar-item-box">
+      <a href="/tags/">
+        <span class="site-item-stat-count">9</span>
+        <span class="site-item-stat-name language" data-lan="tag">标签</span>
+      </a>
+    </div>
+  </div>
+  
+    
+      <div class="sidebar-item">
+        <span class="site-item-rss">
+            <i class="fa fa-rss"></i>
+            <a href="https://doge1024.github.io/atom.xml" target="_blank">RSS</a>
+        </span>
+      </div>
+    
+  
+  
+
+  
+
+
+
+  <div style="width: 100%; position: relative;">
+    <canvas id="canvasDiyBlock" style="width:100%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+    <script src="/media/js/magic/clock.js"></script>
+  </div>
+
+</div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper auto-number auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%B3%A8">注</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</div>
+
+<script>
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
+      }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0] && elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
+    });
+  }
+
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
+
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
+            </div>
+          
+        
+      </div>
+    </div>
+  
+</div>
+<script>
+  const SIDEBAR_TITLE_ACTIVE = 'sidebar-title-active';
+  const SIDEBAR_BODY_ACTIVE = 'sidebar-body-active';
+  const SLIDE_UP_IN = 'slide-up-in';
+
+  let sidebar = document.querySelector('#sidebar'),
+  tocSideBar = document.querySelector('#tocSideBar'),
+  metaSideBar = document.querySelector('#metaSideBar'),
+  postToc = document.querySelector('#post_toc'),
+  postSiteMeta = document.querySelector('#post_side_meta'),
+  sidebarTitle = document.querySelector('.sidebar-title'),
+  sidebarBody = document.querySelector('#sidebar_body');
+
+  tocSideBar && tocSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  metaSideBar && metaSideBar.addEventListener('click', (e) => {
+    toggleSidebar(e);
+  });
+
+  function toggleSidebar(e) {
+    let currentTitle = document.querySelector("."+SIDEBAR_TITLE_ACTIVE);
+    if (currentTitle == e.srcElement) {
+      return ;
+    }
+    let current, showElement, hideElement;
+    if (e.srcElement == metaSideBar) {
+      showElement = postSiteMeta;
+      hideElement = postToc;
+    } else if (e.srcElement == tocSideBar){
+      showElement = postToc;
+      hideElement = postSiteMeta;
+    }
+    currentTitle.classList.remove(SIDEBAR_TITLE_ACTIVE);
+    e.srcElement.classList.add(SIDEBAR_TITLE_ACTIVE);
+
+    window.Velocity(hideElement, 'stop');
+    window.Velocity(hideElement, 'transition.slideUpOut', {
+      display: 'none',
+      duration: 200,
+      complete: function () {
+        window.Velocity(showElement, 'transition.slideDownIn', {
+          duration: 200
+        });
+      }
+    })
+    hideElement.classList.remove(SIDEBAR_BODY_ACTIVE);
+    showElement.classList.add(SIDEBAR_BODY_ACTIVE);
+  }
+
+  postToc && postToc.addEventListener('transitionend', function() {
+    this.classList.remove(SLIDE_UP_IN);
+  });
+
+  if (sidebarBody) {
+    if (sidebarBody.classList.contains('pisces') || sidebarBody.classList.contains('gemini')) {
+      let hasFix = false;
+      let scrollEl = document.querySelector('.main-continer');
+      let limitTop = document.querySelector('#nav_ul').children.length * 42 + 162;
+      window.addEventListener('scroll', function(e) {
+        if (document.scrollingElement.scrollTop >= limitTop) {
+          if (!hasFix) {
+            sidebar.classList.add('sidebar-fixed');
+            hasFix = true;
+          }
+        } else {
+          if (hasFix) {
+            sidebar.classList.remove('sidebar-fixed');
+            hasFix = false;
+          }
+        }
+      });
+    }
+  }
+  
+</script>
+        <div class="section-box box-shadow-wrapper">
+          <div class="section bg-color post post-page">
+            <header class="post-header">
+  <h1 class="post-title">
+    <a class="post-title-link" href="https://doge1024.github.io/post/ios8-wkwebview-zai-te-ding-qing-kuang-xia-de-beng-kui/">
+      iOS8 WKWebView 在特定情况下的崩溃
+    </a>
+  </h1>
+  <div class="post-meta">
+    
+    <span class="meta-item pc-show">
+      <i class="fa fa-calendar-o"></i>
+      <span class="language" data-lan="publish">发布于</span>
+      <span>2017-02-22</span>
+      <span class="post-meta-divider pc-show">|</span>
+    </span>
+    
+    <span class="meta-item">
+      <i class="fa fa-folder-o"></i>
+      <span class="pc-show language" data-lan="category-in">分类于</span>
+      
+      
+      <a href="https://doge1024.github.io/tag/t-pcqh4ec/">
+        <span>iOS</span>
+      </a>
+      
+      
+    </span>
+    <span class="post-meta-divider">|</span>
+    
+    <span class="meta-item">
+      <i class="fa fa-clock-o"></i>
+      <span>1<span class="language" data-lan="minute">分钟</span></span>
+    </span>
+    <span class="meta-item">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-file-word-o"></i>
+      <span>123<span class="pc-show language" data-lan="words">字数</span></span>
+    </span>
+    
+    
+    
+    <span id="/post/ios8-wkwebview-zai-te-ding-qing-kuang-xia-de-beng-kui/" data-flag-title="iOS8 WKWebView 在特定情况下的崩溃" class="meta-item pc-show leancloud_visitors">
+      <span class="post-meta-divider">|</span>
+      <i class="fa fa-eye"></i>
+      <span><span class="language" data-lan="view">浏览量</span>：<span class="leancloud-visitors-count"></span></span>
+    </span>
+    
+  </div>
+</header>
+            <div class="post-body next-md-body" id="post_body">
+              <p>iOS8系统是苹果第一次引入WKWebView，所以有好多东西还不完善，下面记录一次碰到的Crash</p>
+<p>在iOS 8下， 先设置WKWebView的</p>
+<pre><code>webView.allowsBackForwardNavigationGestures = YES;
+</code></pre>
+<p>然后再设置为NO的话</p>
+<pre><code>webView.allowsBackForwardNavigationGestures = NO;
+</code></pre>
+<p>只要手指一碰屏幕，就会出现Crash，日志主要如下：</p>
+<pre><code>
+#0 Thread
+NSInvalidArgumentException
+-[UIView gestureRecognizer:shouldReceiveTouch:]: unrecognized selector sent to instance 0x125da47f0
+</code></pre>
+<p>或者：</p>
+<pre><code>
+#0 Thread
+NSInvalidArgumentException
+-[WKCompositingView gestureRecognizer:shouldReceiveTouch:]: unrecognized selector sent to instance 0x12fc17550
+</code></pre>
+<h2 id="注">注</h2>
+<p>以上情况只会在iOS 8出现，在8以上版本没有问题。</p>
+
+            </div>
+            
+            
+              <div class="post-footer">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong class="language" data-lan="author">本文作者：</strong>
+      doge1024
+    </li>
+    <li class="post-copyright-link">
+      <strong class="language" data-lan="link">本文链接：</strong>
+      <a href="https://doge1024.github.io/post/ios8-wkwebview-zai-te-ding-qing-kuang-xia-de-beng-kui/" title="iOS8 WKWebView 在特定情况下的崩溃">https://doge1024.github.io/post/ios8-wkwebview-zai-te-ding-qing-kuang-xia-de-beng-kui/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong class="language" data-lan="copyright">版权声明： </strong>
+      本博客所有文章除特别声明外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i> BY-NC-SA</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+  <div class="tags">
+    
+      <a href="https://doge1024.github.io/tag/t-pcqh4ec/"># iOS</a>
+    
+  </div>
+  <div class="nav">
+    <div class="nav-prev">
+      
+        <i class="fa fa-chevron-left"></i>
+        <a class="nav-pc-next" title="H5页面不响应WebView代理方法" href="https://doge1024.github.io/post/h5-ye-mian-bu-xiang-ying-webview-dai-li-fang-fa/">H5页面不响应WebView代理方法</a class="nav-pc-next">
+        <a class="nav-mobile-prev" title="H5页面不响应WebView代理方法" href="https://doge1024.github.io/post/h5-ye-mian-bu-xiang-ying-webview-dai-li-fang-fa/">上一篇</a>
+      
+    </div>
+    <div class="nav-next">
+      
+        <a class="nav-pc-next" title="View.layer.mask属性的应用(画圆角，画心)" href="https://doge1024.github.io/post/viewlayermask-shu-xing-de-ying-yong-hua-yuan-jiao-hua-xin/">View.layer.mask属性的应用(画圆角，画心)</a>
+        <a class="nav-mobile-next" title="View.layer.mask属性的应用(画圆角，画心)" href="https://doge1024.github.io/post/viewlayermask-shu-xing-de-ying-yong-hua-yuan-jiao-hua-xin/">下一篇</a>
+        <i class="fa fa-chevron-right"></i>
+      
+    </div>
+  </div>
+</div>
+            
+            
+  
+    
+      <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: 'a715661b0132eeaa2cd2',
+    clientSecret: '295e4b923ab920b2079b423d2dbac18f535418fe',
+    repo: 'doge1024.github.io',
+    owner: 'doge1024',
+    admin: ['doge1024'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+  gitalk.render('gitalk-container')
+</script>
+    
+    
+  
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-box">
+  <footer class="footer">
+    <div class="copyright">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | © 2019-2020 Theme By <a
+        href="https://github.com/hsxyhao/gridea-theme-next" target="_blank">HsxyHao</a>
+    </div>
+    <div class="poweredby">
+      <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget/autoload.js"></script>
+    </div>
+  </footer>
+  
+  
+  <div class="gemini back-to-top" id="back_to_top">
+    <i class="fa fa-arrow-up"></i>
+    
+    <span class="scrollpercent">
+      <span id="back_to_top_text">0</span>%
+    </span>
+    
+  </div>
+  
+  
+  
+</div>
+<script>
+
+  let sideBarOpen = 'sidebar-open';
+  let body = document.body;
+  let back2Top = document.querySelector('#back_to_top'),
+    back2TopText = document.querySelector('#back_to_top_text'),
+    drawerBox = document.querySelector('#drawer_box'),
+    rightSideBar = document.querySelector('.sidebar'),
+    viewport = document.querySelector('body');
+
+  function scrollAnimation(currentY, targetY) {
+
+    let needScrollTop = targetY - currentY
+    let _currentY = currentY
+    setTimeout(() => {
+      const dist = Math.ceil(needScrollTop / 10)
+      _currentY += dist
+      window.scrollTo(_currentY, currentY)
+      if (needScrollTop > 10 || needScrollTop < -10) {
+        scrollAnimation(_currentY, targetY)
+      } else {
+        window.scrollTo(_currentY, targetY)
+      }
+    }, 1)
+  }
+
+  back2Top.addEventListener("click", function (e) {
+    scrollAnimation(document.scrollingElement.scrollTop, 0);
+    e.stopPropagation();
+    return false;
+  });
+
+  window.addEventListener('scroll', function (e) {
+    let percent = document.scrollingElement.scrollTop / (document.scrollingElement.scrollHeight - document.scrollingElement.clientHeight) * 100;
+    if (percent > 1 && !back2Top.classList.contains('back-top-active')) {
+      back2Top.classList.add('back-top-active');
+    }
+    if (percent == 0) {
+      back2Top.classList.remove('back-top-active');
+    }
+    if (back2TopText) {
+      back2TopText.textContent = Math.floor(percent);
+    }
+  });
+
+
+  let hasCacu = false;
+  window.onresize = function () {
+    calcuHeight();
+  }
+
+  function calcuHeight() {
+    // 动态调整站点概览高度
+    if (!hasCacu && back2Top.classList.contains('pisces') || back2Top.classList.contains('gemini')) {
+      let sideBar = document.querySelector('.sidebar');
+      let navUl = document.querySelector('#site_nav');
+      sideBar.style = 'margin-top:' + (navUl.offsetHeight + navUl.offsetTop + 15) + 'px;';
+      hasCacu = true;
+    }
+  }
+  calcuHeight();
+
+  let open = false, MOTION_TIME = 300, RIGHT_MOVE_DIS = '320px';
+
+  if (drawerBox) {
+    let rightMotions = document.querySelectorAll('.right-motion');
+    let right = drawerBox.classList.contains('right');
+
+    let transitionDir = right ? "transition.slideRightIn" : "transition.slideLeftIn";
+
+    let openProp, closeProp;
+    if (right) {
+      openProp = {
+        paddingRight: RIGHT_MOVE_DIS
+      };
+      closeProp = {
+        paddingRight: '0px'
+      };
+    } else {
+      openProp = {
+        paddingLeft: RIGHT_MOVE_DIS
+      };
+      closeProp = {
+        paddingLeft: '0px'
+      };
+    }
+
+    drawerBox.onclick = function () {
+      open = !open;
+      window.Velocity(rightSideBar, 'stop');
+      window.Velocity(viewport, 'stop');
+      window.Velocity(rightMotions, 'stop');
+      if (open) {
+        window.Velocity(rightSideBar, {
+          width: RIGHT_MOVE_DIS
+        }, {
+          duration: MOTION_TIME,
+          begin: function () {
+            window.Velocity(rightMotions, transitionDir, {});
+          }
+        })
+        window.Velocity(viewport, openProp, {
+          duration: MOTION_TIME
+        });
+      } else {
+        window.Velocity(rightSideBar, {
+          width: '0px'
+        }, {
+          duration: MOTION_TIME,
+          begin: function () {
+            window.Velocity(rightMotions, {
+              opacity: 0
+            });
+          }
+        })
+        window.Velocity(viewport, closeProp, {
+          duration: MOTION_TIME
+        });
+      }
+      for (let i = 0; i < drawerBox.children.length; i++) {
+        drawerBox.children[i].classList.toggle('muse-line');
+      }
+      drawerBox.classList.toggle(sideBarOpen);
+    }
+  }
+
+  // 链接跳转
+  let newWindow = 'false'
+  if (newWindow === 'true') {
+    let links = document.querySelectorAll('.post-body a')
+    links.forEach(item => {
+      if (!item.classList.contains('btn')) {
+        item.setAttribute("target", "_blank");
+      }
+    })
+  }
+
+  let faSearch = document.querySelector('#fa_search');
+  faSearch.addEventListener('click', function () {
+    document.querySelector('#search_mask').style = ''
+  })
+
+  // 代码高亮
+  hljs.initHighlightingOnLoad();
+  
+  // 离开当前页title变化
+  var leaveTitle = "";
+  if (leaveTitle) {
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState == 'hidden') {
+        normal_title = document.title;
+        document.title = leaveTitle;
+      } else {
+        document.title = normal_title;
+      }
+    });
+  }
+
+</script>
+    <div class="light-box" id="light_box"></div>
+<script>
+  let imgs = document.querySelectorAll('.post-body img');
+  let lightBox = document.querySelector('#light_box');
+  lightBox.addEventListener('mousedown', (e) => {
+    e.preventDefault()
+  })
+  lightBox.addEventListener('mousewheel', (e) => {
+    e.preventDefault()
+  })
+  let width = window.innerWidth * 0.8;
+  lightBox.onclick = () => {
+    let img = lightBox.querySelector('img');
+    lightBox.style = '';
+    img && img.remove();
+  }
+  imgs.forEach(item => {
+    item.onclick = function (e) {
+      let lightImg = document.createElement('img');
+      lightImg.src = this.src;
+      lightBox.style = `height: 100%; opacity: 1; background-color: rgba(0, 0, 0, 0.5);cursor: zoom-out;`;
+      lightImg.style = `width: ${width}px;cborder-radius: 2px;`;
+      lightImg.onclick = function () {
+        lightBox.style = '';
+        this.remove();
+      }
+      lightBox.append(lightImg);
+    }
+  })
+</script>
+    <div class="reward-mask" style="display: none;">
+  <div class="reward-relative">
+    <span class="close" aria-hidden="true">x</span>
+    <div class="reward-body">
+      <h2>感谢您的支持，我会继续努力的!</h2>
+      <div class="reward-img-box">
+        <div style="position: relative; width: 140px; height: 140px;">
+          
+          
+          
+        </div>
+      </div>
+      <p class="reward-word">扫码打赏，你说多少就多少</p>
+      <p class="reward-tip">打开微信扫一扫，即可进行扫码打赏哦</p>
+    </div>
+    <div class="bottom">
+      
+      
+    </div>
+  </div>
+</div>
+<style>
+  .reward-mask {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #00000054;
+  }
+
+  .reward-relative {
+    position: relative;
+    width: 480px;
+    text-align: center;
+    margin: 0 auto;
+    border-radius: 5px;
+    background-color: #fff;
+    top: 50%;
+    margin-top: -205px;
+  }
+
+  .reward-relative .close {
+    position: absolute;
+    right: 10px;
+    font-weight: normal;
+    font-size: 16px;
+    color: #929292;
+  }
+
+  .reward-body {
+    padding: 40px 20px 20px;
+  }
+
+  .bottom {
+    display: flex;
+  }
+
+  .reward-btn {
+    text-align: center;
+  }
+
+  .reward-btn-text {
+    display: inline-block;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    background-color: #ff9734;
+    color: #FFF;
+    margin-top: 20px;
+  }
+
+  .pay-text {
+    margin-top: 10px;
+    padding: 10px;
+    flex: 1;
+    transition: all .2s linear;
+  }
+
+  .pay-text:hover {
+    background-color: #a5a5a536;
+  }
+
+  .reward-body h2 {
+    padding-top: 10px;
+    text-align: center;
+    color: #a3a3a3;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0 0 20px;
+  }
+
+  .reward-body h2:after,
+  .reward-body h2:before {
+    font-family: Arial, Helvetica, sans-serif;
+    background: 0 0;
+    width: 0;
+    height: 0;
+    font-style: normal;
+    color: #eee;
+    font-size: 80px;
+    position: absolute;
+    top: 20px;
+  }
+
+  .reward-body h2:before {
+    content: '\201c';
+    left: 50px;
+  }
+
+  .reward-body h2:after {
+    content: '\201d';
+    right: 80px;
+  }
+
+  .reward-img-box {
+    display: inline-block;
+    padding: 10px;
+    border: 6px solid #ea5f00;
+    margin: 0 auto;
+    border-radius: 3px;
+    position: relative;
+  }
+
+  .reward-img {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 767px) {
+    .reward-relative {
+      height: 100%;
+      top: 0px;
+      margin-top: 0;
+      width: auto;
+    }
+
+    .reward-relative .bottom {
+      flex-direction: column;
+    }
+
+    .reward-relative .pay-text {
+      width: 80%;
+      margin: 5px auto;
+      border: 1px solid silver;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    .reward-body h2:after {
+      right: 40px;
+    }
+
+    .reward-body h2:after,
+    .reward-body h2:before {
+      font-size: 60px;
+    }
+
+    .reward-body h2:before {
+      left: 20px;
+    }
+  }
+</style>
+<script>
+  !function () {
+    var mask = document.querySelector('.reward-mask');
+    let close = document.querySelector('.reward-relative .close');
+    let rewardBtn = document.querySelector('.reward-btn');
+
+    let zfb = document.querySelector('#zfb'),
+      wx = document.querySelector('#wx'),
+      zfbBtn = document.querySelector('#zfbBtn'),
+      wxBtn = document.querySelector('#wxBtn');
+
+    if (zfbBtn && wxBtn) {
+      zfbBtn.addEventListener('click', () => {
+        window.Velocity(zfb, 'transition.slideLeftIn', {
+          duration: 400
+        });
+        window.Velocity(wx, 'transition.slideRightOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+
+      wxBtn.addEventListener('click', () => {
+        window.Velocity(wx, 'transition.slideRightIn', {
+          duration: 400
+        });
+        window.Velocity(zfb, 'transition.slideLeftOut', {
+          display: 'none',
+          duration: 400
+        });
+      });
+    }
+
+    rewardBtn.addEventListener('click', (e) => {
+      window.Velocity(mask, 'transition.slideDownIn', {
+        duration: 400
+      })
+    });
+
+    close.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.Velocity(mask, 'transition.slideUpOut', {
+        duration: 400
+      })
+    })
+  }()
+</script>
+
+  </div>
+</body>
+
+  <div class="search-mask" id="search_mask" style="display: none;">
+  <div class="search-box">
+    <div class="search-title">
+      <i class="fa fa-search"></i>
+      <div class="input-box">
+        <input id="search" type="text" class="language" data-lan="search" placeholder="搜索">
+      </div>
+      <i id="close" class="fa fa-times-circle"></i>
+    </div>
+    <div class="stat-box">
+      <span id="stat_count">0</span><span class="language" data-lan="stat">条相关条目，使用了</span><span id="stat_times">0</span><span class="language" data-lan="stat-time">毫秒</span>
+      <hr>
+    </div>
+    <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/webstorm-diao-shi-reactnative/"" data-c="
+          &lt;h3 id=&#34;如何使用webstorm调试&#34;&gt;如何使用webstorm调试：&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;在任意位置添加debug的红点&lt;/li&gt;
+&lt;/ol&gt;
+&lt;!-- more --&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-eba5096825329dfb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;
+&lt;p&gt;添加debug配置&lt;br&gt;
+&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-439ddd59f9ecf888.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;按照图示设置debug配置&lt;br&gt;
+&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-3f1e5ef486d17e12.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Bundler host&lt;/code&gt; 可以调整，看自己的RN是从哪个地址加载的，从localhost加载，就设置为localhost，从ip加载就填ip&lt;/li&gt;
+&lt;li&gt;这个配置会帮你自动&lt;code&gt;start&lt;/code&gt;RN的服务，请先终止其他地方占用8081端口的服务&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;打开debug&lt;br&gt;
+&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-39308d40048971e3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在手机上摇一摇，打开&lt;code&gt;Debug JS Remotely&lt;/code&gt; 就可以打断点调试了, 之前的断点也可以暂停到了&lt;br&gt;
+&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-e16c96bffff93a01.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5 id=&#34;我的-webstorm-版本&#34;&gt;我的 webstorm 版本：&lt;/h5&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-8d6e1fca99bc9267.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+">WebStorm调试ReactNative</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/codepush-fu-wu-bian-geng-lian-jie-bu-shang/"" data-c="
+          &lt;p&gt;后台codepush的服务器地址变了，连接不上，不能退出&lt;br&gt;
+删除本地&lt;code&gt;./.code-push.config&lt;/code&gt;文件解决&lt;/p&gt;
+">codepush服务变更，连接不上</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/xiao-mi-shou-ji-an-zhuang-linuxdeploy-peng-dao-de-wen-ti/"" data-c="
+          &lt;h3 id=&#34;发生的错误&#34;&gt;发生的错误&lt;/h3&gt;
+&lt;p&gt;设置好配置，进行安装时报以下错误&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Mounting partitions :
+/ ... fail
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;打开调试模式后&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Mounting partitions:  
+/ ... mount: mounting /dev/loop0 on /data/local/mnt failed: invalid argument
+fail 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;解决方法&#34;&gt;解决方法&lt;/h3&gt;
+&lt;p&gt;点击右下角设置按钮，将安装类型设置为 &amp;quot;目录&amp;quot;，返回重新安装可以成功&lt;/p&gt;
+&lt;p&gt;参考文章：&lt;br&gt;
+&lt;a href=&#34;https://cloud.tencent.com/developer/article/1159800&#34;&gt;https://cloud.tencent.com/developer/article/1159800&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://pluhuxc.github.io/2020/10/23/linuxdeploy-guide.html&#34;&gt;https://pluhuxc.github.io/2020/10/23/linuxdeploy-guide.html&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://www.tkdcz.top/post/48.html&#34;&gt;https://www.tkdcz.top/post/48.html&lt;/a&gt;&lt;/p&gt;
+">小米手机安装linuxdeploy碰到的问题</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/macos-1015-pip-an-zhuang-ku-shi-bai-ti-shi-ssl/"" data-c="
+          &lt;h2 id=&#34;pip安装第三方库失败&#34;&gt;pip安装第三方库失败&lt;/h2&gt;
+&lt;p&gt;今天安装 &lt;code&gt;frida-tools&lt;/code&gt; 时一直提示失败&lt;br&gt;
+其中错误有一句:&lt;br&gt;
+&lt;code&gt;error: &amp;lt;urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;或者：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ /usr/bin/python3 -c &#39;import urllib.request; urllib.request.urlopen(&amp;quot;https://www.apple.com/&amp;quot;)&#39;
+...
+urllib.error.URLError: &amp;lt;urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1056)&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;我的系统环境：&lt;br&gt;
+macOS Catalina 10.15.2 (19C57)&lt;br&gt;
+已安装Xcode11，并且Xcode有带Python3.7&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案&lt;/h2&gt;
+&lt;p&gt;执行以下两行命令：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/usr/bin/sudo /bin/mkdir /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.7/etc
+/usr/bin/sudo /bin/ln -s /etc/ssl/ /Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.7/etc/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;我出问题时的Xcode，默认是没有&lt;code&gt;/etc&lt;/code&gt;这个目录的；使用以上命令后，可以正常安装&lt;code&gt;frida-tools&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id=&#34;参考文章&#34;&gt;参考文章&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&#34;https://stackoverflow.com/questions/57630314/ssl-certificate-verify-failed-error-with-python3-on-macos-10-15&#34;&gt;ssl-certificate-verify-failed-error-with-python3-on-macos-10-15&lt;/a&gt;&lt;/p&gt;
+">macOS 10.15 pip 安装库失败提示SSL</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/du-lesslessshi-jian-jian-shi-greatergreater-jie-shi-ni-wu-liao-shi-de-na-xie-xia-xiang/"" data-c="
+          &lt;h1 id=&#34;读时间简史-解释你无聊时的那些遐想&#34;&gt;读《时间简史》— 解释你无聊时的那些遐想&lt;/h1&gt;
+&lt;p&gt;《时间简史》讲述是探索时间和空间核心秘密的故事，是关于宇宙本性的最前沿知识，包括我们的宇宙图像、空间和时间、膨胀的宇宙不确定性原理、基本粒子和自然的力、黑洞、黑洞不是这么黑、时间箭头等内容。&lt;/p&gt;
+&lt;p&gt;原先看过一点但是感觉有点枯燥，跟视频比起来缺少了些生动震撼的场面，不太好理解，这次看的是插画版的，会容易接受很多。所以如果想看的话，推荐看插画版的。&lt;/p&gt;
+&lt;p&gt;如果不太喜欢文字的描述，这里推荐一部视频 &lt;a href=&#34;https://www.bilibili.com/video/av1935063/&#34;&gt;《宇宙的构造》&lt;/a&gt;，看完视频后会激起你对宇宙探索的欲望，再来看书会好些。视频里面讲解的也很好。&lt;/p&gt;
+&lt;h2 id=&#34;有几个孩子能抵御星空的诱惑呢-~&#34;&gt;有几个孩子，能抵御星空的诱惑呢 ~&lt;/h2&gt;
+&lt;p&gt;小时候特喜欢去房顶上躺着，微风，虫鸣，不知不觉眼镜就看向了天空：天这么大，这么远，天上有云有星，但是天是什么？天的外面又是什么？经常看的《走进科学》里面的那些事是不是真的？51区又有多少外星生命来过？&lt;/p&gt;
+&lt;p&gt;前些日子无聊又看了一遍(我自封的)古装情景喜剧的巅峰《武林外传》，里面吕秀才有句台词：“我和宇宙有必然的联系吗？宇宙是否有尽头，时间是否有长短，过去的时间在哪里消失了，未来的时间又在何处停止，我在这一刻提出的问题，还是你刚才听到的问题吗？”。这句话第一次看的时候可能感叹编剧的厉害，对秀才这个读书人刻画的太好了，一笑而过，但是这次看却让我心里一颤，这不就是我小时候对世界的疑问么。&lt;/p&gt;
+&lt;p&gt;解决自己一直以来的疑问，解释自己无聊时的那些遐想，这就是我读这本书的原因。&lt;/p&gt;
+&lt;h2 id=&#34;书中的答案&#34;&gt;书中的答案&lt;/h2&gt;
+&lt;p&gt;“四方上下曰宇，往古来今曰宙”，这句话太经典了，作为比较朴素的对宇宙的解释，可以帮助我们了解宇宙，但是还是有点笼统，有些哲学意味。&lt;/p&gt;
+&lt;p&gt;下面简单写一些问题在书中的答案。一切了解均是在学习，所以引用原文来解答。&lt;/p&gt;
+&lt;h4 id=&#34;宇宙是如何诞生的&#34;&gt;宇宙是如何诞生的？&lt;/h4&gt;
+&lt;p&gt;引书中言：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1983年，林德提出了一个更好的所谓混沌暴胀模型。这里没有相变和过冷，而代之以存在一个自旋为0的场，由于它的量子涨落，在早期宇宙的某些区域有大的场值。在那些区域中，场的能量起到宇宙常数的作用，它具有排斥的引力效应，而使这些区域以暴胀的形式膨胀。随着它们膨胀，它们中的场的能量慢慢地减小，直到暴胀改变到犹如热大爆炸模型中的膨胀时为止。这些区域之一就成为可观察的宇宙让我们看到。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;量子涨落，是从真空中爆发能量，在空间生成了由粒子和反粒子组成的虚粒子对。粒子对借取能量而生成，又在短时间内湮灭归还能量。这些产生的虚粒子的物理效应是可以被测量和观测的。也就是说真空不是真的空无一物&lt;/p&gt;
+&lt;h4 id=&#34;宇宙的的外面是什么&#34;&gt;宇宙的的外面是什么？&lt;/h4&gt;
+&lt;p&gt;引书中言：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;人们可以说：“宇宙的边界条件是它没有边界。”宇宙便是完全自足的，而不受任何外在于它的东西影响。它既不被创生，也不被消灭。它就是存在。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;是否存在造物主&#34;&gt;是否存在造物主？&lt;/h4&gt;
+&lt;p&gt;引书中言：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;只要宇宙有一个开端，我们就可以设想存在一个造物主。但是，如果宇宙的的确确是完全自足的，没有边界或边缘，它就既没有开端也没有终结：它就是存在。那么，还会有造物主存身之处吗？&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;时间是否有起点&#34;&gt;时间是否有起点？&lt;/h4&gt;
+&lt;p&gt;引书中言：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;所有的弗里德曼解都具有一个特点，即在过去的某一时刻（约100亿至200亿年之前）邻近星系之间的距离一定为零。在这被我们称之为大爆炸的那一时刻，宇宙的密度和时空曲率都是无限大。因为数学不能真正地处理无限大的数，这意味着，广义相对论（弗里德曼解以此为基础）预言，在宇宙中存在一点，在该处理论本身崩溃。这样的点正是数学中称为奇点的一个例子。事实上，我们所有的科学理论都是基于时空是光滑的和几乎平坦的基础上表述的，所以它们在时空曲率为无限大的大爆炸奇点处崩溃。这意味着，即使在大爆炸前存在事件，人们也不能用它们去确定其后所要发生的事件，因为可预见性在大爆炸处崩溃了。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;我们只知道在大爆炸后发生的事件，我们就不能确定在这之前发生什么。就我们而言，大爆炸之前的事件不能有后果，所以并不构成我们宇宙的科学模型的一部分。因此，我们应将它们从模型中割除掉，并宣称时间是从大爆炸开始的。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;宇宙是否有终点&#34;&gt;宇宙是否有终点？&lt;/h4&gt;
+&lt;p&gt;引书中言：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1915年之前，空间和时间被认为是事件在其中发生的固定舞台，而它们不受在其中发生的事件的影响。即便在狭义相对论中，这也是对的。物体运动，力吸引并排斥，但时间和空间则完全不受影响地延伸着。空间和时间很自然地被认为无限地向前延伸。&lt;br&gt;
+然而在广义相对论中，情况则完全不同。这时，空间和时间变成为动力量：当物体运动，或者力作用时，它影响了空间和时间的曲率；反过来，时空的结构影响了物体运动和力作用的方式。空间和时间不仅去影响、而且被发生在宇宙中的每一件事影响。正如人们没有空间和时间的概念不能谈论宇宙的事件一样，同样地，在广义相对论中，在宇宙界限之外讲空间和时间也是没有意义的。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;罗杰·彭罗斯和我证明了，爱因斯坦广义相对论意味着，宇宙必须有个开端，并且可能有个终结。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;可否实现时间旅行&#34;&gt;可否实现时间旅行？&lt;/h4&gt;
+&lt;p&gt;如果可以进行时间旅行，为什么没有未来的人来告诉我们如何做呢？为什么地球没有被从未来旅行来的人挤爆？&lt;br&gt;
+到写文时间为止，时间旅行机器应该都没有被发明出来。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;任何时间旅行都被限制于未来。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;黑洞辐射表明，量子理论在微观尺度上允许在时间中的往回运动，而且这种时间旅行能产生可观测的效应。&lt;/p&gt;
+&lt;/blockquote&gt;
+">读《时间简史》— 解释你无聊时的那些遐想</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/ios-jin-yong-hei-an-mo-shi/"" data-c="
+          &lt;h1 id=&#34;ios-禁用黑暗模式&#34;&gt;iOS 禁用黑暗模式&lt;/h1&gt;
+&lt;p&gt;如果你的公司没有设计黑暗模式，在iOS13到来之际，你需要在应用内禁止一下黑暗模式的显示：&lt;br&gt;
+在程序的Info.plist文件中加入:&lt;/p&gt;
+&lt;p&gt;key: &lt;code&gt;UIUserInterfaceStyle&lt;/code&gt;&lt;br&gt;
+value: &lt;code&gt;Light&lt;/code&gt;&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-6b528dd2af04f202.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1249&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;参考：&lt;br&gt;
+&lt;a href=&#34;https://developer.apple.com/documentation/appkit/supporting_dark_mode_in_your_interface/choosing_a_specific_interface_style_for_your_ios_app&#34;&gt;苹果文档，只支持正常模式&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://developer.apple.com/documentation/appkit/supporting_dark_mode_in_your_interface&#34;&gt;想去支持黑暗模式，查看文档&lt;/a&gt;&lt;/p&gt;
+">iOS 禁用黑暗模式</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/macos-cun-chu-kong-jian-yue-lai-yue-shao-shan-wan-bu-zeng-jia-ke-yong-kong-jian/"" data-c="
+          &lt;h2 id=&#34;问题&#34;&gt;问题&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;# macOS Catalina 10.15 beta 1 #&lt;/code&gt;&lt;br&gt;
+升级 macOS Catalina 10.15 beta 1 后发现存储空间越来越少，怎么删除文件都不管用。文件越删越多。&lt;/p&gt;
+&lt;h2 id=&#34;原因&#34;&gt;原因&lt;/h2&gt;
+&lt;p&gt;因为 Time Machin 的 &lt;code&gt;local snapshots&lt;/code&gt;(本地快照功能)，在你打开自动备份，但是没有接入任何硬盘的时候，系统会从本地创建并存储快照。&lt;br&gt;
+按道理来说此项功能很好，可以帮一些没有或者忘记带硬盘的人自动备份，而且对用户来说应该是不占用存储空间的。&lt;br&gt;
+&lt;strong&gt;但是&lt;/strong&gt; 显然新系统出现了bug，导致了存储空间不能得到及时释放的情况。&lt;/p&gt;
+&lt;p&gt;从苹果官网的解释是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h3 id=&#34;how-local-snapshots-use-storage-space&#34;&gt;How local snapshots use storage space&lt;/h3&gt;
+&lt;p&gt;You don&#39;t need to think about how much storage space local snapshots are using, because they don&#39;t use space needed for tasks like downloading files, copying files, or installing new software.&lt;/p&gt;
+&lt;p&gt;Your Mac counts the space used by snapshots as available storage. Even so, Time Machine stores snapshots only on disks that have plenty of free space, and it automatically deletes snapshots as they age or as space is needed for other things.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;google 翻译：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;###本地快照如何使用存储空间&lt;br&gt;
+您无需考虑本地快照正在使用多少存储空间，因为它们不会使用下载文件，复制文件或安装新软件等任务所需的空间。&lt;/p&gt;
+&lt;p&gt;您的Mac将快照使用的空间计为可用存储空间。即便如此，Time Machine仅将快照存储在具有足够可用空间的磁盘上，并且在它们老化或其他内容需要空间时自动删除快照。搜索&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;可以google自己搜索关键字 &lt;a href=&#34;https://www.google.com/search?newwindow=1&amp;amp;rlz=1C5CHFA_enUS691US691&amp;amp;ei=xyMLXcTkHMqU-gSQrZ2YDw&amp;amp;q=About+Time+Machine+local+snapshots&amp;amp;oq=About+Time+Machine+local+snapshots&amp;amp;gs_l=psy-ab.3...0.0..231404...0.0..0.0.0.......0......gws-wiz.kx7n-Vqtt_M&#34;&gt;About Time Machine local snapshots&lt;/a&gt;，苹果官网的&lt;a href=&#34;https://support.apple.com/en-us/HT204015&#34;&gt;文章&lt;/a&gt;已经删除，可以通过网页快照查看。&lt;/p&gt;
+&lt;h2 id=&#34;解决方案&#34;&gt;解决方案：&lt;/h2&gt;
+&lt;h5 id=&#34;如果你的电脑已经剩余空间太少导致开不开机请使用-time-machine-进行恢复-以下解决方案仅适用可开机用户&#34;&gt;如果你的电脑已经剩余空间太少，导致开不开机，请使用 Time Machine ，进行恢复。以下解决方案仅适用可开机用户&lt;/h5&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;######小白大神皆可使用：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;从菜单栏中的 Time Machine 菜单打开 Time Machine 偏好设置  。或者选择 Apple菜单&amp;gt;系统偏好设置，然后单击 Time Machine。&lt;/li&gt;
+&lt;li&gt;取消选择“自动备份”或单击“关闭/打开”开关，具体取决于您在 Time Machine 偏好设置中看到的内容。&lt;/li&gt;
+&lt;li&gt;等待几分钟以允许删除本地快照。然后再次打开 Time Machine 。它会记的使用您的备份磁盘。&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;此方案未经本人验证，我使用的是下面的方法&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;h6 id=&#34;使用终端命令&#34;&gt;使用终端命令：&lt;/h6&gt;
+&lt;ol&gt;
+&lt;li&gt;使用 tmutil 命令， &lt;code&gt;tmutil listlocalsnapshotdates&lt;/code&gt; 列出所以本地快照&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;tmutil deletelocalsnapshots xxx&lt;/code&gt; 删除对应快照&lt;/li&gt;
+&lt;li&gt;删除了三个快照后，本地剩余空间从 2G 升为 77G&lt;/li&gt;
+&lt;li&gt;可选 &lt;code&gt;sudo tmutil disable localsnapshots&lt;/code&gt; 从终端关闭本地快照备份功能，和手动关闭 “自动备份” 功能效果一样&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-11dfc80ef3a20757.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/680&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+">macOS 存储空间越来越少, 删完不增加可用空间</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/flutter-ru-keng-wen-ti-shou-ji-geng-xin-zhong/"" data-c="
+          &lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;💖字符号不显示&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;You need to set uses-material-design: true in pubspec.yaml for the icons to be included in the app. &lt;a href=&#34;https://stackoverflow.com/questions/50786982/flutter-icons-do-not-show&#34;&gt;stackoverflow&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;执行更新库：packages get 命令，会卡住，一直lock状态&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;找到自己的flutter的路径&lt;/li&gt;
+&lt;li&gt;删除cache中的lockfile &lt;code&gt;rm /Users/xxx/development/flutter/bin/cache/lockfile&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;Waiting for another flutter command to release the startup lock...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;
+&lt;p&gt;打开安卓模拟器提示 &lt;code&gt;Broken AVD system path. Check your ANDROID_SDK_ROOT value&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;原因是 &lt;code&gt;ANDROID_HOME&lt;/code&gt; 和 &lt;code&gt;ANDROID_SDK_ROOT&lt;/code&gt; 配置的不对&lt;br&gt;
+在Android studio找到：File/Other Settings/Default Project Structure...&lt;br&gt;
+里面会有 Android sdk location, 此路径才是&lt;code&gt;ANDROID_HOME&lt;/code&gt;的路径，将&lt;code&gt;ANDROID_HOME&lt;/code&gt; 和 &lt;code&gt;ANDROID_SDK_ROOT&lt;/code&gt;更新为此目录就可以了&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-884d8a870c001517.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;pre&gt;&lt;code&gt;4. flutter使用墙内加速
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;原文链接 ：https://flutter.dev/community/china&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;export PUB_HOSTED_URL=https://pub.flutter-io.cn
+export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+&lt;/code&gt;&lt;/pre&gt;
+">flutter 入坑问题收集(更新中)</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/ios-electra-yue-yu-hou-tweakinject-bu-jia-zai-cha-jian-de-wen-ti/"" data-c="
+          &lt;ol&gt;
+&lt;li&gt;使用ssh链接手机，&#39;ssh root@192.168.0.4&#39;, 默认密码 &lt;code&gt;alpine&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;执行下面命令&lt;br&gt;
+&lt;code&gt;mv /Library/TweakInject /Library/TweakInject.bak &amp;amp;&amp;amp; ln -s /Library/MobileSubstrate/DynamicLibraries /Library/TweakInject&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+">iOS electra 越狱后 TweakInject 不加载插件的问题</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/wkwebview-de-xing-neng-you-hua/"" data-c="
+          &lt;h1 id=&#34;wkwebview-的性能优化&#34;&gt;WKWebView 的性能优化&lt;/h1&gt;
+&lt;h2 id=&#34;起因&#34;&gt;起因&lt;/h2&gt;
+&lt;p&gt;随着移动设备性能不断增强，web 页面的性能体验逐渐变得可以接受，又因为 web 开发模式的诸多好处(跨平台，动态更新，减体积，无限扩展)，APP 客户端里出现越来越多内嵌 web 页面），很多 APP 把一些功能模块改成用 H5 实现。&lt;/p&gt;
+&lt;p&gt;虽然说 H5 页面性能变好了，但如果没针对性地做一些优化，体验还是很糟糕的，主要两部分体验：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;页面启动白屏时间：打开一个 H5 页面需要做一系列处理，会有一段白屏时间，体验糟糕。&lt;/li&gt;
+&lt;li&gt;响应流畅度：由于 webkit 的渲染机制，单线程，历史包袱等原因，页面刷新/交互的性能体验不如原生。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;由于以上原因，公司准备从第一点入手，做 webview 的优化项目(达到秒开         webview )。因为&lt;code&gt;UIWebView&lt;/code&gt;在 iOS12 就被标记废弃了，所以决定先从&lt;code&gt;WKWebView&lt;/code&gt;入手研究。&lt;/p&gt;
+&lt;h2 id=&#34;思路&#34;&gt;思路&lt;/h2&gt;
+&lt;h3 id=&#34;webview-加载过程&#34;&gt;webview 加载过程&lt;/h3&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-984e4c17d42b38a6.png?imageMogr2/auto-orient/strip%7CimageView2/2/&#34; alt=&#34;webview展示流程.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;打开一个页面的过程有很多优化点，包括前端和客户端，常规的前端和后端的性能优化已有前辈们总结过最佳实践，主要的是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;降低请求量：合并资源，减少 HTTP 请求数，minify / gzip 压缩，webP，lazyLoad。&lt;/li&gt;
+&lt;li&gt;加快请求速度：预解析DNS，减少域名数，并行加载，CDN 分发。&lt;/li&gt;
+&lt;li&gt;缓存：HTTP 协议缓存请求，离线缓存 manifest，离线数据缓存 localStorage。&lt;/li&gt;
+&lt;li&gt;渲染：JS/CSS优化，加载顺序，服务端渲染模板直出。&lt;/li&gt;
+&lt;li&gt;客户端：预请求web所需数据&lt;br&gt;
+大家可以看出，主要是第三阶段之前，用户看到的页面一直处于白屏。首先要优化的就是这段时间。&lt;br&gt;
+打开一个页面的过程有很多优化点，包括前端和客户端，常规的前端和后端的性能优化已有前辈们总结过最佳实践，主要的是：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下面只讲客户端优化部分：&lt;/p&gt;
+&lt;h4 id=&#34;减少第一阶段耗时&#34;&gt;减少第一阶段耗时&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;在使用前预先初始化好 webView，从而减小耗时。&lt;/li&gt;
+&lt;li&gt;在初始化的同时，通过 Native 来完成一些网络请求等过程，使得 webView 初始化不是完全的阻塞后续过程。&lt;/li&gt;
+&lt;li&gt;webview 池，可以用两个或多个 webview 重复使用，而不是每次打开 H5 都新建 webview。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;减少第二阶段耗时&#34;&gt;减少第二阶段耗时&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;离线包
+&lt;ol&gt;
+&lt;li&gt;预先下载离线包，可以达到立即展示的效果。&lt;/li&gt;
+&lt;li&gt;离线包可以很方便地根据版本做增量更新。&lt;/li&gt;
+&lt;li&gt;离线包以压缩包的方式下发，同时会经过加密和校验，防止运营商和第三方对其劫持篡改。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;数据缓存
+&lt;ol&gt;
+&lt;li&gt;第一次打开会有延迟，但是后续打开就会很快&lt;/li&gt;
+&lt;li&gt;可以自己控制缓存，方便管理&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;客户端代替请求
+&lt;ol&gt;
+&lt;li&gt;客户端可以在网络请求上做像 DNS 预解析/ IP 直连/长连接/并行请求等更细致的优化&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;难点&#34;&gt;难点&lt;/h2&gt;
+&lt;p&gt;方案是通用的，不区分 UIWebView  和 WKWebView，但是目前很少有以 WKWebView 为目标的方案，那么以上技术方案在 WKWebView 中实现有什么难点呢？&lt;br&gt;
+难点在 &lt;a href=&#34;%5Bhttps://developer.apple.com/documentation/foundation/nsurlprotocol%5D(https://developer.apple.com/documentation/foundation/nsurlprotocol)&#34;&gt;NSURLProtocol&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&#34;wkwebview-无法使用-nsurlprotocol-拦截-http-请求&#34;&gt;WKWebView 无法使用 NSURLProtocol 拦截 http 请求&lt;/h4&gt;
+&lt;p&gt;这个问题网上早有方案：&lt;br&gt;
+&lt;code&gt;[WKBrowsingContextController registerSchemeForCustomProtocol:@&amp;quot;schemes&amp;quot;];&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id=&#34;wkwebview-使用-nsurlprotocol-拦截后httpbody的数据会丢失&#34;&gt;WKWebView 使用 NSURLProtocol 拦截后，HTTPBody的数据会丢失&lt;/h4&gt;
+&lt;p&gt;从网上克隆了 webkit 进行编译调试，尝试解决 Body 丢失的问题（体验到了啥叫大型项目的编译速度）&lt;br&gt;
+&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-3196befb8d12731e.png?imageMogr2/auto-orient/strip%7CimageView2/2/&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;br&gt;
+从图上重点标注的地方可以看到：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;WKWebView 的网络请求是在另外一个进程中操作的，然后如果 app 主进程需要拦截请求的话，通过 XPC 来进行两个进程间的通信。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;苹果出于性能或其他考虑，会在给主进程的 URLProtocol 传输请求时将 &lt;code&gt;HTTPBody&lt;/code&gt; 和 &lt;code&gt;HTTPBodyStream&lt;/code&gt; 置为 nil 。&lt;br&gt;
+&lt;a href=&#34;https://github.com/doge1024/webkit/blob/ce05715c8e1034db2e1ac99dde920c41b47b9534/Source/WebKit/Shared/mac/WebCoreArgumentCodersMac.mm#L195-L201&#34;&gt;源代码&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5 id=&#34;尝试解决方案&#34;&gt;尝试解决方案：&lt;/h5&gt;
+&lt;ol&gt;
+&lt;li&gt;使用 runtime 黑魔法，在其将 HTTPBody 置为 nil 之前，先保存下来？&lt;br&gt;
+因为网络请求是在其他进程中操作，没有办法在主进程使用 runtime 进行拦截。也就是说在 app 中决定拦截 http 请求的那一刻起，拦截到的请求注定是没有 HTTPBody 的。&lt;/li&gt;
+&lt;li&gt;使用 任何方式进入到 Networking 进程做一些操作 ？&lt;br&gt;
+尝试了 Mac 端的 XPC demo，XPC 的回调是在各自进程，是不能操作其他进程的。&lt;/li&gt;
+&lt;li&gt;在 &lt;code&gt;HTTPBody&lt;/code&gt; 置为 nil 之前，是否会有代码走到主进程，然后拿到 request 进行操作？&lt;br&gt;
+抱歉，经过测试，在 &lt;code&gt;HTTPBody&lt;/code&gt; 置为 nil 之前，主进程不会收到关于 request 的调用&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-1e1b75719d7f736d.png?imageMogr2/auto-orient/strip%7CimageView2/2&#34; alt=&#34;xpc 的 demo&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h2 id=&#34;解决&#34;&gt;解决&lt;/h2&gt;
+&lt;p&gt;难到就没有任何方法解决了么？无意中看到一个特别有趣的想法又点燃了我的希望。&lt;/p&gt;
+&lt;p&gt;既然 Networking 进程会将  &lt;code&gt;HTTPBody&lt;/code&gt; 置为 nil ，那我要做的就是两点：&lt;br&gt;
+1. 不让其置为 nil&lt;br&gt;
+2. 或者在其置为 nil 之前，先将 &lt;code&gt;HTTPBody&lt;/code&gt; 保存下来&lt;/p&gt;
+&lt;p&gt;第一点：上面已经尝试失败；第二点：在 native 端也尝试失败，那在 H5 侧做保存操作呢？&lt;br&gt;
+要拦截的是 H5 的请求，那说明 H5 侧肯定是知道请求参数的。&lt;/p&gt;
+&lt;h4 id=&#34;尝试-h5-与-native-结合来解决-httpbody-丢失问题&#34;&gt;尝试 H5 与 native 结合来解决 &lt;code&gt;HTTPBody&lt;/code&gt; 丢失问题&lt;/h4&gt;
+&lt;p&gt;H5 发起发起请求有三种方式：&lt;br&gt;
+1. &lt;strong&gt;&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement&#34;&gt;&lt;code&gt;Form&lt;/code&gt;&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+2. &lt;strong&gt;&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest&#34;&gt;&lt;code&gt;XMLHttpRequest&lt;/code&gt;&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+3. &lt;strong&gt;&lt;a href=&#34;https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API&#34;&gt;&lt;code&gt;Fetch&lt;/code&gt;&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Fetch&lt;/code&gt;是在 iOS10 以后支持的，从通用场景看，只需要处理 &lt;code&gt;Form&lt;/code&gt; 和 &lt;code&gt;XMLHttpRequest&lt;/code&gt; 发起的带 &lt;code&gt;HTTPBody&lt;/code&gt; 的请求就可以.&lt;/p&gt;
+&lt;p&gt;基本所有 H5 开发者，肯定知道 H5 里面也有黑魔法，就是原型：&lt;br&gt;
+&lt;code&gt;XMLHttpRequest&lt;/code&gt; 对应的是 &lt;code&gt;XMLHttpRequest.prototype.send&lt;/code&gt; 方法&lt;br&gt;
+&lt;code&gt;Form&lt;/code&gt; 对应的是 &lt;code&gt;HTMLFormElement.prototype.submit&lt;/code&gt; 方法&lt;/p&gt;
+&lt;p&gt;我们对以上方法使用 &lt;code&gt;WKUserScript&lt;/code&gt; 在 &lt;code&gt;WKUserScriptInjectionTimeAtDocumentStart&lt;/code&gt; 时机做对应拦截。这样 H5 在发起请求前，先将 POST 的数据发送给 native 存储(&lt;code&gt;WKScriptMessageHandler&lt;/code&gt;)。然后在 native 拦截到匹配到的请求，尝试接管，并重新设置 &lt;code&gt;HTTPBody&lt;/code&gt;，而且由于拦截到的是 request ，只需要补齐&lt;code&gt;HTTPBody&lt;/code&gt;，其他在 h5 中原本对 request 做的各种操作也是存在的，这样就能解决问题了&lt;/p&gt;
+&lt;p&gt;这个方法提供了一种解决&lt;code&gt;HTTPBody&lt;/code&gt; 丢失问题的可能，并且大部分 app，使用应该完全够用。本人已经按照上述方案实现，并接入到 app 中，在解决了一些细节问题后，将各个流程中的 H5 页面走了一遍，目前没有发现不支持的请求。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;感兴趣的可以自己下载编译 &lt;a href=&#34;https://github.com/doge1024/webkit&#34;&gt;webkit&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://github.com/doge1024/XPCDemo.git&#34;&gt;XPCDemo&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;参考：&lt;br&gt;
+&lt;a href=&#34;https://tech.meituan.com/2017/06/09/webviewperf.html&#34;&gt;WebView性能、体验分析与优化&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://blog.cnbang.net/tech/3477/&#34;&gt;移动 H5 首屏秒开优化方案探讨&lt;br&gt;
+&lt;/a&gt; &lt;a href=&#34;https://github.com/li6185377/IMYWebLoader.git&#34;&gt;IMYWebLoader&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://github.com/Tencent/VasSonic.git&#34;&gt;VasSonic&lt;/a&gt;&lt;/p&gt;
+">WKWebView 的性能优化</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/ios-zi-ding-yi-dao-hang-lan-hua-dong-fan-hui-qu-xiao-hou-chu-xian-san-ge-xiao-dian-biao-ti-lan-cuo-luan-jie-jue-fang-an/"" data-c="
+          &lt;p&gt;同事发现在iOS10系统操作滑动返回，然后半路取消后，导航栏会多出三个小点&lt;br&gt;
+&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-05e290b695fb7c13.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;解决方法&#34;&gt;解决方法：&lt;/h3&gt;
+&lt;p&gt;在 &lt;code&gt;viewWillAppear:&lt;/code&gt; 方法里面加上几行代码，将title置为空字符串：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.hidesBackButton = YES;
+    } else {
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@&amp;quot;&amp;quot; style:UIBarButtonItemStylePlain target:nil action:nil];
+        self.navigationItem.hidesBackButton = YES;
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;原因探究&#34;&gt;原因探究：&lt;/h3&gt;
+&lt;p&gt;查看了下图层，明显就是系统默认的返回按钮么：&lt;br&gt;
+&lt;code&gt;UINavigationBar&lt;/code&gt; -&amp;gt; &lt;code&gt;UINavigationItemButtonView&lt;/code&gt; -&amp;gt; &lt;code&gt;UILabel&lt;/code&gt;&lt;br&gt;
+&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-8155fe421ee9a1f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/920&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;p&gt;看到&lt;code&gt;backBarButtonItem&lt;/code&gt;(&lt;code&gt;UINavigationItemButtonView&lt;/code&gt;) 的宽高都是0，那三个点就是内部的UILabel造成的，因为宽高不够所以显示了... ，这个label的字是系统自动取的上个控制器的title，所以不使用系统自己创建的&lt;code&gt;backBarButtonItem&lt;/code&gt;, 自己创建一个没有title的就可以了&lt;/p&gt;
+&lt;p&gt;#####有些文章里面写的是直接判断&lt;code&gt;UINavigationItemButtonView&lt;/code&gt; 的class类型然后粗暴的隐藏掉，感觉不是最好的解决方法&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;知识点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;当前控制器展示的backBarButtonItem，是上个控制器的；所以看到上面的label展示的是&amp;lt;密码管理&amp;gt;, 这是堆栈中&amp;lt;修改登录密码&amp;gt;的上个页面&lt;/li&gt;
+&lt;li&gt;customView在&lt;code&gt;backBarButtonItem&lt;/code&gt;中是不生效的&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;系统的注释：当此属性为nil时，导航项使用其title属性中的值创建适当的后退按钮。&lt;br&gt;
+&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-1a27ae5fc3ffc001.png?imageMogr2/auto-orient/strip%7CimageView2/2/h/540&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+">iOS 自定义导航栏滑动返回取消后出现三个小点(标题栏错乱)解决方案</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/xcode100-beta-yun-xing-xiang-mu-chu-cuo/"" data-c="
+          &lt;h3 id=&#34;错误&#34;&gt;错误&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;Showing All Errors Only
+:-1: Multiple commands produce &#39;/Users/xxx/Library/Developer/Xcode/DerivedData/xxx-grhikhutwnfcetecdukkohqbygam/Build/Products/Debug-iphoneos/MGBankCard/MGBankCardResource.bundle/Info.plist&#39;:
+1) Target &#39;MGBankCard-MGBankCardResource&#39; has copy command from &#39;/Users/xxx/Desktop/xy_projects/xxx/Pods/MGBankCard/demo/MGBankCard/BankCardResource/Info.plist&#39; to &#39;/Users/xxx/Library/Developer/Xcode/DerivedData/xxx-grhikhutwnfcetecdukkohqbygam/Build/Products/Debug-iphoneos/MGBankCard/MGBankCardResource.bundle/Info.plist&#39;
+2) Target &#39;MGBankCard-MGBankCardResource&#39; has process command with input &#39;/Users/xxx/Desktop/xy_projects/xxx/Pods/Target Support Files/MGBankCard/ResourceBundle-MGBankCardResource-Info.plist&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;大概意思就是Info.plist重复了：&lt;br&gt;
+需要删除Resources目录下的info.plist，保留Support Files文件夹下的&lt;br&gt;
+删除后可错误可解决&lt;/p&gt;
+&lt;p&gt;版本：Xcode Version 10.0 beta (10L176w)， cocoapods 1.5.0&lt;/p&gt;
+">Xcode10.0 beta运行项目出错</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/hei-ping-guo-sheng-ji-10134-yi-hou-usb30-bu-neng-shi-yong/"" data-c="
+          &lt;p&gt;解决问题需要找到EFI盘下的文件 &lt;code&gt;EFI/CLOVER/config.plist&lt;/code&gt;&lt;br&gt;
+使用Sublime Text打开，搜索KextsToPatch&lt;br&gt;
+&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-cae205031c6ac59b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/540&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-e3ad0a07eae112f4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;将下面文字，复制粘贴过去，并保存重启即可生效， USB3.0可以使用&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;            &amp;lt;dict&amp;gt;
+                &amp;lt;key&amp;gt;Comment&amp;lt;/key&amp;gt;
+                &amp;lt;string&amp;gt;USB 10.13.4+ by PMHeart&amp;lt;/string&amp;gt;
+                &amp;lt;key&amp;gt;Disabled&amp;lt;/key&amp;gt;
+                &amp;lt;false/&amp;gt;
+                &amp;lt;key&amp;gt;Find&amp;lt;/key&amp;gt;
+                &amp;lt;data&amp;gt;
+                g32UDw+DlwQAAA==
+                &amp;lt;/data&amp;gt;
+                &amp;lt;key&amp;gt;InfoPlistPatch&amp;lt;/key&amp;gt;
+                &amp;lt;false/&amp;gt;
+                &amp;lt;key&amp;gt;MatchOS&amp;lt;/key&amp;gt;
+                &amp;lt;string&amp;gt;10.13.x&amp;lt;/string&amp;gt;
+                &amp;lt;key&amp;gt;Name&amp;lt;/key&amp;gt;
+                &amp;lt;string&amp;gt;com.apple.driver.usb.AppleUSBXHCI&amp;lt;/string&amp;gt;
+                &amp;lt;key&amp;gt;Replace&amp;lt;/key&amp;gt;
+                &amp;lt;data&amp;gt;
+                g32UD5CQkJCQkA==
+                &amp;lt;/data&amp;gt;
+            &amp;lt;/dict&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.tonymacx86.com/threads/macos-10-13-4-update.248292/page-9#post-1718100&#34;&gt;资料地址&lt;/a&gt;&lt;/p&gt;
+">黑苹果升级10.13.4以后，usb3.0不能使用</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/reactnative-ru-keng-yi-xie-chang-yong-kong-jian-de-shi-yong-wu/"" data-c="
+          &lt;h5 id=&#34;button外面要包一个view才能设置样式&#34;&gt;button外面要包一个View，才能设置样式&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/facebook/react-native/blob/master/Libraries/Components/Button.js&#34;&gt;这里是Button的源码&lt;/a&gt;， Button除了accessibilityLabel, color, onPress, title, disabled, testID, 这几个属性以外其他属性都不能生效， 需要外面套一个View 才能设置样式&lt;br&gt;
+再就是Button里面只有个自带的Text，自己往Button里塞的子控件不会显示的&lt;/p&gt;
+&lt;h5 id=&#34;touchablehighlight&#34;&gt;TouchableHighlight&lt;/h5&gt;
+&lt;p&gt;TouchableHighlight只能有一个子控件，如果既有文字又有图片等多个控件需要使用View包装一层&lt;/p&gt;
+&lt;h5 id=&#34;如何设置默认props&#34;&gt;如何设置默认props&lt;/h5&gt;
+&lt;h3 id=&#34;sectionlist的用法&#34;&gt;SectionList的用法&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;
+&amp;lt;SectionList
+                ListHeaderComponent={&amp;lt;View style={{backgroundColor: &amp;quot;red&amp;quot;, height: 40}} &amp;gt;&amp;lt;/View&amp;gt;}
+                ListFooterComponent={&amp;lt;View style={{backgroundColor: &amp;quot;green&amp;quot;, height: 40}} &amp;gt;&amp;lt;/View&amp;gt;}
+                renderItem={({item, index, section}) =&amp;gt; &amp;lt;Text style={{flex: 1, height: 50}}&amp;gt;section:{section.key}----{item.title}----{index}&amp;lt;/Text&amp;gt;}
+                renderSectionHeader={({section}) =&amp;gt; &amp;lt;Text style={{backgroundColor: &#39;yellow&#39;}}&amp;gt;Header：{section.key}&amp;lt;/Text&amp;gt;}
+                renderSectionFooter={({section}) =&amp;gt; &amp;lt;Text style={{backgroundColor: &#39;purple&#39;}}&amp;gt;Footer：{section.key}&amp;lt;/Text&amp;gt;}
+                stickySectionHeadersEnabled={false}
+                sections={[
+                    {
+                        key: &#39;s1&#39;,
+                        data: [
+                            {title: &#39;0 item&#39;, key: &#39;0&#39;},
+                            {title: &#39;1 item&#39;, key: &#39;1&#39;},
+                            {title: &#39;2 item&#39;, key: &#39;2&#39;},
+                    ]},
+                    {
+                        key: &#39;s2&#39;,
+                        data: [
+                            {title: &#39;0 item&#39;, key: &#39;0&#39;},
+                            {title: &#39;1 item&#39;, key: &#39;1&#39;},
+                            {title: &#39;2 item&#39;, key: &#39;2&#39;},
+                            {title: &#39;3 item&#39;, key: &#39;3&#39;},
+                    ]},
+                ]}
+            /&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;其余的属性看&lt;a href=&#34;https://facebook.github.io/react-native/docs/sectionlist.html&#34;&gt;官方SectionList文档&lt;/a&gt;&lt;/p&gt;
+">ReactNative入坑: 一些常用控件的使用(五)</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/hei-ping-guo-sheng-ji-1333-hou-xian-shi-qia-dun-yan-chi-jie-jue-ban-fa/"" data-c="
+          &lt;h3 id=&#34;问题&#34;&gt;问题&lt;/h3&gt;
+&lt;p&gt;Xcode升级到9.2以后，可以从github直接打开*.xcodeproj 的项目&lt;br&gt;
+最近因为想要使用这个功能，就把家里的黑苹果升级到10.13.3 (17D47)，发现升级以后鼠标的移动和窗口变换有很大延迟&lt;/p&gt;
+&lt;h3 id=&#34;解决办法&#34;&gt;解决办法&lt;/h3&gt;
+&lt;p&gt;最新更新：更新系统到10.13.4 (17E199)，并将NVIDIA Web Driver 更新到适配的最新版就没有延迟问题了&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;黑苹果配置：&lt;br&gt;
+主板：技嘉z270-Phoenix Gaming&lt;br&gt;
+显卡：GTX 1060 6GB&lt;br&gt;
+CPU：i7 7700k&lt;/p&gt;
+&lt;/blockquote&gt;
+">黑苹果升级13.3.3后，显示卡顿延迟解决办法</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/yue-yu-di-si-zhang-mian-yue-yu-qi-ye-wei-xin-qiang-hong-bao-gong-neng/"" data-c="
+          &lt;h1 id=&#34;免越狱企业微信抢红包功能&#34;&gt;免越狱企业微信抢红包功能&lt;/h1&gt;
+&lt;p&gt;写这个，主要是为了：认真工作的时候却错过了老板的红包，心里不爽😂&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-176ca5d79f1358ee.gif?imageMogr2/auto-orient/strip&#34; alt=&#34;红包测试&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h2 id=&#34;点击去-仓库地址-star-和-运行&#34;&gt;点击去 &lt;a href=&#34;https://github.com/doge1024/MyWeWork.git&#34;&gt;仓库地址&lt;/a&gt; Star 和 运行&lt;/h2&gt;
+&lt;h3 id=&#34;使用&#34;&gt;使用&lt;/h3&gt;
+&lt;h6 id=&#34;-测试使用&#34;&gt;- 测试使用&lt;/h6&gt;
+&lt;ol&gt;
+&lt;li&gt;将脱壳后的企业微信ipa解压取得.app文件放到&lt;code&gt;MyWeWork/TargetApp/wework.app&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;选择自己的BundleID和证书&lt;/li&gt;
+&lt;li&gt;插上手机，&lt;code&gt;cmd+R&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;聊天会话页面右上角有个开关，打开后，如果人发红包红包的话，会自动抢（默认打开）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h6 id=&#34;-正式使用&#34;&gt;- 正式使用&lt;/h6&gt;
+&lt;ol&gt;
+&lt;li&gt;编译Release版&lt;code&gt;cmd+shift+i&lt;/code&gt;，待编译完成&lt;/li&gt;
+&lt;li&gt;双击&lt;code&gt;LatestBuild/createIPA.command&lt;/code&gt;，待进程完成后，文件夹下面会多一个ipa文件，拿去用吧&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;效果&#34;&gt;效果&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;自动打开红包，功能只能在聊天会话页面使用，但是可以在后台，继续抢&lt;/li&gt;
+&lt;li&gt;仔细想了想应该不会封号，还能把你开除企业么？🤔&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;注意&#34;&gt;注意&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;非越狱手机推送是不可能推送的，这辈子都不会有推送&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/harddog/MyWeWork&#34;&gt;MyWeWork仓库地址&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;感谢&#34;&gt;感谢&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;感谢 &lt;a href=&#34;https://github.com/AloneMonkey/MonkeyDev&#34;&gt;MonkeyDev&lt;/a&gt;，在没有越狱机的情况下还能简单的调试编写&lt;/li&gt;
+&lt;li&gt;感谢同事的1分钱测试红包&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;抢红包算是完成了，issue随机更新ヽ(^o^)丿&lt;/p&gt;
+">越狱第四章：免越狱企业微信抢红包功能</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/gua-pei-ios-11-yu-iphone-x/"" data-c="
+          &lt;blockquote&gt;
+&lt;p&gt;我的项目不是个性化的特别厉害，做一些简单的操作基本上就完成了新系统和机型的适配工作，碰到问题会持续更新此文章&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;适配ios-11&#34;&gt;适配iOS 11&lt;/h3&gt;
+&lt;p&gt;Xcode 9 增加了&lt;code&gt;@available(iOS 11, *)&lt;/code&gt; 的用法，很方便&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;if (@available(iOS 11, *)) {
+        NSLog(@&amp;quot;这是iOS 11&amp;quot;);
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;    // 适配 iOS 11， 如果打包的 Xcode 版本是9的话，可以替换为@available(iOS 11, *) 来判断
+    if ([[[UIDevice currentDevice] systemVersion] doubleValue] &amp;gt;= 11.0) {
+        // 不主动设置此处为0的话，cell 和 SectionHeader、 SectionFooter 的高度 会不走代理方法
+        self.tableView.estimatedSectionHeaderHeight = 0;
+        self.tableView.estimatedSectionFooterHeight = 0;
+        self.tableView.estimatedRowHeight = 0;
+        // UIViewController 的 automaticallyAdjustsScrollViewInsets 属性已经不使用，换为下面属性
+        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;如何适配iphone-x&#34;&gt;如何适配iPhone X&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注意：iPhone X 的导航栏高度为44， 状态栏高度44， Tabbar 高度83&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;叫UI设计师帮你切一张 &lt;code&gt;1125x2436&lt;/code&gt; 的图&lt;/li&gt;
+&lt;li&gt;将原先项目Assets中的LaunchImage保存一下&lt;/li&gt;
+&lt;li&gt;新建一个LaunchImage，将原LaunchImage中的图拖回原位，然后将 &lt;code&gt;1125x2436&lt;/code&gt; 的图放入 &lt;code&gt;iPhone X Portrait iOS 11+&lt;/code&gt; 的位置&lt;/li&gt;
+&lt;li&gt;如果你使用的是原生的Tabbar和导航控制器，此时基本已经适配完成&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-fbbe41cd52c03118.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/620&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h6 id=&#34;大家可能碰到-iphone-x-的模拟器打印-uiscreen-mainscreenboundssizeheight-的值为-667-的问题&#34;&gt;大家可能碰到 iPhone X 的模拟器打印 [UIScreen mainScreen].bounds.size.height 的值为 667 的问题&lt;/h6&gt;
+&lt;p&gt;这种问题就是 LaunchImage 中没有 &lt;code&gt;iPhone X Portrait iOS 11+&lt;/code&gt; 图片导致的，大家添加上，即可恢复正常&lt;/p&gt;
+&lt;h3 id=&#34;常用的宏定义&#34;&gt;常用的宏定义&lt;/h3&gt;
+&lt;p&gt;判断iPhone X&lt;br&gt;
+&lt;code&gt;#define IS_IPHONEX (([[UIScreen mainScreen] bounds].size.height - 812) ? NO : YES)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Tabbar默认高度&lt;br&gt;
+&lt;code&gt;#define kTabBarHeight ((IS_IPHONEX) ? 83 : 49)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;状态栏默认高度&lt;br&gt;
+&lt;code&gt;#define kStatusBarHeight ((IS_IPHONEX) ? (44) : (20))&lt;/code&gt;&lt;/p&gt;
+">适配iOS 11 与 iPhone X</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/reactnative-ru-keng-codepush-re-geng-xin-si/"" data-c="
+          &lt;h2 id=&#34;如何使用debug环境调试code-push&#34;&gt;如何使用Debug环境调试code-push&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;code-push&lt;/code&gt;可以在Debug环境调试（** 真机、模拟器都可以奥**），下面介绍一下方法：&lt;/p&gt;
+&lt;h4 id=&#34;配置codepush_key&#34;&gt;配置CODEPUSH_KEY&lt;/h4&gt;
+&lt;p&gt;在测试环境手动设置deploymentKey，需要加载Staging的更新，就设置Staging的key；&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// 在测试环境添加下面这行代码，更改测试环境的deploymentKey
+[CodePushConfig current].deploymentKey = @&amp;quot;your_Staging_deploymentKey&amp;quot;;
+// 加载你的jsbundle地址
+NSURL *jsCodeLocation = [CodePush bundleURLForResource:@&amp;quot;index.ios&amp;quot; withExtension:@&amp;quot;jsbundle&amp;quot; subdirectory:@&amp;quot;bundles&amp;quot;];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在不需要测试的时候将代码注释掉就好了， 简单方便&lt;/p&gt;
+&lt;h4 id=&#34;使用打包好的jsbundle进行调试&#34;&gt;使用打包好的jsbundle进行调试&lt;/h4&gt;
+&lt;p&gt;大家要记住，如果使用本地服务进行调试的话，无论什么时候加载的都是本地&lt;code&gt;localhost:8081&lt;/code&gt;服务的代码，更新的jsbundle代码是一定不会被加载的。所以要使用打包好的jsbundle，然后运行 真机 / 模拟器 ,就可以在Dev环境检测到&lt;code&gt;Staging&lt;/code&gt;的更新，并下载&lt;/p&gt;
+">ReactNative入坑: codepush热更新(四)</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/jie-jue-pod-lib-lintrepo-push-bu-zhi-chi-i386-bian-yi-andzhi-neng-zhen-ji-yun-xing-de-ku/"" data-c="
+          &lt;h2 id=&#34;源起&#34;&gt;源起&lt;/h2&gt;
+&lt;p&gt;公司有几个私有pod库，一直使用的是&lt;code&gt;:git =&amp;gt;&#39;https://xxxx.git&#39;&lt;/code&gt;这种方式集成的，但是每次 &lt;code&gt;pod update&lt;/code&gt; 的时候都需要下载一遍，而且公司的网太慢了，十分不爽(* ￣︿￣)&lt;/p&gt;
+&lt;p&gt;&lt;s&gt;公司的网确实奇怪，网易云音乐听歌一点都不卡，一旦和工作有关的网就特别慢。。。老板你听我解释···&lt;/s&gt;&lt;/p&gt;
+&lt;h2 id=&#34;意外的事情&#34;&gt;意外的事情&lt;/h2&gt;
+&lt;p&gt;有一些只能在真机运行的库，在&lt;code&gt;pod lib lint&lt;/code&gt; 阶段就不能通过，直接报错 ， 原先做的pod都是模拟器可以运行的，所以就&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ld: symbol(s) not found for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
+** BUILD FAILED **
+The following build commands failed:
+	Ld /Users/lzh/Library/Developer/Xcode/DerivedData/App-gaskduvrghhdcwcbkdqpuxupzbfv/Build/Intermediates/App.build/Release-iphonesimulator/App.build/Objects-normal/i386/App normal i386
+	Ld /Users/lzh/Library/Developer/Xcode/DerivedData/App-gaskduvrghhdcwcbkdqpuxupzbfv/Build/Intermediates/App.build/Release-iphonesimulator/App.build/Objects-normal/x86_64/App normal x86_64
+(2 failures)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;解决方法&#34;&gt;解决方法&lt;/h2&gt;
+&lt;h3 id=&#34;第一种文人操作&#34;&gt;第一种：文人操作&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;第一种&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol&gt;
+&lt;li&gt;在 podspec 文件中添加 &lt;code&gt;s.pod_target_xcconfig = { &#39;ARCHS[sdk=iphonesimulator*]&#39; =&amp;gt; &#39;$(ARCHS_STANDARD_64_BIT)&#39; }&lt;/code&gt;，如果项目已经设置 &lt;code&gt;pod_target_xcconfig&lt;/code&gt;，添加到已有值的后面。&lt;br&gt;
+仅编译64位，尝试是否可以解决，不行请尝试第二种。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;第二种&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;在 podspec 文件中添加 &lt;code&gt;s.pod_target_xcconfig = { &#39;VALID_ARCHS[sdk=iphonesimulator*]&#39; =&amp;gt; &#39;&#39; }&lt;/code&gt;，如果项目已经设置 &lt;code&gt;pod_target_xcconfig&lt;/code&gt;，添加到已有值的后面。设置此处将在 模拟器编译时不产生二进制文件。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://pewpewthespells.com/blog/buildsettings.html#valid_archs&#34;&gt;VALID_ARCHS 的描述&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;pod lint&lt;/code&gt; 命令添加 &lt;code&gt;--skip-import-validation&lt;/code&gt; 参数，lint 将跳过验证 pod 是否可以导入。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://guides.cocoapods.org/terminal/commands.html#pod_lib_lint&#34;&gt;&lt;code&gt;pod lint&lt;/code&gt; 命令详情链接&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;pod repo push&lt;/code&gt; 命令添加 &lt;code&gt;--skip-import-validation&lt;/code&gt; 参数，push 将跳过验证 pod 是否可以导入。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://guides.cocoapods.org/terminal/commands.html#pod_repo_push&#34;&gt;&lt;code&gt;pod repo push&lt;/code&gt; 命令详情链接&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;O鸡儿K，可以试试，不成功还有【第二种：张飞操作】&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;第二种张飞操作&#34;&gt;第二种：张飞操作&lt;/h3&gt;
+&lt;p&gt;不就是编译不通过吗？&lt;br&gt;
+直接改源码，将编译检测跳过去，老子不编了，&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-66c778930ceb9186.png?imageMogr2/auto-orient/strip%7CimageView2/2/h/230&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h4 id=&#34;检测的源码在-validatorrb文件-如何找到它&#34;&gt;检测的源码在 &lt;code&gt;validator.rb&lt;/code&gt;文件 如何找到它？&lt;/h4&gt;
+&lt;p&gt;######1. 终端 &lt;code&gt;gem which cocoapods&lt;/code&gt;&lt;br&gt;
+输出：&lt;code&gt;/usr/local/lib/ruby/gems/2.3.0/gems/cocoapods-1.3.0.beta.2/lib/cocoapods.rb&lt;/code&gt;&lt;br&gt;
+######2. 终端 &lt;code&gt;open /usr/local/lib/ruby/gems/2.3.0/gems/cocoapods-1.3.0.beta.2/lib/&lt;/code&gt;&lt;br&gt;
+将第一步命令输出的结果去掉最后的文件名&lt;code&gt;cocoapods.rb&lt;/code&gt;，将前面的路径加到 &lt;code&gt;open&lt;/code&gt;命令的后面, 执行命令后会在Finder打开一个**&lt;code&gt;lib&lt;/code&gt;文件夹**&lt;br&gt;
+######3. 在当前&lt;code&gt;lib&lt;/code&gt;目录下有个&lt;code&gt;cocoapods&lt;/code&gt;文件夹，进入，&lt;code&gt;validator.rb&lt;/code&gt;文件就在这个文件夹里&lt;/p&gt;
+&lt;h4 id=&#34;如何修改它&#34;&gt;如何修改它？&lt;/h4&gt;
+&lt;p&gt;找到下面的代码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-8fbfe1c8544e7514.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;源代码.png&#34; loading=&#34;lazy&#34;&gt;&lt;br&gt;
+改成下面的样子&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-ac938711bb5e147d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;更改后.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;这样每次向仓库推送podspec文件的时候，都会直接打印一下&lt;code&gt;xcodebuild --help&lt;/code&gt; 然后就算作通过验证了&lt;br&gt;
+接下来你就可以安心的 push 你的代码了&lt;br&gt;
+像一些x86_64，i386，不支持模拟器啦，这种都是小case，所有编译错误都可以解决&lt;/p&gt;
+&lt;h4 id=&#34;注意&#34;&gt;注意&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;此方法因为太叼，不到万不得已，不能使用，过分依赖容易走火入魔&lt;br&gt;
+&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-e98bbb9f8705b00f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/230&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/li&gt;
+&lt;li&gt;一定在本地先以&lt;code&gt;:path&lt;/code&gt;、&lt;code&gt;:git&lt;/code&gt; 等的方式集成一下，确认没问题后再往仓库推&lt;/li&gt;
+&lt;li&gt;搞完以后记得改回到原来的代码，毕竟做库是为了项目使用的，多点检测也是为了保证质量&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;第三种正常却又有点麻烦的操作&#34;&gt;第三种：正常却又有点麻烦的操作&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;模拟器 32 位处理器测试需要 i386 架构，&lt;br&gt;
+模拟器 64 位处理器测试需要 x86_64 架构，&lt;br&gt;
+真机 32 位处理器需要 armv7 ,或者 armv7s 架构，&lt;br&gt;
+真机 64 位处理器需要 arm64 架构。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;第二种方法可以将验证的命令替换为 &lt;code&gt;xcodebuild --help&lt;/code&gt;，那么也就可以替换为正常的真机校验命令：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;command += %w(-sdk iphoneos12.2 -destination=generic/iOS ONLY_ACTIVE_ARCH=YES ARCHS=armv64)&lt;/code&gt; 。&lt;/p&gt;
+&lt;p&gt;将验证的设备改为通用 iOS 设备 &lt;code&gt;generic/iOS&lt;/code&gt;，sdk 根据自己电脑 xcode 版本来设置 &lt;code&gt;iphoneos12.2&lt;/code&gt;，ARCHS 根据自己支持的真机选择架构 &lt;code&gt;arm64&lt;/code&gt;，可以根据自己的电脑，仿照上面的命令进行更改。&lt;/p&gt;
+&lt;p&gt;此命令会验证 pod 库在真机上的表现，效果应该是最接近原本 cocoapods 命令的本意，但是里面的 sdk 版本 和 cocoapods 版本 在升级时都需要重新设置。&lt;br&gt;
+&lt;img src=&#34;https://upload-images.jianshu.io/upload_images/1300265-525a19cc16625582.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;截图为 cocoapods v1.5.3&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;p&gt;######参考文章&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;cocoapods的github上有个&lt;a href=&#34;https://github.com/CocoaPods/CocoaPods/issues/5854&#34;&gt;issues&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.jianshu.com/p/9d32368ae3b2&#34;&gt;待解决 pod lib lint pod不支持i386编译环境，如何避开&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+">解决pod lib lint/repo push不支持i386编译&只能真机运行的库</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/reactnative-ru-keng-react-navigation-ku-san/"" data-c="
+          &lt;h4 id=&#34;源起&#34;&gt;源起&lt;/h4&gt;
+&lt;p&gt;既然使用RN，跨平台必不可少，iOS 和 Android 在NavigationBar 和TabBar 方面的展示逻辑不太一样，使用RN自己的库会有写两套代码的问题。&lt;br&gt;
+react-navigation在github上有五千多的Star✨，成了我们第一选择。&lt;br&gt;
+暂时只用到navigationBar，所以写一下自己碰到的问题，后续会继续更新&lt;/p&gt;
+&lt;h4 id=&#34;react-navigation&#34;&gt;react-navigation&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/react-community/react-navigation&#34;&gt;react-navigation&lt;/a&gt; 的逻辑大概是自己实现了一套NavigationBar 和TabBar 的UI和动画，效果基本跟原生一样，可以根据不同平台展示不同的样式&lt;/p&gt;
+&lt;h5 id=&#34;1-react-navigation-自定义返回按钮&#34;&gt;1. react-navigation-&amp;gt;自定义返回按钮&lt;/h5&gt;
+&lt;p&gt;StackNavigator的第二个参数可以传入一些通用的自定义配置，通过自定义一个按钮代替库里自己的返回控件&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-c54675e01186aab8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;效果图.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;pre&gt;&lt;code&gt;// NavigationCustomBackMenu为自定义按钮
+const navigationConfig = {
+    navigationOptions: ({navigation}) =&amp;gt; ({
+        headerLeft: &amp;lt;NavigationCustomBackMenu nav = {navigation} /&amp;gt;,
+    })
+};
+const app = StackNavigator({
+    Home: {
+        screen: Home
+        },
+}, navigationConfig);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;NavigationCustomBackMenu的源码如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import React from &#39;react&#39;;
+import { StyleSheet, Image, TouchableOpacity, Text } from &#39;react-native&#39;;
+
+export default class NavigationCustomBackMenu extends React.Component {
+
+    render() {
+        return (
+            &amp;lt;TouchableOpacity
+                onPress={()=&amp;gt;{
+                    this.props.nav.goBack()
+                }}
+            &amp;gt;
+                &amp;lt;Image style={styles.image} source={require(&#39;../../img/navigation/nav_back.png&#39;)} &amp;gt;&amp;lt;/Image&amp;gt;
+            &amp;lt;/TouchableOpacity&amp;gt;
+        );
+    }
+}
+
+const styles = StyleSheet.create({
+    image: {
+        left: 13,
+    },
+});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;但是这样搞了以后，因为是通用配置，导航的栈顶控制器的导航栏上也会有一个返回按钮，但是这个按钮不应该存在，所以还要再自定义一下栈顶控制器的返回按钮&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;const app = StackNavigator({
+    Home: {
+        screen: Home,
+        navigationOptions: ({navigation}) =&amp;gt; ({
+            headerLeft: null,
+        })},
+    Next: {screen: NextView}
+}, navigationConfig);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样就是最终效果了，Home位于栈顶，不会有返回按钮，，跳转到Next的时候，Next的左上角会有个返回按钮&lt;/p&gt;
+&lt;h5 id=&#34;2-react-navigation-自定义导航栏颜色&#34;&gt;2. react-navigation-&amp;gt;自定义导航栏颜色&lt;/h5&gt;
+&lt;h6 id=&#34;单独修改某一screen的导航栏颜色&#34;&gt;单独修改某一Screen的导航栏颜色&lt;/h6&gt;
+&lt;pre&gt;&lt;code&gt;// （在某一Screen 内部设置）
+static navigationOptions = { 
+    title: &#39;Home&#39;, 
+    headerStyle: {
+         backgroundColor : &#39;white&#39;,
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h6 id=&#34;统一定制所有screen的导航栏颜色&#34;&gt;统一定制所有Screen的导航栏颜色&lt;/h6&gt;
+&lt;pre&gt;&lt;code&gt;
+const navigationConfig = {
+    navigationOptions: ({navigation}) =&amp;gt; ({
+        headerLeft: &amp;lt;NavigationCustomBackMenu nav = {navigation} /&amp;gt;,
+        headerStyle: {
+            backgroundColor : &#39;red&#39;, // 定制所有导航栏的颜色
+        }
+    }),
+};
+
+const app = StackNavigator({
+    Home: {
+        screen: Home,
+        navigationOptions: ({navigation}) =&amp;gt; ({
+            headerLeft: null,
+        })},
+    Next: {screen: NextView}
+}, navigationConfig);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h5 id=&#34;3-react-navigation-拦截导航事件&#34;&gt;3. react-navigation-&amp;gt;拦截导航事件&lt;/h5&gt;
+&lt;p&gt;代码：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// 创建StackNavigator
+const app = StackNavigator({
+    Home: {
+        screen: Home,
+        navigationOptions: ({navigation}) =&amp;gt; ({
+            headerLeft: null,
+        })},
+    Next: {screen: NextView}
+}, navigationConfig);
+const defaultGetStateForAction = app.router.getStateForAction;
+app.router.getStateForAction = (action, state) =&amp;gt; {
+    // 所有的导航事件都会走这里，可以定制一些东西，
+    // 比如我的需求，某一个TabBar的控制器集成的RN, 点击跳转到下一页的时候，需要隐藏TabBar
+    // action 是跳转动作，state是当前StackNavigator的状态
+    console.log(action);
+    console.log(state);
+    return defaultGetStateForAction(action, state);
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;h6 id=&#34;其他文章&#34;&gt;其他文章&lt;/h6&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.jianshu.com/p/c8550af92886&#34;&gt;ReactNative入坑: ReactNative入门(一)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.jianshu.com/p/af0ac940a01d&#34;&gt;ReactNative入坑: iOS原生项目集成ReactNavite(二)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.jianshu.com/p/27342c26f827&#34;&gt;ReactNative入坑: react-navigation库(三)&lt;/a&gt;&lt;/p&gt;
+">ReactNative入坑: react-navigation库(三)</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/reactnative-ru-keng-ios-yuan-sheng-xiang-mu-ji-cheng-reactnaviteer/"" data-c="
+          &lt;h2 id=&#34;创建一个简单的reactnative-程序&#34;&gt;** 创建一个简单的ReactNative 程序 **&lt;/h2&gt;
+&lt;p&gt;使用下面三个命令可以创建一个简单的ReactNative程序，并在iOS模拟器上运行 （无论是运行在安卓还是iOS模拟器上，都需要在开启模拟器的情况下运行程序）&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;react-native init AwesomeProject
+cd AwesomeProject
+react-native run-ios
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;那么如何将reactnative的界面嵌入到ios程序中那&#34;&gt;** 那么如何将ReactNative的界面嵌入到iOS程序中那？**&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;首先将新创建的 AwesomeProject 程序目录下的 &lt;code&gt;package.json&lt;/code&gt; 和 &lt;code&gt;index.ios.js&lt;/code&gt; 文件拷贝自己的原生程序目录下面 (自己新建目录统一放置也可以)&lt;/li&gt;
+&lt;li&gt;在命令行 切换到 &lt;code&gt;package.json&lt;/code&gt; 所在的目录，并执行&lt;br&gt;
+&lt;code&gt;sudo npm install&lt;/code&gt; 输入密码后回车，等待执行成功&lt;/li&gt;
+&lt;li&gt;在Podfile中加入&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;pod &#39;Yoga&#39;,  :path =&amp;gt; &#39;./node_modules/react-native/ReactCommon/yoga&#39;
+pod &#39;React&#39;, :path =&amp;gt; &#39;./node_modules/react-native&#39;, :subspecs =&amp;gt; [
+        &#39;Core&#39;,
+        &#39;BatchedBridge&#39;,
+        &#39;DevSupport&#39;,
+        &#39;ART&#39;,
+        &#39;RCTActionSheet&#39;,
+        &#39;RCTAnimation&#39;,
+        &#39;RCTImage&#39;,
+        &#39;RCTNetwork&#39;,
+        &#39;RCTText&#39;,
+        &#39;RCTWebSocket&#39;,
+        &#39;RCTLinkingIOS&#39;,
+]
+# 这是一份基础的添加库列表，其他如有需要继续添加
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;执行 &lt;code&gt;pod update --verbose&lt;/code&gt; 等待更新成功&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;好的，已经将关于RN的准备工作做完了，下面还要对原生程序进行一点小改造：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;a. 设置程序Info.plist文件中的 &lt;code&gt;App Transport Security Settings&lt;/code&gt;&lt;br&gt;
+确保http协议可以正常通信&lt;br&gt;
+&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-09a352975da308d5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1024&#34; alt=&#34;Paste_Image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/li&gt;
+&lt;li&gt;b. 在程序中添加：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;    // ----------第一种方式----------
+    #import &amp;lt;React/RCTRootView.h&amp;gt;
+    NSString * strUrl = @&amp;quot;http://localhost:8081/index.ios.bundle?platform=ios&amp;quot;;
+    NSURL * jsCodeLocation = [NSURL URLWithString:strUrl];
+    
+    RCTRootView * rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                         moduleName:@&amp;quot;AwesomeProject&amp;quot;
+                                                  initialProperties:nil
+                                                      launchOptions:nil];
+    rootView.frame = self.view.bounds;
+    [self.view addSubview:rootView];
+    
+    // ----------第二种方式----------
+    #import &amp;lt;React/RCTRootView.h&amp;gt;
+    #import &amp;lt;React/RCTBundleURLProvider.h&amp;gt;
+    [[RCTBundleURLProvider sharedSettings] setEnableDev:YES];
+    NSURL *jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@&amp;quot;index.ios&amp;quot; fallbackResource:nil];
+    RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                        moduleName:@&amp;quot;AwesomeProject&amp;quot;
+                                                 initialProperties:nil
+                                                     launchOptions:nil];
+    rootView.frame = self.view.bounds;
+    [self.view addSubview:rootView];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;c.  运行Packager：&lt;br&gt;
+跳转到包含&lt;code&gt;node_module&lt;/code&gt;目录的文件夹，运行&lt;br&gt;
+&lt;code&gt;npm start&lt;/code&gt; or &lt;code&gt;react-native start&lt;/code&gt; （两个命令都可以）&lt;br&gt;
+命令行出现 ：** &lt;code&gt;Loading dependency graph, done.&lt;/code&gt;** 即表示本地服务已成功开启&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;如果忘记这一步会出现：Could not connect to development server&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;如果出现 &lt;code&gt;Packager can&#39;t listen on port 8081&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;Most likely another process is already using this port&lt;/code&gt; 或端口被占用之类的，多半是其他命令窗口已经Start服务了，检查下，找到后 &lt;code&gt;control + C&lt;/code&gt; 关闭它&lt;/li&gt;
+&lt;li&gt;此提示是基于以下版本，如果版本不同可能会提示不一样&lt;br&gt;
+&lt;code&gt;react-native-cli: 2.0.1&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;react-native: 0.42.3&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;d. 在Xcode &lt;code&gt;com&lt;/code&gt;+&lt;code&gt;R&lt;/code&gt; 运行项目&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;请确保** cocoapods版本在1.2.0以上 ** 否则可能会出现 找不到头文件 的错误&lt;br&gt;
+查看cocoapods版本，在命令行执行 &lt;code&gt;pod --version&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;ios打包react-native资源&#34;&gt;** iOS打包React Native资源 **&lt;/h2&gt;
+&lt;p&gt;在正式测试打包的时候，就需要将RN的资源进行打包成离线资源，放到项目中，使项目在其他机器上也能正常运行&lt;br&gt;
+React Native的 &lt;code&gt;react-native bundle&lt;/code&gt; 命令是用来进行打包的命令，&lt;br&gt;
+其中我们常使用的一些命令选项：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;--entry-file ,ios或者android入口的js名称，比如&lt;code&gt;index.ios.js&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;--platform ,平台名称(ios或者android)&lt;/li&gt;
+&lt;li&gt;--dev ,设置为false的时候将会对JavaScript代码进行优化处理。&lt;/li&gt;
+&lt;li&gt;--bundle-output, 生成的jsbundle文件的名称，比如&lt;code&gt;./ios/bundle/index.ios.jsbundle&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;--assets-dest 图片以及其他资源存放的目录,比如&lt;code&gt;./react-native/image&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;** 打包的命令：**&lt;br&gt;
+&lt;code&gt;react-native bundle --entry-file index.ios.js --platform ios --dev false --bundle-output ./bundles/index.ios.jsbundle --assets-dest ./bundles&lt;/code&gt;&lt;br&gt;
+** 正式打包时候的代码：**&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    NSURL * jsCodeLocation = [[NSBundle mainBundle] URLForResource:@&amp;quot;index.ios&amp;quot; withExtension:@&amp;quot;jsbundle&amp;quot;];
+    
+    RCTRootView * rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                         moduleName:@&amp;quot;RNInit&amp;quot;
+                                                  initialProperties:nil
+                                                      launchOptions:nil];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+## ** iOS真机运行React Native **
+将刚才打包生成的bundles的文件夹，拖入iOS 工程，放到主工程下面
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-9e3d2bbb8388cb83.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/620&#34; alt=&#34;image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;iOS中导入bundle的路径需要改一下&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    // #import &amp;lt;React/RCTRootView.h&amp;gt;
+    // #import &amp;lt;React/RCTBundleURLProvider.h&amp;gt;
+    NSURL *jsCodeLocation = [[NSBundle mainBundle] URLForResource:@&amp;quot;index.ios&amp;quot; withExtension:@&amp;quot;jsbundle&amp;quot; subdirectory:@&amp;quot;bundles&amp;quot;];
+    RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                        moduleName:@&amp;quot;AwesomeProject&amp;quot;
+                                                 initialProperties:nil
+                                                     launchOptions:nil];
+    rootView.frame = self.view.bounds;
+    [self.view addSubview:rootView];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;index.ios.js 中的代码也需要改一下，才能将图片的路径搞对，不然会出现本地图片不显示的问题&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import { AppRegistry } from &#39;react-native&#39;;
+import App from &#39;./js/yourapp&#39;;
+import { Platform } from &#39;react-native&#39;;
+import { setCustomSourceTransformer } from &#39;react-native/Libraries/Image/resolveAssetSource&#39;;
+
+// 更改一下图片的查找方法，以便在真机能正确查找路径
+setCustomSourceTransformer(function (resolver) {
+    if (Platform.OS === &#39;ios&#39;
+        &amp;amp;&amp;amp; !resolver.serverUrl
+        &amp;amp;&amp;amp; !resolver.bundlePath
+        &amp;amp;&amp;amp; resolver.asset.type === &#39;png&#39;) {
+        resolver.bundlePath = &#39;bundles/&#39;;
+    }
+    return resolver.defaultAsset();
+});
+
+AppRegistry.registerComponent(&#39;test&#39;, () =&amp;gt; App);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+## ** iOS真机实时调试React Native **
+在调试的时候，我比较习惯使用真机运行查看，介绍下如何在真机调试React Native：
+&gt;在项目中加入一个名字为ip.txt的文件，将自己电脑的ip地址写入文件，占用1行，记得加入target中
+剩下的和使用模拟器一样的步骤启动，npm start
+正常运行项目，即可
+&lt;br&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;将reactnative-嵌入ios-中时会碰到一些问题&#34;&gt;** 将ReactNative 嵌入iOS 中时，会碰到一些问题 **&lt;/h3&gt;
+&lt;h5 id=&#34;1-不知道需要pod里的react的subspecs填哪些&#34;&gt;1. 不知道需要Pod里的React的subspecs填哪些？&lt;/h5&gt;
+&lt;p&gt;可以去打开 &lt;code&gt;./node_modules/react-native/React.podspec&lt;/code&gt; 这个文件里面有React的subspecs 的全部声明&lt;/p&gt;
+&lt;h5 id=&#34;2-更新pod-出现-yoga-依赖错误&#34;&gt;2. 更新pod 出现 Yoga 依赖错误&lt;/h5&gt;
+&lt;p&gt;类似于这种 &lt;code&gt;Yoga (= 0.42.3.React) required by React/Core (0.42.3)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;详细错误：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[!] Unable to satisfy the following requirements:
+
+- `Yoga (= 0.42.3.React)` required by `React/Core (0.42.3)`
+
+None of your spec sources contain a spec satisfying the dependency: `Yoga (= 0.42.3.React)`.
+
+You have either:
+ * out-of-date source repos which you can update with `pod repo update`.
+ * mistyped the name or version.
+ * not added the source repo that hosts the Podspec to your Podfile.
+
+Note: as of CocoaPods 1.0, `pod repo update` does not happen on `pod install` by default.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;解决方法：&lt;br&gt;
+在Podfile文件加上&lt;br&gt;
+&lt;code&gt;pod &#39;Yoga&#39;, :path =&amp;gt; &#39;./node_modules/react-native/ReactCommon/yoga&#39;&lt;/code&gt;&lt;br&gt;
+路径中的&lt;code&gt;./node_modules&lt;/code&gt;需要替换为自己项目中的&lt;code&gt;node_modules&lt;/code&gt;目录路径&lt;/p&gt;
+&lt;h4 id=&#34;3-运行程序出现-native-module-cannot-be-null&#34;&gt;3. 运行程序出现 Native module cannot be null&lt;/h4&gt;
+&lt;p&gt;第一次将RN嵌入到iOS中后，运行程序出现 Native module cannot be null&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-c6977233a0001a4e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/320&#34; alt=&#34;Paste_Image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;p&gt;解决方法：&lt;br&gt;
+出现上述错误，是因为少引入了一个部件 &lt;code&gt;RCTNetwork&lt;/code&gt; ，将 &lt;code&gt;RCTNetwork&lt;/code&gt; 加入到 &lt;code&gt;React&lt;/code&gt; 的 &lt;code&gt;subspecs&lt;/code&gt; 中。&lt;br&gt;
+以下是三个基础部件，如果需要其他 &lt;code&gt;subspecs&lt;/code&gt; 自己继续往下加就好了&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;pod &#39;React&#39;, :path =&amp;gt; &#39;./node_modules/react-native&#39;, :subspecs =&amp;gt; [
+        &#39;Core&#39;,
+        &#39;BatchedBridge&#39;,
+        &#39;DevSupport&#39;,
+        &#39;ART&#39;,
+        &#39;RCTActionSheet&#39;,
+        &#39;RCTAnimation&#39;,
+        &#39;RCTImage&#39;,
+        &#39;RCTNetwork&#39;,
+        &#39;RCTText&#39;,
+        &#39;RCTWebSocket&#39;,
+        &#39;RCTLinkingIOS&#39;,
+]
+# 这是一份基础的添加库列表
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/facebook/react-native/issues/8449&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&#34;4-编译出现-jschelpersjavascriptcoreh-file-not-found-️&#34;&gt;4. 编译出现 jschelpers/JavaScriptCore.h file not found ❗️&lt;/h4&gt;
+&lt;p&gt;第一个可能的问题：cocoapods版本低于1.2.0，去网上查找升级cocoapods的方法解决&lt;br&gt;
+第二个可能的问题：0.45 版本以后 React缺少依赖，更新Podfile解决&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;pod &#39;Yoga&#39;,  :path =&amp;gt; &#39;../node_modules/react-native/ReactCommon/yoga&#39;
+pod &#39;React&#39;, :path =&amp;gt; &#39;../node_modules/react-native&#39;, :subspecs =&amp;gt; [
+         &#39;Core&#39;,
+         &#39;BatchedBridge&#39;, # 0.45 版本以后需要添加
+         &#39;RCTText&#39;,
+         &#39;RCTWebSocket&#39;,
+         &#39;RCTNetwork&#39;,
+    ]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;(真的坑啊。。。)&lt;/p&gt;
+&lt;h4 id=&#34;5-出现-error-bundling-unabletoresolveerror-unable-to-resolve-module-accessibilityinfo&#34;&gt;5. 出现 error: bundling: UnableToResolveError: Unable to resolve module &lt;code&gt;AccessibilityInfo&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;详细信息：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;error: bundling: UnableToResolveError: Unable to resolve module `AccessibilityInfo` from `/Users/Test/Desktop/cardloan_react/node_modules/react-native/Libraries/react-native/react-native-implementation.js`: Module does not exist in the module map or in these directories:
+  /Users/Test/Desktop/cardloan_react/node_modules/react-native/node_modules
+,   /Users/Test/Desktop/cardloan_react/node_modules
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;解决办法：&lt;br&gt;
+调用&lt;code&gt;npm start -- --reset-cache&lt;/code&gt; 重新开启服务，重新运行解决&lt;br&gt;
+&lt;br&gt;&lt;/p&gt;
+&lt;h4 id=&#34;6-出现-unhandled-js-exception-cannot-read-property-string-of-undefined&#34;&gt;6. 出现 &lt;code&gt;Unhandled JS Exception: Cannot read property &#39;string&#39; of undefined&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;报错到系统的js文件：&lt;br&gt;
+Unhandled JS Exception: Cannot read property &#39;string&#39; of undefined就是报错到系统的 &lt;code&gt;React.PropTypes.string&lt;/code&gt;&lt;br&gt;
+遇到这种情况，你需要在js文件夹下执行下 &lt;code&gt;npm list&lt;/code&gt; 如果过出现 &lt;code&gt;ERR&lt;/code&gt; 就表明是依赖库错误，需要删除 &lt;code&gt;node_modules&lt;/code&gt; 重新 &lt;code&gt;install&lt;/code&gt; 一下&lt;/p&gt;
+&lt;br&gt;
+** 注意 **： 本文描述中出现的 `./node_modules/react-native` 记得替换成自己项目中的 `node_modules` 目录的路径
+** Tips **：
+`./ 为当前文件所在的文件夹`
+`../ 为当前文件所在的文件夹的上级文件夹`
+&lt;blockquote&gt;
+&lt;h6 id=&#34;其他文章&#34;&gt;其他文章&lt;/h6&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.jianshu.com/p/c8550af92886&#34;&gt;ReactNative入坑: ReactNative入门(一)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.jianshu.com/p/af0ac940a01d&#34;&gt;ReactNative入坑: iOS原生项目集成ReactNavite(二)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://www.jianshu.com/p/27342c26f827&#34;&gt;ReactNative入坑: react-navigation库(三)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://www.jianshu.com/p/ca199a7a0870&#34;&gt;ReactNative入坑: codepush热更新(四)&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://www.jianshu.com/p/7d3bf876cbd0&#34;&gt;ReactNative入坑: 一些常用控件的使用(五)&lt;/a&gt;&lt;/p&gt;
+">ReactNative入坑: iOS原生项目集成ReactNavite(二)</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/reactnative-ru-keng-reactnative-ru-men-yi/"" data-c="
+          &lt;h3 id=&#34;初识react-native&#34;&gt;初识React Native&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;React Native (简称RN)是Facebook于2015年4月开源的跨平台移动应用开发框架，是Facebook早先开源的UI框架 React 在原生移动应用平台的衍生产物，目前支持iOS和安卓两大平台。RN使用Javascript语言，类似于HTML的JSX，以及CSS来开发移动应用，因此熟悉Web前端开发的技术人员只需很少的学习就可以进入移动应用开发领域。(百度百科)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;作为一个iOS开发人员的一些小看法：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;s&gt;React Native的学习还是有点麻烦的，需要先学习JS、Html、ES6语法，然后可以接触React Native的开发了&lt;/s&gt;&lt;br&gt;
+React Native的学习还是有点麻烦的，需要先学习JS、Html、ES6语法、React 然后可以接触React Native的开发了 (当然直接跳过也是可以的，反正最后还会回来查 😂)&lt;/li&gt;
+&lt;li&gt;如果使用React Native，作为主力开发可以开发一些动画效果不多，列表展示不多的App。或者当做组件开发一些两端通用的界面&lt;/li&gt;
+&lt;li&gt;JS和原生的交互是异步的，一些交互通信比较麻烦，一些组件联动效果不好实现&lt;/li&gt;
+&lt;li&gt;React Native仍然不完善，文档还不全，虽然Facebook推的力度不大，但是国内对这块需求比较高，对前景看好&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;工欲善其事必先利其器&#34;&gt;工欲善其事，必先利其器&lt;/h3&gt;
+&lt;h4 id=&#34;开发环境搭建&#34;&gt;开发环境搭建&lt;/h4&gt;
+&lt;p&gt;RN的版本差异较大，下面的工具做好全部安装最新的，否则新旧版本之间的配合，可能出现始料不及的问题&lt;/p&gt;
+&lt;h6 id=&#34;安装node&#34;&gt;安装Node&lt;/h6&gt;
+&lt;p&gt;运行&lt;code&gt;brew install node&lt;/code&gt; 使用Homebrew来安装&lt;a href=&#34;https://nodejs.org/&#34;&gt;Node.js&lt;/a&gt; , 安装最新的就好&lt;/p&gt;
+&lt;p&gt;安装完node后建议设置npm镜像以加速后面的过程（或使用科学上网工具）。注意：不要使用cnpm！cnpm安装的模块路径比较奇怪，packager不能正常识别！&lt;br&gt;
+&lt;code&gt;npm config set registry https://registry.npm.taobao.org --global&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;npm config set disturl https://npm.taobao.org/dist --global&lt;/code&gt;&lt;/p&gt;
+&lt;h6 id=&#34;yarn-react-native的命令行工具&#34;&gt;Yarn、React Native的命令行工具&lt;/h6&gt;
+&lt;p&gt;&lt;a href=&#34;http://yarnpkg.com/&#34;&gt;Yarn&lt;/a&gt;是Facebook提供的替代npm的工具，可以加速node模块的下载。React Native的命令行工具用于执行创建、初始化、更新项目、运行打包服务（packager）等任务。&lt;br&gt;
+&lt;code&gt;npm install -g yarn react-native-cli&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;安装完yarn后同理也要设置镜像源：&lt;br&gt;
+&lt;code&gt;yarn config set registry https://registry.npm.taobao.org --global&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;yarn config set disturl https://npm.taobao.org/dist --global&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id=&#34;开发reactnative自然需要编辑器&#34;&gt;开发ReactNative自然需要编辑器&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;h6 id=&#34;sublime-text-3&#34;&gt;Sublime Text 3&lt;/h6&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;s&gt;初始的练习，推荐Sublime Text 3，多敲下代码，练练手&lt;/s&gt;&lt;br&gt;
+首先在Sublime Text 安装 &lt;a href=&#34;https://packagecontrol.io/installation&#34;&gt;Package Control&lt;/a&gt; 然后在Package Control 搜索安装插件&lt;br&gt;
+建议安装的插件:&lt;br&gt;
+&lt;strong&gt;&lt;a href=&#34;https://github.com/babel/babel-sublime&#34;&gt;Babel&lt;/a&gt;&lt;/strong&gt;：提供JSX的ES6语法格式和提示&lt;br&gt;
+&lt;strong&gt;&lt;a href=&#34;https://github.com/sergeche/emmet-sublime&#34;&gt;Emmet&lt;/a&gt;&lt;/strong&gt;：提供CSS和HTML的提示&lt;br&gt;
+&lt;strong&gt;&lt;a href=&#34;https://github.com/Shrugs/react-native-snippets&#34;&gt;react-native-snippets&lt;/a&gt;&lt;/strong&gt;：提供RN的代码片段&lt;br&gt;
+2. ###### WebStorm&lt;br&gt;
+实际开发的时候可以使用WebStorm 代码编写运行都非常方便， 调试嘛，不如atom方便 &lt;a href=&#34;https://www.jetbrains.com/webstorm/&#34;&gt;WebStorm下载&lt;/a&gt;&lt;br&gt;
+这里有两篇blog，讲如何设置WebStorm 便于开发ReactNative&lt;br&gt;
+&lt;a href=&#34;https://blog.jetbrains.com/webstorm/2016/12/developing-mobile-apps-with-react-native-in-webstorm/&#34;&gt;Developing mobile apps with React Native in WebStorm&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;https://blog.jetbrains.com/webstorm/2015/10/working-with-reactjs-in-webstorm-coding-assistance/&#34;&gt;Working with ReactJS in WebStorm: Coding Assistance&lt;/a&gt;&lt;br&gt;
+3. ###### Atom&lt;br&gt;
+Atom是Facebook官方推荐的开发工具, &lt;a href=&#34;https://nuclide.io/docs/quick-start/getting-started/&#34;&gt;指导文章在这里&lt;/a&gt;, Atom可以直接调试RN的代码，打断点Debug，这一点上还是比使用Chrome调试方便了很多&lt;br&gt;
+我最近开发的话也是使用的Atom&lt;/p&gt;
+&lt;br&gt;   
+###### 其他文章
+ [ReactNative入坑: ReactNative入门(一)](http://www.jianshu.com/p/c8550af92886)
+[ReactNative入坑: iOS原生项目集成ReactNavite(二)](http://www.jianshu.com/p/af0ac940a01d)
+[ReactNative入坑: react-navigation库(三)](http://www.jianshu.com/p/27342c26f827)
+[ReactNative入坑: codepush热更新(四)](https://www.jianshu.com/p/ca199a7a0870)
+[ReactNative入坑: 一些常用控件的使用(五)](https://www.jianshu.com/p/7d3bf876cbd0)
+">ReactNative入坑: ReactNative入门(一)</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/ios-gei-zi-fu-chuan-tian-jia-shan-chu-xian-xia-hua-xian-xiao-guo/"" data-c="
+          &lt;p&gt;本来以为挺简单的效果，没想到居然有点小坑🙄，写下来跟大家分享下&lt;/p&gt;
+&lt;h3 id=&#34;给字符串添加删除线效果&#34;&gt;给字符串添加删除线效果&lt;/h3&gt;
+&lt;h5 id=&#34;1-给字符串123456添加删除线效果&#34;&gt;1. 给字符串&amp;quot;123456&amp;quot;添加删除线效果&lt;/h5&gt;
+&lt;p&gt;设置&lt;code&gt;@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleSingle)}&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@&amp;quot;123456&amp;quot;
+                                                                            attributes:@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleSingle)}];
+label.attributedText = attrStr;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在iOS 8.1，9.0，10.3系统的模拟器，呈现出一样的效果，如下：&lt;br&gt;
+&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-8901dcfdac4f08c7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/250&#34; alt=&#34;iOS 8.1，9.0，10.3系统的效果&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;2-只给字符串某一部分添加删除线&#34;&gt;2. 只给字符串某一部分添加删除线&lt;/h5&gt;
+&lt;p&gt;如：字符串&amp;quot;123456&amp;quot;，只给“456”添加删除线&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@&amp;quot;123456&amp;quot;];
+[attrStr setAttributes:@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleSingle)}
+                 range:NSMakeRange(3, 3)];
+label.attributedText = attrStr;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;继续使用上面的方法得到效果如下：&lt;br&gt;
+在iOS 8.1，10.3系统的模拟器效果（NSStrikethroughStyleAttributeName在iOS 10.3、8.1不管用）：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-113b7e8fc6a5185a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/250&#34; alt=&#34;iOS 8.1，10.3系统的效果&#34; loading=&#34;lazy&#34;&gt;&lt;br&gt;
+在iOS 9.0系统的模拟器效果：&lt;br&gt;
+&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-92f1a59cfb4a5930.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/250&#34; alt=&#34;iOS 9.0系统的效果&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;问题出现了如何在80和100的系统里面使方法生效&#34;&gt;问题出现了，如何在8.0和10.0的系统里面使方法生效？&lt;/h5&gt;
+&lt;p&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-c4c95675be05c339.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/155&#34; alt=&#34;表情.jpg&#34; loading=&#34;lazy&#34;&gt;&lt;br&gt;
+不懂就要查喽，经过搜索以后，找到了最简单方便的解决办法：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在iOS 8 需要额外给其他字符串设置&lt;code&gt;@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleNone)}&lt;/code&gt;，才能正常显示&lt;br&gt;
+在iOS 10  需要额外给其他字符串设置&lt;code&gt;@{NSBaselineOffsetAttributeName : @0}&lt;/code&gt;，才能正常显示&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;注：@(NSUnderlineStyleNone) 和 @0均是默认值&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;两者综合一下，&lt;br&gt;
+代码：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@&amp;quot;123456&amp;quot;
+                                                                                attributes:@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleNone)}];
+[attrStr setAttributes:@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleSingle),
+                             NSBaselineOffsetAttributeName : @0}
+                     range:NSMakeRange(3, 3)];
+label.attributedText = attrStr;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;效果：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-11fd094f0d170432.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/310&#34; alt=&#34;QQ20170504-140132@2x.png&#34; loading=&#34;lazy&#34;&gt;&lt;br&gt;
+在 iOS 8.1、9.0 和 iOS 10.3均能正常显示，使用其他方法也可以,但是要保证上面的属性设置上&lt;/p&gt;
+&lt;h3 id=&#34;给字符串添加下划线效果&#34;&gt;给字符串添加下划线效果&lt;/h3&gt;
+&lt;h5 id=&#34;1-给字符串123456添加下划线效果&#34;&gt;1. 给字符串&amp;quot;123456&amp;quot;添加下划线效果&lt;/h5&gt;
+&lt;p&gt;设置&lt;code&gt;@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@&amp;quot;123456&amp;quot;
+                                                                                attributes:@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}];
+label.attributedText = attrStr;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在iOS 8.1，9.0，10.3系统的模拟器，正常显示：&lt;br&gt;
+&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-35baf41f74e02303.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/250&#34; alt=&#34;QQ20170504-143253@2x.png&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;2-只给字符串某一部分添加下划线效果&#34;&gt;2. 只给字符串某一部分添加下划线效果&lt;/h5&gt;
+&lt;p&gt;如：字符串&amp;quot;123456&amp;quot;，只给“456”添加下划线&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@&amp;quot;123456&amp;quot;];
+[attrStr setAttributes:@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}
+                 range:NSMakeRange(3, 3)];
+label.attributedText = attrStr;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在iOS 9.0、 iOS 10.3显示如下：&lt;br&gt;
+&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-af100dadac64b99a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/250&#34; alt=&#34;QQ20170504-151351@2x.png&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;p&gt;在iOS 8.1显示如下（NSUnderlineStyleAttributeName在iOS 8.1不管用）：&lt;br&gt;
+&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-4d62708aa66f3ba4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/250&#34; alt=&#34;QQ20170504-151604@2x.png&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;如何在ios-8的系统里面使添加下划线方法生效&#34;&gt;如何在iOS 8的系统里面使添加下划线方法生效？&lt;/h5&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在iOS 8 需要额外给其他字符串设置@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleNone)}，才能正常显示&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;代码：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@&amp;quot;123456&amp;quot;
+                                                                            attributes:@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleNone)}];
+[attrStr setAttributes:@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}
+                 range:NSMakeRange(3, 3)];
+label.attributedText = attrStr;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;效果：&lt;br&gt;
+&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-22e1dbb23d008228.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/250&#34; alt=&#34;QQ20170504-152134@2x.png&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;总结&#34;&gt;总结：&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;给整个字符串添加效果&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;删除线：设置&lt;code&gt;@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleSingle)}&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;下划线：设置&lt;code&gt;@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;给部分字符添加效果&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;删除线：&lt;br&gt;
+给全部字符串设置&lt;code&gt;@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleNone)}&lt;/code&gt;&lt;br&gt;
+添加删除线的字符串设置&lt;code&gt;@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleSingle), NSBaselineOffsetAttributeName : @0}&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;下划线：&lt;br&gt;
+给全部字符串设置&lt;code&gt;@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleNone)}&lt;/code&gt;&lt;br&gt;
+添加下划线的字符串设置&lt;code&gt;@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h6 id=&#34;参考链接&#34;&gt;参考链接&lt;/h6&gt;
+&lt;p&gt;&lt;a href=&#34;http://stackoverflow.com/questions/43074652/ios-10-3-nsstrikethroughstyleattributename-is-not-rendered-if-applied-to-a-sub&#34;&gt;stackoverflow&lt;/a&gt;&lt;/p&gt;
+">iOS给字符串添加删除线，下划线效果</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/ios-shi-yong-oclint-zuo-jing-tai-dai-ma-fen-xi/"" data-c="
+          &lt;h2 id=&#34;初识oclint&#34;&gt;初识OCLint&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;OCLint是一个静态代码分析工具,提高质量和减少缺陷通过检查C 、C++ 和Objective-C 代码和寻找潜在的问题,如:&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;可能的缺陷 - 空的if / else / try / catch / finally语句&lt;/li&gt;
+&lt;li&gt;未使用的代码 - 未使用的局部变量和参数&lt;/li&gt;
+&lt;li&gt;复杂的代码 - 很高的圈复杂度,NPath复杂性和太高的NCSS&lt;/li&gt;
+&lt;li&gt;代码异味 - 长方法和参数列表&lt;/li&gt;
+&lt;li&gt;长方法和参数列表不好的实践——倒逻辑和参数重新分配&lt;/li&gt;
+&lt;li&gt;…&lt;br&gt;
+静态代码分析是一个来检测对于编译不可见的缺陷的关键技术。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;注：* NPath &lt;em&gt;复杂度是一个方法中各种可能的执行路径总和 ；&lt;/em&gt; NCSS * 有效代码行&lt;br&gt;
+以上翻译自&lt;a href=&#34;http://oclint.org/&#34;&gt;OCLint官网&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;安装&#34;&gt;安装&lt;/h2&gt;
+&lt;p&gt;使用第三方的软件会比使用xcodebuild方便些&lt;br&gt;
+最新xctool的build方法已经弃用，不能配合OCLint使用，推荐使用&lt;a href=&#34;http://docs.oclint.org/en/stable/guide/xcpretty&#34;&gt;xcpretty&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// 安装OCLint
+brew tap oclint/formulae
+brew install oclint
+// 安装xcpretty
+gem install xcpretty
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果未安装&lt;a href=&#34;https://brew.sh/index_zh-cn.html&#34;&gt;home brew&lt;/a&gt;，自行去官网按提示安装&lt;/p&gt;
+&lt;h4 id=&#34;更新&#34;&gt;更新&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;// 以后可能需要更新
+brew update
+brew upgrade oclint
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;使用&#34;&gt;使用&lt;/h2&gt;
+&lt;p&gt;在终端进入项目目录，然后替换workspace的名字和scheme的名字，将修改好的命令粘贴到终端执行，等待命令执行完毕&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;myworkspace=haha.xcworkspace # 替换workspace的名字
+myscheme=haha # 替换scheme的名字
+xcodebuild -workspace $myworkspace -scheme $myscheme clean&amp;amp;&amp;amp;
+xcodebuild -workspace $myworkspace -scheme $myscheme \
+-configuration Debug \
+| xcpretty -r json-compilation-database -o compile_commands.json&amp;amp;&amp;amp;
+oclint-json-compilation-database -e Pods -- \
+-report-type html -o oclint_result.html \
+-rc LONG_LINE=200 \
+-max-priority-1=100000 \
+-max-priority-2=100000 \
+-max-priority-3=100000; \
+rm compile_commands.json;
+if [ -f ./oclint_result.html ]; then echo &#39;-----分析完毕-----&#39;
+else echo &amp;quot;-----分析失败-----&amp;quot;; fi
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;中间可能会在&lt;code&gt;Build Succeeded&lt;/code&gt;后面等待一段时间，这是因为OCLint在分析文件&lt;br&gt;
+等待命令执行完成，终端会打印出&lt;code&gt;-----分析完毕-----&lt;/code&gt;字样，&lt;br&gt;
+打开项目目录，会看到目录下会多出一个** oclint_result.html **的文件&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如果&lt;/strong&gt;没有使用cocoapods，则去掉&lt;code&gt;myworkspace=haha.xcworkspace&lt;/code&gt;、&lt;code&gt;-workspace $myworkspace&lt;/code&gt;、&lt;code&gt;-workspace $myworkspace&lt;/code&gt;，然后再在终端执行&lt;br&gt;
+另外可以自己建一个xx.sh的文件，将上面代码粘贴进去，每次在命令行进入xx.sh所在目录执行&lt;code&gt;bash xx.sh&lt;/code&gt;就可以了&lt;/p&gt;
+&lt;h2 id=&#34;查看&#34;&gt;查看&lt;/h2&gt;
+&lt;p&gt;双击打开oclint_result.html文件，样式如下&lt;br&gt;
+OCLint的分析结果：&lt;br&gt;
+优先级的级别是从&lt;code&gt;Priority 1, Priority 2, Priority 3&lt;/code&gt; 依次降低的&lt;br&gt;
+&lt;code&gt;Total Files&lt;/code&gt; 总文件数&lt;br&gt;
+&lt;code&gt;Files with Violations&lt;/code&gt; 违规文件数&lt;br&gt;
+&lt;code&gt;Compiler Warnings&lt;/code&gt; 表示项目中的警告⚠️&lt;br&gt;
+&lt;code&gt;Compiler Errors&lt;/code&gt; 表示编译错误&lt;br&gt;
+&lt;code&gt;Location&lt;/code&gt; 表示警告的位置&lt;br&gt;
+报告中的描述其实非常清晰，一般找到代码位置，结合代码理解下，自己基本都能明白了&lt;br&gt;
+可以直接复制路径到Chrome打开查看，右击查看源码就有行号&lt;br&gt;
+&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-c27dff270b5f1b34.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;Paste_Image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;自定义规则&#34;&gt;自定义规则&lt;/h2&gt;
+&lt;p&gt;上面的命令中&lt;br&gt;
+&lt;code&gt;-e Pods&lt;/code&gt; 表示移除Pods文件夹里代码的分析, 如果有继续&lt;code&gt;-e Debug.m&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;-report-type html&lt;/code&gt; 表示分析后输出的文件类型为HTML，&lt;a href=&#34;http://docs.oclint.org/en/stable/howto/selectreporters.html&#34;&gt;查看其他支持的文件类型&lt;/a&gt;&lt;br&gt;
+&lt;code&gt;-o oclint_result.html&lt;/code&gt; 表示输出到&lt;code&gt;oclint_result.html&lt;/code&gt;这个文件中()&lt;br&gt;
+&lt;code&gt;-rc LONG_LINE=200&lt;/code&gt; 表示每行最大字节长度为200（默认值为100，感觉在OC中100完全不够用啊）&lt;/p&gt;
+&lt;h6 id=&#34;一些常用规则的注释&#34;&gt;一些常用规则的注释&lt;/h6&gt;
+&lt;pre&gt;&lt;code&gt;# --命名
+# 变量名字最长字节
+#-rc=LONG_VARIABLE_NAME=20 \
+# 变量名字最短字节
+#-disable-rule ShortVariableName \
+# --size
+# 圈复杂度
+#-re=CYCLOMATIC_COMPLEXITY=10 \
+# 每个类最行数
+#-rc=LONG_CLASS=700 \
+# 每行字节数量
+#-rc=LONG_LINE=200 \
+# 每个方法行数
+#-rc=LONG_METHOD=80 \
+# 忽略注释后括号后的有效代码行数
+#-rc=NCSS_METHOD=40 \
+# 嵌套深度
+#-rc=NESTED_BLOCK_DEPTH=5 \
+# 字段数量
+#-rc=TOO_MANY_FIELDS=20 \
+# 方法数量
+#-rc=TOO_MANY_METHODS=30 \
+# 方法参数
+#-rc=TOO_MANY_PARAMETERS=6
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href=&#34;http://docs.oclint.org/en/stable/manual/oclint-json-compilation-database.html&#34;&gt;oclint-json-compilation-database命令手册&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.oclint.org/en/stable/manual/oclint.html&#34;&gt;oclint命令手册&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://oclint-docs.readthedocs.io/en/stable/howto/thresholds.html&#34;&gt;OCLint自定义规则介绍&lt;/a&gt;&lt;br&gt;
+&lt;a href=&#34;http://docs.oclint.org/en/stable/rules/index.html&#34;&gt;OCLint全部规则介绍&lt;/a&gt;&lt;br&gt;
+文档里面有每个规则的demo和对应的命令名字，上面没介绍到的大家可以去文档查询&lt;/p&gt;
+&lt;h2 id=&#34;xcode集成oclint&#34;&gt;Xcode集成OCLint&lt;/h2&gt;
+&lt;p&gt;这里有官网指导网址，十分简单&lt;br&gt;
+http://oclint-docs.readthedocs.io/en/stable/guide/xcode.html&lt;br&gt;
+但是有点小坑：可能出现下面错误&lt;/p&gt;
+&lt;h6 id=&#34;in-invalid-byte-sequence-in-us-ascii&#34;&gt;in `===&#39;: invalid byte sequence in US-ASCII&lt;/h6&gt;
+&lt;p&gt;此时你需要在xcode的脚本的最前面，加上：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 指定编码
+export LANG=&amp;quot;zh_CN.UTF-8&amp;quot;
+export LC_COLLATE=&amp;quot;zh_CN.UTF-8&amp;quot;
+export LC_CTYPE=&amp;quot;zh_CN.UTF-8&amp;quot;
+export LC_MESSAGES=&amp;quot;zh_CN.UTF-8&amp;quot;
+export LC_MONETARY=&amp;quot;zh_CN.UTF-8&amp;quot;
+export LC_NUMERIC=&amp;quot;zh_CN.UTF-8&amp;quot;
+export LC_TIME=&amp;quot;zh_CN.UTF-8&amp;quot;
+export LC_ALL=
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;我写了一个简单的脚本文件&lt;a href=&#34;https://github.com/harddog/oclint_apply&#34;&gt;oclint_xcode&lt;/a&gt;大家可以自己下载，可替换的变量，已经在脚本中使用注释标注了出来&lt;/p&gt;
+&lt;p&gt;创建一个OCLint的Aggregate，将脚本放到项目工程根目录下，在Run Script中加入以下代码，点击运行即可&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;bash ./oclint.sh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;jenkins集成oclint&#34;&gt;Jenkins集成OCLint&lt;/h2&gt;
+&lt;p&gt;######1. 创建一个&lt;code&gt;PMDOclint.sh&lt;/code&gt;的文件, 将下述代码拷贝到文件中，并将文件放入到jenkins的根目录下 (例如我的就是&lt;code&gt;/Users/buildWork/.jenkins/PMDOclint.sh&lt;/code&gt;) , 我自己使用的脚本放到了仓库中&lt;a href=&#34;https://github.com/harddog/oclint_apply&#34;&gt;oclint_apply&lt;/a&gt;，可以去里面下载&lt;code&gt;apply_jenkins/PMDOclint.sh&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;######2. jenkins需要安装&lt;code&gt;PMD Plugin&lt;/code&gt;插件&lt;br&gt;
+######3. jenkins新建一个项目，Git配置成需要代码分析的代码库&lt;br&gt;
+######4. 剩下的按照下图配置，（将&lt;code&gt;PMDOclint.sh&lt;/code&gt;放到Jenkins的主目录，如果出现问题，涉及到的路径，请注意检查一下）&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-7fff0c8f482d4cbc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;QQ20170628-170241.png&#34; loading=&#34;lazy&#34;&gt;&lt;br&gt;
+######5. 效果&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-2abc5615c7298b2c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;效果图&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;br/&gt;
+#### Warning❗️
+(一). xcodebuild命令不好用的时候，使用`com + opt + shift + k` 和 `com + shift + k` 有80%的可能解决😂
+(二).  `oclint: error: one compiler command contains multiple jobs:` 
+   解决方案：   
+   ###### 1. 如果电脑里面安装了两个Xcode的话可能会报上面错误，删掉其他只剩一个
+   ###### xcode9以后(OCLint version 0.13, Version 9.2 beta (9C34b) 测试可用)：   
+   ###### 2.1 更新到最新的`oclint`, `brew upgrade oclint`
+   ######  2.2 去github下载最新的[oclint.sh](https://github.com/harddog/oclint_apply)，替换掉旧的
+   ###### 3.  试试手动将 工程=&gt; `Build Settings` =&gt; 搜索`COMPILER_INDEX_STORE_ENABLE` 该配置设成NO
+&lt;br/&gt;
+[oclint_apply仓库地址](https://github.com/harddog/oclint_apply)
+&lt;h5 id=&#34;参考文章&#34;&gt;参考文章：&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;http://blog.csdn.net/uxyheaven/article/details/50818107&#34;&gt;用OCLint给iOS代码做静态分析&lt;/a&gt;&lt;br&gt;
+[&lt;a href=&#34;https://segmentfault.com/a/1190000005155260&#34;&gt;OCLint 规则与结果分析&lt;/a&gt;](https://segmentfault.com/a/1190000005155260)e&#39;e&#39;e&lt;/p&gt;
+">iOS使用OCLint做静态代码分析</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/uibarbuttonitem-dian-ji-fan-wei-guo-da/"" data-c="
+          &lt;h2 id=&#34;解决navgationbar里面uibarbuttonitem点击范围过大的问题&#34;&gt;解决NavgationBar里面UIBarButtonItem点击范围过大的问题&lt;/h2&gt;
+&lt;h4 id=&#34;问题&#34;&gt;问题&lt;/h4&gt;
+&lt;p&gt;大家肯定都自定义过NavgationBar的返回按钮吧，按照下面方法设置的时候，会有点击范围过大的问题&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    leftButton.frame = CGRectMake(0, 0, 30, 30);
+    leftButton.backgroundColor = [UIColor redColor];
+    [leftButton addTarget:self action:@selector(leftButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
+    self.navigationItem.leftBarButtonItem = leftItem;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-938e2cd15c73f60a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/200&#34; alt=&#34;Paste_Image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h4 id=&#34;解决&#34;&gt;解决&lt;/h4&gt;
+&lt;p&gt;在Button外面包一层View就可以了，就会是正常的Button的点击范围了&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    leftButton.frame = CGRectMake(0, 0, 30, 30);
+    leftButton.backgroundColor = [UIColor redColor];
+    [leftButton addTarget:self action:@selector(leftButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIView *menuButtonContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+    [menuButtonContainer addSubview:leftButton];
+    
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButtonContainer];
+    self.navigationItem.leftBarButtonItem = leftItem;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;观察&#34;&gt;观察&lt;/h2&gt;
+&lt;p&gt;尝试了好多应用，基本上都有这个现象，不是很细心的人根本发现不了，但是我开发的APP返回按钮给的图片太小了😂    效果十分明显的，找到解决方法以后，发现按钮太小了，button的frame是根据图片大小来的，不打算改成正常的了  (;￢＿￢)&lt;/p&gt;
+">UIBarButtonItem点击范围过大</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/h5-ye-mian-bu-xiang-ying-webview-dai-li-fang-fa/"" data-c="
+          &lt;h2 id=&#34;问题&#34;&gt;问题&lt;/h2&gt;
+&lt;p&gt;在项目中接入了WKWebView，在调试网页的过程中碰到一个问题：&lt;br&gt;
+在点击a标签的时候，不会触发webView的&lt;code&gt;navigationDelegate&lt;/code&gt;代理方法，如：&lt;br&gt;
+&lt;code&gt;webView:decidePolicyForNavigationAction:decisionHandler:&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;webView:decidePolicyForNavigationResponse:decisionHandler:&lt;/code&gt;等等，&lt;br&gt;
+原本我是在网页加载完成后更新下网页的返回按钮的，这下不起作用了。&lt;/p&gt;
+&lt;h4 id=&#34;a标签的代码&#34;&gt;a标签的代码&lt;/h4&gt;
+&lt;h6 id=&#34;a标签的事件已经被拦截网页使用的是vue&#34;&gt;（a标签的事件已经被拦截，网页使用的是vue）&lt;/h6&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;a class=&amp;quot;activity-item-wrapper&amp;quot; href=&amp;quot;/activity-detail/588425470926a819f7b8d61d&amp;quot;&amp;gt;  &amp;lt;/a&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;曲线救国&#34;&gt;曲线救国&lt;/h2&gt;
+&lt;p&gt;虽然代理方法不会响应，但是经过尝试&lt;code&gt;canGoBack&lt;/code&gt;这个属性的值还是会随着页面的变化而变化的，所以我直接监听这个属性，也可以达到我想要的效果&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[self.webView.realWebView addObserver:self forKeyPath:@&amp;quot;canGoBack&amp;quot; options:NSKeyValueObservingOptionNew context:nil];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;为什么会出现这种问题&#34;&gt;为什么会出现这种问题&lt;/h2&gt;
+&lt;p&gt;经过请教我司前端的同学后，了解到原网页使用的是H5的History Api，应该是在不刷新页面的情况下切换Url，导致WKWebView没有Call代理方法，但是canGoBack和canGoForward属性是可以检测到的。现在H5的体验越来越好，许多SPA应用都是采用的这种方法。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;大概流程：&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;在A页面 通过发AJAX请求 请求页面中的B数据。&lt;/li&gt;
+&lt;li&gt;在页面A中通过JS装载相应的信息到相应的位置来。&lt;/li&gt;
+&lt;li&gt;通过History API在不刷新页面的情况下在浏览器的地址栏中从页面A的URL地址切换到页面B的URL地址。&lt;/li&gt;
+&lt;/ol&gt;
+">H5页面不响应WebView代理方法</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/ios8-wkwebview-zai-te-ding-qing-kuang-xia-de-beng-kui/"" data-c="
+          &lt;p&gt;iOS8系统是苹果第一次引入WKWebView，所以有好多东西还不完善，下面记录一次碰到的Crash&lt;/p&gt;
+&lt;p&gt;在iOS 8下， 先设置WKWebView的&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;webView.allowsBackForwardNavigationGestures = YES;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;然后再设置为NO的话&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;webView.allowsBackForwardNavigationGestures = NO;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;只要手指一碰屏幕，就会出现Crash，日志主要如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+#0 Thread
+NSInvalidArgumentException
+-[UIView gestureRecognizer:shouldReceiveTouch:]: unrecognized selector sent to instance 0x125da47f0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;或者：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+#0 Thread
+NSInvalidArgumentException
+-[WKCompositingView gestureRecognizer:shouldReceiveTouch:]: unrecognized selector sent to instance 0x12fc17550
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;注&#34;&gt;注&lt;/h2&gt;
+&lt;p&gt;以上情况只会在iOS 8出现，在8以上版本没有问题。&lt;/p&gt;
+">iOS8 WKWebView 在特定情况下的崩溃</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/viewlayermask-shu-xing-de-ying-yong-hua-yuan-jiao-hua-xin/"" data-c="
+          &lt;h4 id=&#34;前言&#34;&gt;前言&lt;/h4&gt;
+&lt;p&gt;看到什么app，脑子里都会不自觉的想这个东西是怎么实现的。哔哩哔哩作为我用来偶尔看看鬼畜，追追新番的一个应用，感觉它某些细节的设计确实不错。例如下图中的标注&lt;strong&gt;①&lt;/strong&gt;处的圆角&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-b6424aac39015512.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/310&#34; alt=&#34;哔哩哔哩的iOS客户端首页截图&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h4 id=&#34;设置view的四个角都为圆角&#34;&gt;设置View的四个角都为圆角&lt;/h4&gt;
+&lt;p&gt;像图中&lt;strong&gt;②&lt;/strong&gt;处的4个角都为圆角，这都是一些基础的东西感觉就没必要写了，什么你还不知道？特别简单，只需要设置下面的属性就可以了，产生圆角引发的性能问题此处不做讨论，这样写一般应用是没有问题的&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;view.layer.cornerRadius = 10;
+view.layer.masksToBounds = YES;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;设置view的两个角都为圆角&#34;&gt;设置View的两个角都为圆角&lt;/h4&gt;
+&lt;p&gt;像图&lt;strong&gt;①&lt;/strong&gt;中的两个圆角，当然就实现效果来说，方法有很多种，此处讲一个，使用CALayer的mask属性：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
+                                                   byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight
+                                                         cornerRadii:CGSizeMake(15, 15)];
+CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+maskLayer.frame = self.bounds;
+maskLayer.path = maskPath.CGPath;
+self.layer.mask = maskLayer;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;设置view显示一个心形️&#34;&gt;设置View显示一个心形❤️&lt;/h4&gt;
+&lt;p&gt;其实和显示两个圆角的方法差不多，只不过就是绘制图形的路径不一样&lt;br&gt;
+下图的图片上使用两根贝塞尔曲线绘制了一个心形❤️，曲线的算式，想要看的可以看下&lt;a href=&#34;https://github.com/harddog/Test-LayerDrawMask&#34;&gt;github的工程&lt;/a&gt;&lt;br&gt;
+&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-025bc1bf98319863.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/310&#34; alt=&#34;各个形状的展示&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;总结&#34;&gt;总结&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;mask属性是做什么的？&lt;/strong&gt;&lt;br&gt;
+看下苹果文档的描述：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;The layer’s alpha channel determines how much of the layer’s content and background shows through. Fully or partially opaque pixels allow the underlying content to show through but fully transparent pixels block that content.
+
+The default value of this property is nil nil. When configuring a mask, remember to set the size and position of the mask layer to ensure it is aligned properly with the layer it masks.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;翻译成中文就是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这个layer的alpha通道决定展示多少layer的内容和背景，完全或部分不透明的像素允许下面的内容展示出来，但是完全透明的像素会阻碍内容&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;为什么用&lt;code&gt;CAShapeLayer&lt;/code&gt; + &lt;code&gt;UIBezierPath&lt;/code&gt;哪？&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;UIBezierPath是系统对画图方法的封装，可以很方便的调用，获取路径path&lt;br&gt;
+&lt;code&gt;@property(nonatomic) CGPathRef CGPath;&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;CAShapeLayer有path属性&lt;br&gt;
+&lt;code&gt;@property(nullable) CGPathRef path;&lt;/code&gt;&lt;br&gt;
+可以很方便的将你画的path绘制到layer上&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这两个搭配简直就是珠连璧合、相得益彰、相辅相成、不好意思没词了。。。&lt;/p&gt;
+">View.layer.mask属性的应用(画圆角，画心)</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/qiang-po-zheng-fu-yin-ios7-yi-shang-fang-bian-de-gai-bian-zhuang-tai-lan-yan-se/"" data-c="
+          &lt;p&gt;在iOS 9以后设置状态栏颜色不建议使用UIApplication来改变了，警告⚠️不能忍&lt;br&gt;
+&lt;code&gt;- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated NS_DEPRECATED_IOS(2_0, 9_0, &amp;quot;Use -[UIViewController preferredStatusBarStyle]&amp;quot;)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;1.在导航控制器里面实现下面方法：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//一般在BaseNavigationController里面实现
+/**
+ 设置显示栈顶控制器的状态栏颜色
+ */
+- (UIViewController *)childViewControllerForStatusBarStyle {
+    return self.topViewController;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;2.在子控制器里面实现&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样系统push到某个控制器的时候就会显示此控制器&lt;code&gt;preferredStatusBarStyle&lt;/code&gt;方法返回状态栏style，不写默认显示黑色字体的状态栏&lt;/p&gt;
+&lt;h4 id=&#34;如何动态的改变状态栏颜色&#34;&gt;如何动态的改变状态栏颜色？&lt;/h4&gt;
+&lt;p&gt;项目中有业务需求需要动态的改变状态栏颜色，StatusBarStyle可能在两种状态之间替换，最简单的是拿全局变量控制，但是为了以后调用方便，就写个分类，使用runtime 动态替换方法，当做一个小练习吧，以后用着也方便&lt;/p&gt;
+&lt;p&gt;贴一下代码：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// UIViewController+ForcedChangeStatusBarColor.h
+#import &amp;lt;UIKit/UIKit.h&amp;gt;
+
+@interface UIViewController (ForcedChangeStatusBarColor)
+
+@property (nonatomic, strong) NSNumber *fcsb_statusBarStyle;
+
+@property (nonatomic, strong) NSNumber *fcsb_hasChange;
+
+/**
+ @brief 控制器强制替换StatusBarStyle
+ 只对自定义系统导航栏的控制器生效
+ */
+- (void)forcedChangeStatusBarStyle:(UIStatusBarStyle)style;
+
+@end
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;#import &amp;quot;UIViewController+ForcedChangeStatusBarColor.h&amp;quot;
+#import &amp;quot;NSObject+CEHook.h&amp;quot;
+
+@implementation UIViewController (ForcedChangeStatusBarColor)
+
+- (void)forcedChangeStatusBarStyle:(UIStatusBarStyle)style {
+    
+    @synchronized (self) {
+        if (self.fcsb_hasChange == nil) {
+            // 这行代码在替换方法， 可以替换
+            [self cehook_instanceMethodSwizzling:@selector(preferredStatusBarStyle) to:@selector(fcsb_preferredStatusBarStyle)];
+            self.fcsb_hasChange = @(YES);
+        }
+    }
+    
+    self.fcsb_statusBarStyle = @(style);
+    
+    // 刷新 StatusBar
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (UIStatusBarStyle)fcsb_preferredStatusBarStyle {
+    return [self.fcsb_statusBarStyle integerValue];
+}
+
+#pragma mark - get &amp;amp; set
+static char kAssociatedObjectKey_HasChange;
+- (void)setFcsb_hasChange:(NSNumber *)fcsb_hasChange {
+    objc_setAssociatedObject(self, &amp;amp;kAssociatedObjectKey_HasChange, fcsb_hasChange, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSNumber *)fcsb_hasChange {
+    return (NSNumber *)objc_getAssociatedObject(self, &amp;amp;kAssociatedObjectKey_HasChange);
+}
+
+static void *FCSBOrgiKey = &amp;amp;FCSBOrgiKey;
+ - (NSNumber *)fcsb_statusBarStyle {
+    return objc_getAssociatedObject(self, &amp;amp;FCSBOrgiKey);
+}
+
+- (void)setFcsb_statusBarStyle:(NSNumber *)fcsb_statusBarStyle {
+    objc_setAssociatedObject(self,
+                             &amp;amp;FCSBOrgiKey,
+                             fcsb_statusBarStyle,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;#import &amp;quot;NSObject+CEHook.h&amp;quot;
+
+@implementation NSObject (CEHook)
+
+- (void)cehook_instanceMethodSwizzling:(SEL)originSelector to:(SEL)swizzleSelector {
+    Class class = [self class];
+    
+    Method originMethod = class_getInstanceMethod(class, originSelector);
+    Method swizzleMethod = class_getInstanceMethod(class, swizzleSelector);
+    
+    if (!originMethod || !swizzleMethod) {
+        return;
+    }
+    
+    class_addMethod(class,
+                    originSelector,
+                    method_getImplementation(originMethod),
+                    method_getTypeEncoding(originMethod));
+    class_addMethod(class,
+                    swizzleSelector,
+                    method_getImplementation(swizzleMethod),
+                    method_getTypeEncoding(swizzleMethod));
+    
+    ///&amp;lt; 添加完了之后要重新赋值，因为原来的两个method都是父类的。参考自见https://github.com/rentzsch/jrswizzle/blob/semver-1.x/JRSwizzle.m
+    /// addMethod 返回 true 时，需要重新取 Method
+    Method originMethod2 = class_getInstanceMethod(class, originSelector);
+    Method swizzleMethod2 = class_getInstanceMethod(class, swizzleSelector);
+    
+    // NSLog(@&amp;quot;instanceMethodSwizzling: %p, %p, %p, %p&amp;quot;, originMethod, originMethod2, swizzleMethod, swizzleMethod2);
+    method_exchangeImplementations(originMethod2, swizzleMethod2);
+}
+@end
+&lt;/code&gt;&lt;/pre&gt;
+">强迫症福音！iOS7以上方便的改变状态栏颜色</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/jie-jue-charles-he-shadowsocks-chong-tu/"" data-c="
+          &lt;h2 id=&#34;问题&#34;&gt;问题：&lt;/h2&gt;
+&lt;p&gt;由于没有买iOS上的番(fan)茄(qiang)App，有的时候电脑打开Charles，想走电脑的Shadow&lt;span class=&#34;katex&#34;&gt;&lt;span class=&#34;katex-mathml&#34;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;s&lt;/mi&gt;&lt;mi&gt;o&lt;/mi&gt;&lt;mi&gt;c&lt;/mi&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;mi&gt;s&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&#34;application/x-tex&#34;&gt;socks&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&#34;katex-html&#34; aria-hidden=&#34;true&#34;&gt;&lt;span class=&#34;base&#34;&gt;&lt;span class=&#34;strut&#34; style=&#34;height:0.69444em;vertical-align:0em;&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34;&gt;o&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34; style=&#34;margin-right:0.03148em;&#34;&gt;k&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34;&gt;s&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;的代理，百度是没有问题的，但是google就走不通了。&lt;/p&gt;
+&lt;h3 id=&#34;解决方法&#34;&gt;解决方法：&lt;/h3&gt;
+&lt;h6 id=&#34;第一步&#34;&gt;第一步&lt;/h6&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-5f2d48c4790abbb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;Paste_Image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h6 id=&#34;第二步&#34;&gt;第二步&lt;/h6&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-308962058ff45bce.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;Paste_Image.png&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h2 id=&#34;环境&#34;&gt;环境：&lt;/h2&gt;
+&lt;p&gt;Shadow&lt;span class=&#34;katex&#34;&gt;&lt;span class=&#34;katex-mathml&#34;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;s&lt;/mi&gt;&lt;mi&gt;o&lt;/mi&gt;&lt;mi&gt;c&lt;/mi&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;mi&gt;s&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&#34;application/x-tex&#34;&gt;socks&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&#34;katex-html&#34; aria-hidden=&#34;true&#34;&gt;&lt;span class=&#34;base&#34;&gt;&lt;span class=&#34;strut&#34; style=&#34;height:0.69444em;vertical-align:0em;&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34;&gt;o&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34; style=&#34;margin-right:0.03148em;&#34;&gt;k&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34;&gt;s&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;X v2.6.3&lt;br&gt;
+Charles v4.0&lt;/p&gt;
+&lt;h6 id=&#34;文章参考&#34;&gt;文章参考 :&lt;/h6&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.wangjiawen.com/skill/shadowsocks-work-with-charles&#34;&gt;Charles和Shadow&lt;span class=&#34;katex&#34;&gt;&lt;span class=&#34;katex-mathml&#34;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;s&lt;/mi&gt;&lt;mi&gt;o&lt;/mi&gt;&lt;mi&gt;c&lt;/mi&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;mi&gt;s&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&#34;application/x-tex&#34;&gt;socks&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&#34;katex-html&#34; aria-hidden=&#34;true&#34;&gt;&lt;span class=&#34;base&#34;&gt;&lt;span class=&#34;strut&#34; style=&#34;height:0.69444em;vertical-align:0em;&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34;&gt;o&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34; style=&#34;margin-right:0.03148em;&#34;&gt;k&lt;/span&gt;&lt;span class=&#34;mord mathdefault&#34;&gt;s&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;共同使用&lt;/a&gt;&lt;/p&gt;
+">解决Charles和Shadowsocks冲突</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/masonry-zi-gua-ying-cell-gao-du-tong-shi-shi-xian-cell-zhe-die-he-zhan-kai/"" data-c="
+          &lt;p&gt;这都2017年了还在用frame布局实在是有点low了。。。&lt;br&gt;
+Autolayout自iOS6开始引入，到现在基本上也没什么坑了，就算有，前辈们也都填好了( ⁼̴̀ .̫ ⁼̴́ )✧&lt;/p&gt;
+&lt;h2 id=&#34;自动计算cell高度&#34;&gt;自动计算cell高度&lt;/h2&gt;
+&lt;p&gt;我理解的自动计算cell高度，有两个注意点：&lt;br&gt;
+第一： 设置tableView.estimatedRowHeight&lt;br&gt;
+&lt;code&gt;self.tableView.estimatedRowHeight = 20&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;第二： 设置约束，保证cell的contentView的高度可以根据子控件算出来&lt;br&gt;
+例如以下只有一个label填充的cell（cell的结构-&amp;gt;cell--contentView--label）&lt;br&gt;
+只需要给label添加以下约束：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// 布局
+    [_contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(_contentLabel.superview.mas_left).with.offset(20);
+        make.top.equalTo(_contentLabel.superview.mas_top).with.offset(20);
+        make.right.equalTo(_contentLabel.superview.mas_right).with.offset(-20);
+        make.bottom.equalTo(_contentLabel.superview.mas_bottom).with.offset(-20);
+    }];
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;cell就可以自动计算自己的高度&lt;/p&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;1&#34;&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-f401b0e911ac27e4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#34; alt=&#34;内容高度不固定的cell&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h2 id=&#34;实现cell的折叠和展开&#34;&gt;实现cell的折叠和展开&lt;/h2&gt;
+&lt;h6 id=&#34;先说我觉的比较好的实现方法上面约束不用变改变label的numberoflines就可以需要展开的时候设置为0折叠的时候设置为3&#34;&gt;先说我觉的比较好的实现方法：上面约束不用变改变Label的numberOfLines就可以，需要展开的时候设置为0，折叠的时候设置为3。&lt;/h6&gt;
+&lt;p&gt;下面的是我的想法过程，大家可以略过：&lt;br&gt;
+一开始的时候想的是给label一个高度小于等于120的约束，并且持有它&lt;br&gt;
+&lt;code&gt;make.height.lessThanOrEqualTo(@120)&lt;/code&gt;&lt;br&gt;
+折叠的时候，把约束install，展开的时候uninstall。&lt;/p&gt;
+&lt;p&gt;实现起来：每次在TableView的cell点击代理方法里面 调用cell的方法使label高度的约束install和uninstall，然后调用&lt;code&gt;[tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;后来发现和这个约束有冲突&lt;br&gt;
+&lt;code&gt;make.bottom.equalTo(_contentLabel.superview.mas_bottom).with.offset(-20)&lt;/code&gt; ，作为强迫症患者这能忍？。&lt;br&gt;
+然后突然想到label的numberOfLines可以限制行数......这不就是现成的实现折叠/展开的最好方法吗...&lt;/p&gt;
+&lt;h6 id=&#34;效果&#34;&gt;效果：&lt;/h6&gt;
+&lt;figure data-type=&#34;image&#34; tabindex=&#34;2&#34;&gt;&lt;img src=&#34;http://upload-images.jianshu.io/upload_images/1300265-ee51a6ed2ffb3776.gif?imageMogr2/auto-orient/strip&#34; alt=&#34;可以折叠的cell的效果图&#34; loading=&#34;lazy&#34;&gt;&lt;/figure&gt;
+&lt;h5 id=&#34;demo&#34;&gt;Demo ：&lt;/h5&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/harddog/test-autolayoutcell.git&#34;&gt;test-autolayoutcell&lt;/a&gt;&lt;/p&gt;
+&lt;h6 id=&#34;文章参考&#34;&gt;文章参考 :&lt;/h6&gt;
+&lt;p&gt;1.&lt;a href=&#34;https://github.com/SnapKit/Masonry&#34;&gt;Masonry&lt;/a&gt;&lt;br&gt;
+2.&lt;a href=&#34;http://blog.sunnyxx.com/2015/05/17/cell-height-calculation&#34;&gt;优化UITableViewCell高度计算的那些事&lt;/a&gt;&lt;br&gt;
+3.&lt;a href=&#34;http://www.jianshu.com/p/cef485a9ce36&#34;&gt;iOS7和iOS8下的自适应cell&lt;/a&gt;&lt;/p&gt;
+">Masonry自适应cell高度，同时实现cell折叠和展开</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/chu-li-wkcontentview-de-crash/"" data-c="
+          &lt;h3 id=&#34;解决wkcontentview没有issecuretextentry方法造成的crash&#34;&gt;解决WKContentView没有isSecureTextEntry方法造成的crash&lt;/h3&gt;
+&lt;p&gt;程序中有web页面，使用WKWebView，但是有个crash一直存在：&lt;br&gt;
+&lt;code&gt;[WKContentView isSecureTextEntry]: unrecognized selector sent to instance 0x101bd5000&lt;/code&gt;&lt;br&gt;
+网上搜索，并没有结果，是太简单了吗？不清楚，准备使用runtime给WKContentView添加一个方法，观察下&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;在程序启动的时候调用一下progressWKContentViewCrash方法就可以&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/**
+ 处理WKContentView的crash
+ [WKContentView isSecureTextEntry]: unrecognized selector sent to instance 0x101bd5000
+ */
++ (void)progressWKContentViewCrash {
+    if (([[[UIDevice currentDevice] systemVersion] doubleValue] &amp;gt;= 8.0)) {
+        const char *className = @&amp;quot;WKContentView&amp;quot;.UTF8String;
+        Class WKContentViewClass = objc_getClass(className);
+        SEL isSecureTextEntry = NSSelectorFromString(@&amp;quot;isSecureTextEntry&amp;quot;);
+        SEL secureTextEntry = NSSelectorFromString(@&amp;quot;secureTextEntry&amp;quot;);
+        BOOL addIsSecureTextEntry = class_addMethod(WKContentViewClass, isSecureTextEntry, (IMP)isSecureTextEntryIMP, &amp;quot;B@:&amp;quot;);
+        BOOL addSecureTextEntry = class_addMethod(WKContentViewClass, secureTextEntry, (IMP)secureTextEntryIMP, &amp;quot;B@:&amp;quot;);
+        if (!addIsSecureTextEntry || !addSecureTextEntry) {
+            NSLog(@&amp;quot;WKContentView-Crash-&amp;gt;修复失败&amp;quot;);
+        }
+    }
+}
+
+/**
+ 实现WKContentView对象isSecureTextEntry方法
+ @return NO
+ */
+BOOL isSecureTextEntryIMP(id sender, SEL cmd) {
+    return NO;
+}
+
+/**
+ 实现WKContentView对象secureTextEntry方法
+ @return NO
+ */
+BOOL secureTextEntryIMP(id sender, SEL cmd) {
+    return NO;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;实际使用效果&#34;&gt;实际使用效果&lt;/h2&gt;
+&lt;p&gt;在项目的新版本里加上上面处理方法以后，&lt;code&gt;[WKWebView isSecureTextEntry]&lt;/code&gt;崩溃已经消失🤓&lt;/p&gt;
+">处理WKContentView的crash</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/yue-yu-di-san-zhang-qi-ye-wei-xin-qiang-hong-bao-cha-jian/"" data-c="
+          &lt;h4 id=&#34;企业微信抢红包为年终奖做准备-̴̀-̫-̴́&#34;&gt;企业微信抢红包（为年终奖做准备( ⁼̴̀ .̫ ⁼̴́ )✧）&lt;/h4&gt;
+&lt;h2 id=&#34;使用loglypl自动编写打印方法的文件&#34;&gt;使用logly.pl自动编写打印方法的文件&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;/opt/theos/bin/logify.pl /文件目录/WWKConversationRedEnvelopesBubbleView.h  &amp;gt; ./1.xm&lt;/li&gt;
+&lt;li&gt;如果要跟踪多个头文件，则继续转换：/opt/theos/bin/logify.pl 其它头文件 &amp;gt;&amp;gt; Tweak.xm    注意中间是 &amp;gt;&amp;gt;（没试过）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;安装到手机&#34;&gt;安装到手机&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;export THEOS=/opt/theos&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;export THEOSDEVICEIP=192.168.1.100&lt;/code&gt;&lt;br&gt;
+先执行以上两行命令&lt;br&gt;
+然后执行&lt;br&gt;
+&lt;code&gt;make package install&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;make package&lt;/code&gt; 和 &lt;code&gt;make install&lt;/code&gt;可以单独使用&lt;/p&gt;
+&lt;h2 id=&#34;make-package报错&#34;&gt;make package报错&lt;/h2&gt;
+&lt;p&gt;有的时候会报错，不知道类名，这种情况在文件最上面写上&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;@interface WWKMessageRedEnvelopes
+@end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;写上类似此种格式的代码，骗过编译&lt;/p&gt;
+&lt;h2 id=&#34;打印log&#34;&gt;打印log&lt;/h2&gt;
+&lt;p&gt;安装完成后，打开Xcode-&amp;gt;Window-&amp;gt;Device-&amp;gt;你的设备，下面有Log显示，&lt;/p&gt;
+&lt;p&gt;参考网站：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;https://zhuanlan.zhihu.com/p/21530388&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;http://www.jianshu.com/p/98642d1ea4e1&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;http://www.jianshu.com/p/98642d1ea4e1&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;http://www.jianshu.com/p/189afbe3b429&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+">越狱第三章：企业微信抢红包插件</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/ios-tong-shi-hua-xu-xian-he-zhi-xian/"" data-c="
+          &lt;pre&gt;&lt;code&gt;- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    
+    CGFloat y1 = _textField.bottom;
+    CGFloat y2 = _monthPayLabel.bottom;
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(context, UIColorFromRGB(0xd7dadf).CGColor);
+    
+    //画两根线，虚线
+    CGContextSetLineWidth(context,1);//线宽度
+    CGFloat lengths[] = {10,5};//先画4个点再画2个点
+    CGContextSetLineDash(context, 0, lengths, 2);
+    CGContextMoveToPoint(context, AutoSize(12), y1);
+    CGContextAddLineToPoint(context, SCREEN_WIDTH, y1);
+    CGContextStrokePath(context);
+    //实线
+    CGContextSetLineDash(context, 0, NULL, 0);
+    CGContextMoveToPoint(context, AutoSize(12), y2);
+    CGContextAddLineToPoint(context, SCREEN_WIDTH, y2);
+    CGContextStrokePath(context);
+    
+    CGContextClosePath(context);
+}
+&lt;/code&gt;&lt;/pre&gt;
+">iOS 同时画虚线和直线</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/zi-ji-shi-xian-tong-shi-dai-you-yuan-jiao-he-yin-ying-de-view/"" data-c="
+          &lt;pre&gt;&lt;code&gt;#import &amp;lt;UIKit/UIKit.h&amp;gt;
+
+/**
+ *  按钮类型
+ */
+typedef NS_ENUM(NSInteger, CardLoanBaseButtonStyle) {
+    
+    // 深蓝色
+    CardLoanBaseButtonStyleBlue,
+};
+
+/**
+ 2.0 基类button
+ */
+@interface CardLoanBaseButton : UIButton
+
+/**
+ Button样式
+ */
+@property (nonatomic, assign) CardLoanBaseButtonStyle style;
+
+/**
+ Button
+ */
+@property (nonatomic, strong) UIColor *maskColor;
+
+/**
+ *  初始化 button
+ */
++ (instancetype)buttonWithFrame:(CGRect)frame buttonStyle:(CardLoanBaseButtonStyle)buttonStyle;
+
+@end
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;@interface CardLoanBaseButton ()
+
+/**
+ Masklayer
+ */
+@property (nonatomic, strong) CAShapeLayer *maskLayer;
+
+@end
+
+@implementation CardLoanBaseButton
+
++ (instancetype)buttonWithFrame:(CGRect)frame buttonStyle:(CardLoanBaseButtonStyle)buttonStyle {
+    
+    CardLoanBaseButton *button = [self buttonWithType:UIButtonTypeCustom];
+    button.frame = frame;
+    button.style = buttonStyle;
+    
+    return button;
+}
+
+- (void)setStyle:(CardLoanBaseButtonStyle)style {
+    
+    _style = style;
+    
+    switch (_style) {
+        case CardLoanBaseButtonStyleBlue: {
+            
+            self.maskColor = UIColorFromRGB(0x574ef2);
+            [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [self setTitleColor:[UIColor colorWithWhite:1 alpha:.2] forState:UIControlStateDisabled];
+            
+            self.titleEdgeInsets = UIEdgeInsetsMake(0, 0, self.height * .2, 0);
+        }
+        break;
+        
+        default:
+        break;
+    }
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    [self setShandowAndCurveRect];
+}
+
+/**
+ 添加圆角和阴影
+ */
+- (void)setShandowAndCurveRect {
+    
+    CGFloat radius = self.height * .5;
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path setLineWidth:.5];
+    [path moveToPoint:CGPointMake(radius, 0)];
+    [path addLineToPoint:CGPointMake(self.width - radius, 0)];
+    [path addArcWithCenter:CGPointMake(self.width - radius, radius) radius:radius startAngle:- M_PI_2 endAngle:M_PI_2 clockwise:YES];
+    [path addLineToPoint:CGPointMake(radius, self.height)];
+    [path addArcWithCenter:CGPointMake(radius, radius) radius:radius startAngle:M_PI_2 endAngle:M_PI_2 * 3 clockwise:YES];
+    [path closePath];
+    self.maskLayer.frame = self.bounds;
+    self.maskLayer.strokeColor = self.maskColor.CGColor;
+    self.maskLayer.fillColor = self.maskColor.CGColor;
+    self.maskLayer.path = path.CGPath;
+    [self.layer insertSublayer:self.maskLayer atIndex:0];
+    
+    self.maskLayer.shadowOffset = CGSizeMake(0, self.height * .1);
+}
+
+- (CALayer *)maskLayer {
+    if (_maskLayer == nil) {
+        _maskLayer = [CAShapeLayer layer];
+        self.maskLayer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.8].CGColor;
+        self.maskLayer.shadowOpacity = 0.8;
+    }
+    return _maskLayer;
+}
+
+@end
+
+&lt;/code&gt;&lt;/pre&gt;
+">自己实现同时带有圆角和阴影的View</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/yue-yu-di-er-zhang-an-zhuang-revealcha-kan-ta-ren-app-de-ui/"" data-c="
+          &lt;h5 id=&#34;1-reveal-162自行百度&#34;&gt;1. Reveal 1.6.2，自行百度&lt;/h5&gt;
+&lt;h5 id=&#34;2-越狱手机安装openssh&#34;&gt;2. 越狱手机安装openssh&lt;/h5&gt;
+&lt;h5 id=&#34;3-使用openssh拷贝reveal的framework和dylib到手机&#34;&gt;3. 使用openSSH拷贝Reveal的framework和dylib到手机&lt;/h5&gt;
+&lt;p&gt;** 下文中出现的192.168.1.X，请替换为自己手机的ip **&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;scp -r /Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/Reveal.framework root@192.168.1.X:/System/Library/Frameworks
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;scp /Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/libReveal.dylib root@192.168.1.X:/Library/MobileSubstrate/DynamicLibraries
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h5 id=&#34;4-编辑librevealplist&#34;&gt;4. 编辑libReveal.plist&lt;/h5&gt;
+&lt;p&gt;在xcode新建一个plist文件，那文本或sublime打开，把里面的东西都删除，加入以下文字&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+	Filter = {
+		Bundles = (
+			&amp;quot;com.tencent.mqq&amp;quot;,
+			&amp;quot;com.apple.AppStore&amp;quot;,
+			&amp;quot;com.360buy.jdmobile&amp;quot;,
+			&amp;quot;com.alipay.iphoneclient&amp;quot;,
+			&amp;quot;com.taobao.taobao4iphone&amp;quot;,
+			&amp;quot;com.taobao.tmall&amp;quot;,
+			&amp;quot;com.sina.weibo&amp;quot;,
+			&amp;quot;com.xiaoying.cardloan&amp;quot;,
+			&amp;quot;com.netease.cloudmusic&amp;quot;,
+		);
+	};
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;** 以上是我初步写的一些应用，个人可根据自己的情况，增删Bundles数组里面的BundleID **&lt;/p&gt;
+&lt;p&gt;使用以下命令拷贝到手机&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;scp /Users/lzh/Desktop/libReveal.plist(个人libReveal.plist文件路径) root@192.168.1.X:/Library/MobileSubstrate/DynamicLibraries
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;另&#34;&gt;另：&lt;/h4&gt;
+&lt;p&gt;如果DynamicLibraries不是文件夹，说明你手机的Cydia已经不管用了，请重新越狱或google提示错误以解决 。&lt;br&gt;
+如果和我一样Cydia出现 status -2的错误，请按照第一章内容尝试。&lt;/p&gt;
+">越狱第二章：安装Reveal，查看他人App的UI</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/yue-yu-di-yi-zhang-ios-yue-yu/"" data-c="
+          &lt;ol&gt;
+&lt;li&gt;ios 9的系统，使用盘古越狱&lt;/li&gt;
+&lt;li&gt;越狱后，经常重启导致cydia失效， status -2的问题 &lt;a href=&#34;http://tieba.baidu.com/p/4810607718&#34;&gt;参考贴吧链接&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;越狱后一定要安装一个iFile，以防不测！&lt;/li&gt;
+&lt;/ol&gt;
+">越狱第一章：iOS越狱</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/js-he-ios-jiao-hu-zhong-de-yi-xie-bi-ji/"" data-c="
+          &lt;h3 id=&#34;所用框架webviewjavascriptbridge&#34;&gt;所用框架WebViewJavascriptBridge&lt;/h3&gt;
+&lt;h5 id=&#34;关于webview的delegate&#34;&gt;关于webView的delegate&lt;/h5&gt;
+&lt;p&gt;如果使用WebViewJavascriptBridge， webview的delegate不能直接设置，需要通过下面方法&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[self.bridge setWebViewDelegate:self] 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h5 id=&#34;nullundefinednsnullnil&#34;&gt;null，undefined，NSNull，nil&lt;/h5&gt;
+&lt;pre&gt;&lt;code&gt;js中的null，转到ios会变成NSNull类的实例
+js中字典取不到的值，或者未声明的属性，会为undefined
+js中的undefined，传到ios会变为nil
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;ios中的NSNull， 转到js会变成null
+ios中的responseCallback(nil)时， 框架会转成NSNull再进行传递
+&lt;/code&gt;&lt;/pre&gt;
+">js和ios交互中的一些笔记</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/ji-lu-yi-ci-wei-xin-fen-xiang-de-jing-li/"" data-c="
+          &lt;h1 id=&#34;1微信好友分享缩略图不显示的bug&#34;&gt;1.微信好友分享缩略图不显示的bug&lt;/h1&gt;
+&lt;h3 id=&#34;经过两天彻查加请教终于发现了问题&#34;&gt;经过两天彻查加请教，终于发现了问题。&lt;/h3&gt;
+&lt;p&gt;微信分享要遵循一下规则：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;微信（好友、朋友圈、收藏）分享规则：
+微信三个平台中，好友的功能最完整，朋友圈不能分享表情、文件，收藏不能分享表情和应用，表格下以好友为例子（其中分享图文消息限制10条，超过10条将会无响应）：
+参数说明
+title：512Bytes以内
+description：1KB以内
+imageData：大小不能超过10M
+imagePath：大小不能超过10M(传递的imagePath路径不能超过10KB)
+imageUrl：长度不能超过10K（图片链接，支持JPG、PNG格式，较好的效果为大图360*200，小图200*200 ）
+ThumbImage：内存大小不能超过32K的png图
+musicUrl：长度不能超过10K
+videoUrl：长度不能超过10K
+url：不能为空且长度不能超过10K
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;当然，以上规则什么问题都没有，&lt;br&gt;
+但是有的时候，明明遵守了上面规则，却还是出不来。。。&lt;/p&gt;
+&lt;h2 id=&#34;比如&#34;&gt;比如：&lt;/h2&gt;
+&lt;h3 id=&#34;description里面不能有红包之类的关键字&#34;&gt;&lt;strong&gt;description里面不能有红包之类的关键字&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;只要描述内容里面出现&lt;strong&gt;红包&lt;/strong&gt;两个字，微信好友分享出去的网页，缩略图就不见了！！！&lt;/p&gt;
+">记录一次微信分享的经历</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/an-zhuang-cocoapods-quan-xian-cuo-wu/"" data-c="
+          &lt;p&gt;&lt;em&gt;&lt;strong&gt;错误ERROR:  While executing gem ... (Errno::EPERM)&lt;/strong&gt;&lt;/em&gt;&lt;br&gt;
+***    Operation not permitted - /usr/bin/pod ***&lt;br&gt;
+&lt;strong&gt;解决方法&lt;/strong&gt;: 命令行输入sudo gem install -n /usr/local/bin cocoapods&lt;/p&gt;
+">安装cocoapods权限错误</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/weakify-de-hong-ding-yi-fen-jie/"" data-c="
+          &lt;p&gt;项目中用到了@weakify的宏定义, 正好今天任务解决了, 就一步一步拆分下看看它是怎么实现的.&lt;/p&gt;
+&lt;p&gt;下面就一步一步拆分@weakify&lt;br&gt;
+&lt;code&gt;object-c&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;@weakify(self) 中@weakify的宏定义如下
+#define weakify(...) \
+    ext_keywordify \
+    metamacro_foreach_cxt(ext_weakify_,, __weak, __VA_ARGS__)
+
+    /*
+	@weakify(self)
+	可以替换为
+	ext_keywordify \
+    metamacro_foreach_cxt(ext_weakify_,, __weak, self)
+    */
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;p&gt;分段拆解&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;先看&lt;code&gt;ext_keywordify&lt;/code&gt;, 替换为&lt;code&gt;autoreleasepool {}&lt;/code&gt;; 知道为什么weakify前面为什么要加@了吧, 是在这里用的.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;效果&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;@autoreleasepool {} 
+metamacro_foreach_cxt(ext_weakify_,, __weak, self)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;在看&lt;code&gt;metamacro_foreach_cxt(ext_weakify_,, __weak, self)&lt;/code&gt;&lt;br&gt;
+先替换 &lt;code&gt;metamacro_foreach_cxt&lt;/code&gt;&lt;pre&gt;&lt;code&gt;#define metamacro_foreach_cxt(MACRO, SEP, CONTEXT, ...) \ 
+metamacro_concat(metamacro_foreach_cxt, metamacro_argcount(__VA_ARGS__))(MACRO, SEP, CONTEXT, __VA_ARGS__)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;先看&lt;code&gt;metamacro_argcount(__VA_ARGS__)&lt;/code&gt;&lt;br&gt;
+这个宏的作用是返回一共参数有多少个&lt;br&gt;
+工作原理是截取前二十个&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#define metamacro_argcount(...) \
+        metamacro_at(20, __VA_ARGS__, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+        
+//这个宏的定义是拼接连个参数
+#define metamacro_at(N, ...) \
+        metamacro_concat(metamacro_at, N)(__VA_ARGS__)
+        会转换为, metamacro_at20(__VA_ARGS__), 并且参数最后20位为20到1;
+        
+#define metamacro_at20(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, ...) metamacro_head(__VA_ARGS__)
+
+metamacro_head(__VA_ARGS__) //宏的作用是取第一个参数
+
+再这样的话, 前20个参数一一对应, 最后会剩下1(以@weakify(self)为例);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;效果&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;metamacro_foreach_cxt1(ext_weakify_,, __weak, self)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;// 按照#define metamacro_foreach_cxt1(MACRO, SEP, CONTEXT, _0) MACRO(0, CONTEXT, _0)&lt;br&gt;
+进一步转化为&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ext_weakify_(0, __weak, self);&lt;/code&gt;&lt;br&gt;
+再带入&lt;code&gt;ext_weakify_&lt;/code&gt;&lt;br&gt;
+转化为:&lt;br&gt;
+&lt;code&gt;__weak __typeof__(self) self_weak_ = (self);&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;分解完毕&lt;/p&gt;
+&lt;p&gt;@strongify要在block中使用&lt;br&gt;
+@strongify想要看的自己完成, 最终结果为&lt;br&gt;
+&lt;code&gt;__strong __typeof__(self) self = self_weak_;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;想要具体过程的, 推荐简书文章WzxJiang的&lt;a href=&#34;http://www.jianshu.com/p/bcd7367ea54b&#34;&gt;剖析@weakify、@strongify&lt;/a&gt;&lt;br&gt;
+感谢WzxJiang在简书上的文章, 对我帮助很大, 对宏的了解又增加了许多&lt;/p&gt;
+">@weakify的宏定义分解</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://doge1024.github.io/post/about/"" data-c="
+          &lt;blockquote&gt;
+&lt;p&gt;欢迎来到我的小站呀，很高兴遇见你！🤝&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;关于本站&#34;&gt;🏠 关于本站&lt;/h2&gt;
+&lt;h2 id=&#34;博主是谁&#34;&gt;👨‍💻 博主是谁&lt;/h2&gt;
+&lt;h2 id=&#34;兴趣爱好&#34;&gt;⛹ 兴趣爱好&lt;/h2&gt;
+&lt;h2 id=&#34;联系我呀&#34;&gt;📬 联系我呀&lt;/h2&gt;
+">关于</a>
+      </div>
+      
+    </div>
+    <div class="page">
+      <div id="page_ul"></div>
+    </div>
+  </div>
+</div>
+<script>
+  !function () {
+    let searchMask = document.querySelector('#search_mask');
+    let result = document.querySelector('#result');
+    let items = document.querySelectorAll('.item');
+    let searchBox = document.querySelector('#search');
+    let statCount = document.querySelector('#stat_count');
+    let statTimes = document.querySelector('#stat_times');
+    let pageUl = document.querySelector('#page_ul');
+    let close = document.querySelector('#close');
+    
+    close.addEventListener('click', function() {
+      searchMask.style = 'display: none;'
+    })
+
+    let finds = [];
+    let contents = [];
+    let pageSize = 10;
+    items.forEach(item => {
+      let a = item.querySelector('a');
+      contents.push({
+        title: a.innerText,
+        details: a.dataset.c,
+        link: a.href
+      })
+      item.remove();
+    })
+
+    function insertStr(soure, start, count) {
+      let newStr = soure.substr(start, count);
+      return soure.slice(0, start) + '<em>' + newStr + '</em>' + soure.slice(start + count);
+    }
+
+    pageUl.addEventListener('click', function(event) {
+      let target = event.target;
+      if (target.__proto__ === HTMLSpanElement.prototype) {
+        appendResults(parseInt(target.dataset.i));
+      }
+    })
+
+    function appendResults(index) {
+      let htmlResult = '';
+      let start = index || 0;
+      let end = Math.min(start + pageSize, finds.length);
+      for (let i = start; i < end; i++) {
+        const current = finds[i];
+        let html = current.title;
+        let sum = 0;
+        let positions = current.positions;
+        positions.forEach(position => {
+          html = insertStr(html, position.start + sum, position.count);
+          sum += 9;
+        })
+        htmlResult += `<div class="item"><a class="result-title" href="${current.link}">${html}</a></div>`;
+      }
+      result.innerHTML = htmlResult;
+      pageUl.innerHTML = '';
+      let count = finds.length / pageSize;
+      let lis = '';
+      if (start !== 0) {
+        lis += `<span class="fa fa-angle-left" data-i='${start - 1}'></span>`;
+      }
+      for (let i = 0; i < count; i++) {
+        lis += `<span class='${i === start?'current':''}' data-i='${i}'>${i+1}</span>`;     
+      }
+      if (start+1 < count) {
+        lis += `<span class="fa fa-angle-right" data-i='${start+1}'></span>`;  
+      }
+      pageUl.innerHTML = lis;
+    }
+
+    function search(delay) {
+      let timer = null
+      return function () {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+          let start = Date.now();
+          let segments = searchBox.value.split(' ').filter(c => c != '');
+          if (segments.length <= 0) {
+            return;
+          }
+          finds = [];
+          let htmlResult = '';
+          contents.forEach(content => {
+            let title = content.title;
+            let positions = [];
+            let find = false;
+            segments.forEach((segment) => {
+              if (content.title.includes(segment)) {
+                find = true;
+                positions.push({
+                  start: content.title.indexOf(segment),
+                  count: segment.length
+                })
+              } else if (content.details.includes(segment)) {
+                find = true;
+              }
+            });
+            if (find) {
+              finds.push({
+                title: content.title,
+                link: content.link,
+                positions
+              });
+            }
+          })
+          appendResults(0);
+          statCount.textContent = finds.length;
+          statTimes.textContent = Date.now() - start;
+        }, delay)
+      }
+    }
+    searchBox.addEventListener('input', search(200));
+  }()
+</script>
+
+<input hidden id="copy" />
+<script>
+  let language = '';
+  if (language !== '') {
+    let map = new Map();
+    if (language === 'en') {
+      map.set('search', 'Search');
+      map.set('category', 'Categories');
+      map.set('article', 'Articles');
+      map.set('tag', 'Tags');
+      map.set('top', 'Top');
+      map.set('publish', 'published');
+      map.set('minute', ' minutes');
+      map.set('read-more', 'Read More');
+      map.set('view', 'View');
+      map.set('words', ' words');
+      map.set('category-in', 'category in');
+      map.set('preview', 'Meta');
+      map.set('index', 'Toc');
+      map.set('no-archives', "You haven't created yet");
+      map.set('archives', " articles in total");
+      map.set('cloud-tags', " tags in total");
+      map.set('copyright', "Copyright: ");
+      map.set('author', "Author: ");
+      map.set('link', "Link: ");
+      map.set('leave-message', "Leave a message");
+      map.set('format', "Links Format");
+      map.set('site-name', "Name: ");
+      map.set('site-link', "Link: ");
+      map.set('site-desc', "Desc: ");
+      map.set('stat', " related results, taking ");
+      map.set('stat-time', " ms");
+      map.set('site-img', "Image: ");
+    }
+
+    if (map.size > 0) {
+      let lanElems = document.querySelectorAll('.language');
+      lanElems.forEach(elem => {
+        let lan = elem.dataset.lan, text = map.get(lan);
+        if (elem.__proto__ === HTMLInputElement.prototype) {
+          elem.placeholder = text
+        } else {
+          if (elem.dataset.count) {
+            text = elem.dataset.count + text;
+          }
+          elem.textContent = text;
+        }
+      })
+    }
+  }
+  //拿来主义(真香)^_^，Clipboard 实现摘自掘金 https://juejin.im/post/5aefeb6e6fb9a07aa43c20af
+  window.Clipboard = (function (window, document, navigator) {
+    var textArea,
+      copy;
+
+    // 判断是不是ios端
+    function isOS() {
+      return navigator.userAgent.match(/ipad|iphone/i);
+    }
+    //创建文本元素
+    function createTextArea(text) {
+      textArea = document.createElement('textArea');
+      textArea.value = text;
+      textArea.style.width = 0;
+      textArea.style.height = 0;
+      textArea.clientHeight = 0;
+      textArea.clientWidth = 0;
+      document.body.appendChild(textArea);
+    }
+    //选择内容
+    function selectText() {
+      var range,
+        selection;
+
+      if (isOS()) {
+        range = document.createRange();
+        range.selectNodeContents(textArea);
+        selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        textArea.setSelectionRange(0, 999999);
+      } else {
+        textArea.select();
+      }
+    }
+
+    //复制到剪贴板
+    function copyToClipboard() {
+      try {
+        document.execCommand("Copy")
+      } catch (err) {
+        alert("复制错误！请手动复制！")
+      }
+      document.body.removeChild(textArea);
+    }
+
+    copy = function (text) {
+      createTextArea(text);
+      selectText();
+      copyToClipboard();
+    };
+
+    return {
+      copy: copy
+    };
+  })(window, document, navigator);
+
+  function copyCode(e) {
+    if (e.srcElement.tagName === 'SPAN' && e.srcElement.classList.contains('copy-code')) {
+      let code = e.currentTarget.querySelector('code');
+      var text = code.innerText;
+      if (e.srcElement.textContent === '复制成功') {
+        return;
+      }
+      e.srcElement.textContent = '复制成功';
+      (function (elem) {
+        setTimeout(() => {
+          if (elem.textContent === '复制成功') {
+            elem.textContent = '复制代码'
+          }
+        }, 1000);
+      })(e.srcElement)
+      Clipboard.copy(text);
+    }
+  }
+
+  let pres = document.querySelectorAll('pre');
+  pres.forEach(pre => {
+    let code = pre.querySelector('code');
+    let copyElem = document.createElement('span');
+    copyElem.classList.add('copy-code');
+    copyElem.textContent = '复制代码';
+    pre.appendChild(copyElem);
+    pre.onclick = copyCode
+  })
+
+</script>
+<script src="/media/js/motion.js"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/cferdinandi/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
+<script>
+  var scroll = new SmoothScroll('a[href*="#"]', {
+    speed: 200
+  });
+</script>
+
+
+
+</html>
