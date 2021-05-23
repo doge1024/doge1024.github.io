@@ -1,0 +1,1777 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  doge1024
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="doge1024" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+ 
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site: ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; doge1024</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="self" href="index.html">Home</a></li>
+        
+        <li><a target="_self" href="archives.html">Archives</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+	$(function(){
+		$('#menu_item_index').addClass('is_active');
+	});
+</script>
+<div class="row">
+	<div class="large-8 medium-8 columns">
+		<div class="markdown-body home-categories">
+		
+			<div class="article">
+                <a class="clearlink" href="2017-05-14%2023%3A37%3A45.html">
+                
+                  <h1>ReactNative入坑: iOS原生项目集成ReactNavite(二)</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">** 创建一个简单的ReactNative 程序 **</h2>
+
+<p>使用下面三个命令可以创建一个简单的ReactNative程序，并在iOS模拟器上运行 （无论是运行在安卓还是iOS模拟器上，都需要在开启模拟器的情况下运行程序）</p>
+
+<pre><code class="language-text">react-native init AwesomeProject
+cd AwesomeProject
+react-native run-ios
+</code></pre>
+
+<h2 id="toc_1">** 那么如何将ReactNative的界面嵌入到iOS程序中那？**</h2>
+
+<ol>
+<li>首先将新创建的 AwesomeProject 程序目录下的 <code>package.json</code> 和 <code>index.ios.js</code> 文件拷贝自己的原生程序目录下面 (自己新建目录统一放置也可以)</li>
+<li>在命令行 切换到 <code>package.json</code> 所在的目录，并执行
+<code>sudo npm install</code> 输入密码后回车，等待执行成功</li>
+<li>在Podfile中加入
+<code>
+pod &#39;Yoga&#39;,  :path =&gt; &#39;./node_modules/react-native/ReactCommon/yoga&#39;<br/>
+pod &#39;React&#39;, :path =&gt; &#39;./node_modules/react-native&#39;, :subspecs =&gt; [<br/>
+    &#39;Core&#39;,<br/>
+    &#39;BatchedBridge&#39;,<br/>
+    &#39;DevSupport&#39;,<br/>
+    &#39;ART&#39;,<br/>
+    &#39;RCTActionSheet&#39;,<br/>
+    &#39;RCTAnimation&#39;,<br/>
+    &#39;RCTImage&#39;,<br/>
+    &#39;RCTNetwork&#39;,<br/>
+    &#39;RCTText&#39;,<br/>
+    &#39;RCTWebSocket&#39;,<br/>
+    &#39;RCTLinkingIOS&#39;,<br/>
+]<br/>
+# 这是一份基础的添加库列表，其他如有需要继续添加
+</code></li>
+<li>执行 <code>pod update --verbose</code> 等待更新成功</li>
+</ol>
+
+<p>好的，已经将关于RN的准备工作做完了，下面还要对原生程序进行一点小改造：</p>
+
+<ul>
+<li>a. 设置程序Info.plist文件中的 <code>App Transport Security Settings</code> <br/>
+确保http协议可以正常通信
+<img src="http://upload-images.jianshu.io/upload_images/1300265-09a352975da308d5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1024" alt="Paste_Image.png"/></li>
+<li>b. 在程序中添加：</li>
+</ul>
+
+<pre><code class="language-text">    // ----------第一种方式----------
+    #import &lt;React/RCTRootView.h&gt;
+    NSString * strUrl = @&quot;http://localhost:8081/index.ios.bundle?platform=ios&quot;;
+    NSURL * jsCodeLocation = [NSURL URLWithString:strUrl];
+    
+    RCTRootView * rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                         moduleName:@&quot;AwesomeProject&quot;
+                                                  initialProperties:nil
+                                                      launchOptions:nil];
+    rootView.frame = self.view.bounds;
+    [self.view addSubview:rootView];
+    
+    // ----------第二种方式----------
+    #import &lt;React/RCTRootView.h&gt;
+    #import &lt;React/RCTBundleURLProvider.h&gt;
+    [[RCTBundleURLProvider sharedSettings] setEnableDev:YES];
+    NSURL *jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@&quot;index.ios&quot; fallbackResource:nil];
+    RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                        moduleName:@&quot;AwesomeProject&quot;
+                                                 initialProperties:nil
+                                                     launchOptions:nil];
+    rootView.frame = self.view.bounds;
+    [self.view addSubview:rootView];
+</code></pre>
+
+<ul>
+<li><p>c.  运行Packager：<br/>
+跳转到包含<code>node_module</code>目录的文件夹，运行<br/>
+<code>npm start</code> or <code>react-native start</code> （两个命令都可以）<br/>
+命令行出现 ：** <code>Loading dependency graph, done.</code>** 即表示本地服务已成功开启</p>
+<blockquote>
+<p>1) 如果忘记这一步会出现：Could not connect to development server<br/>
+2) 如果出现 <code>Packager can&#39;t listen on port 8081</code><br/>
+<code>Most likely another process is already using this port</code> 或端口被占用之类的，多半是其他命令窗口已经Start服务了，检查下，找到后 <code>control + C</code> 关闭它<br/>
+3) 此提示是基于以下版本，如果版本不同可能会提示不一样<br/>
+<code>react-native-cli: 2.0.1</code><br/>
+<code>react-native: 0.42.3</code></p>
+</blockquote></li>
+<li><p>d. 在Xcode <code>com</code>+<code>R</code> 运行项目    </p>
+<blockquote>
+<p>请确保** cocoapods版本在1.2.0以上 ** 否则可能会出现 找不到头文件 的错误<br/>
+查看cocoapods版本，在命令行执行 <code>pod --version</code> </p>
+</blockquote></li>
+</ul>
+
+<hr/>
+
+<h2 id="toc_2">** iOS打包React Native资源 **</h2>
+
+<p>在正式测试打包的时候，就需要将RN的资源进行打包成离线资源，放到项目中，使项目在其他机器上也能正常运行<br/>
+React Native的 <code>react-native bundle</code> 命令是用来进行打包的命令，<br/>
+其中我们常使用的一些命令选项：</p>
+
+<ul>
+<li>--entry-file ,ios或者android入口的js名称，比如<code>index.ios.js</code></li>
+<li>--platform ,平台名称(ios或者android)</li>
+<li>--dev ,设置为false的时候将会对JavaScript代码进行优化处理。</li>
+<li>--bundle-output, 生成的jsbundle文件的名称，比如<code>./ios/bundle/index.ios.jsbundle</code></li>
+<li>--assets-dest 图片以及其他资源存放的目录,比如<code>./react-native/image</code><br/></li>
+</ul>
+
+<p>** 打包的命令：**<br/>
+<code><br/>
+react-native bundle --entry-file index.ios.js --platform ios --dev false --bundle-output ./bundles/index.ios.jsbundle --assets-dest ./bundles<br/>
+</code><br/>
+** 正式打包时候的代码：**</p>
+
+<pre><code class="language-text">    NSURL * jsCodeLocation = [[NSBundle mainBundle] URLForResource:@&quot;index.ios&quot; withExtension:@&quot;jsbundle&quot;];
+    
+    RCTRootView * rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                         moduleName:@&quot;RNInit&quot;
+                                                  initialProperties:nil
+                                                      launchOptions:nil];
+</code></pre>
+<br>
+<h2 id="toc_3">** iOS真机运行React Native **</h2>
+
+<p>将刚才打包生成的bundles的文件夹，拖入iOS 工程，放到主工程下面</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-9e3d2bbb8388cb83.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/620" alt="image.png"/></p>
+
+<p>iOS中导入bundle的路径需要改一下</p>
+
+<pre><code class="language-text">    // #import &lt;React/RCTRootView.h&gt;
+    // #import &lt;React/RCTBundleURLProvider.h&gt;
+    NSURL *jsCodeLocation = [[NSBundle mainBundle] URLForResource:@&quot;index.ios&quot; withExtension:@&quot;jsbundle&quot; subdirectory:@&quot;bundles&quot;];
+    RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                        moduleName:@&quot;AwesomeProject&quot;
+                                                 initialProperties:nil
+                                                     launchOptions:nil];
+    rootView.frame = self.view.bounds;
+    [self.view addSubview:rootView];
+</code></pre>
+
+<p>index.ios.js 中的代码也需要改一下，才能将图片的路径搞对，不然会出现本地图片不显示的问题</p>
+
+<pre><code class="language-text">import { AppRegistry } from &#39;react-native&#39;;
+import App from &#39;./js/yourapp&#39;;
+import { Platform } from &#39;react-native&#39;;
+import { setCustomSourceTransformer } from &#39;react-native/Libraries/Image/resolveAssetSource&#39;;
+
+// 更改一下图片的查找方法，以便在真机能正确查找路径
+setCustomSourceTransformer(function (resolver) {
+    if (Platform.OS === &#39;ios&#39;
+        &amp;&amp; !resolver.serverUrl
+        &amp;&amp; !resolver.bundlePath
+        &amp;&amp; resolver.asset.type === &#39;png&#39;) {
+        resolver.bundlePath = &#39;bundles/&#39;;
+    }
+    return resolver.defaultAsset();
+});
+
+AppRegistry.registerComponent(&#39;test&#39;, () =&gt; App);
+</code></pre>
+<br>
+<h2 id="toc_4">** iOS真机实时调试React Native **</h2>
+
+<p>在调试的时候，我比较习惯使用真机运行查看，介绍下如何在真机调试React Native：</p>
+
+<blockquote>
+<p>在项目中加入一个名字为ip.txt的文件，将自己电脑的ip地址写入文件，占用1行，记得加入target中<br/>
+剩下的和使用模拟器一样的步骤启动，npm start<br/>
+正常运行项目，即可<br/>
+<br></p>
+</blockquote>
+
+<hr/>
+
+<h3 id="toc_5">** 将ReactNative 嵌入iOS 中时，会碰到一些问题 **</h3>
+
+<h5 id="toc_6">1. 不知道需要Pod里的React的subspecs填哪些？</h5>
+
+<p>可以去打开 <code>./node_modules/react-native/React.podspec</code> 这个文件里面有React的subspecs 的全部声明</p>
+
+<h5 id="toc_7">2. 更新pod 出现 Yoga 依赖错误</h5>
+
+<p>类似于这种 <code>Yoga (= 0.42.3.React) required by React/Core (0.42.3)</code>  </p>
+
+<p>详细错误：</p>
+
+<pre><code class="language-text">[!] Unable to satisfy the following requirements:
+
+- `Yoga (= 0.42.3.React)` required by `React/Core (0.42.3)`
+
+None of your spec sources contain a spec satisfying the dependency: `Yoga (= 0.42.3.React)`.
+
+You have either:
+ * out-of-date source repos which you can update with `pod repo update`.
+ * mistyped the name or version.
+ * not added the source repo that hosts the Podspec to your Podfile.
+
+Note: as of CocoaPods 1.0, `pod repo update` does not happen on `pod install` by default.
+</code></pre>
+
+<p>解决方法：<br/>
+在Podfile文件加上<br/>
+<code>pod &#39;Yoga&#39;,  :path =&gt; &#39;./node_modules/react-native/ReactCommon/yoga&#39;</code><br/>
+路径中的<code>./node_modules</code>需要替换为自己项目中的<code>node_modules</code>目录路径</p>
+
+<h4 id="toc_8">3. 运行程序出现 Native module cannot be null</h4>
+
+<p>第一次将RN嵌入到iOS中后，运行程序出现 Native module cannot be null</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-c6977233a0001a4e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/320" alt="Paste_Image.png"/></p>
+
+<p>解决方法：<br/>
+出现上述错误，是因为少引入了一个部件 <code>RCTNetwork</code> ，将 <code>RCTNetwork</code> 加入到 <code>React</code> 的 <code>subspecs</code> 中。<br/><br/>
+以下是三个基础部件，如果需要其他 <code>subspecs</code> 自己继续往下加就好了</p>
+
+<pre><code class="language-text">pod &#39;React&#39;, :path =&gt; &#39;./node_modules/react-native&#39;, :subspecs =&gt; [
+        &#39;Core&#39;,
+        &#39;BatchedBridge&#39;,
+        &#39;DevSupport&#39;,
+        &#39;ART&#39;,
+        &#39;RCTActionSheet&#39;,
+        &#39;RCTAnimation&#39;,
+        &#39;RCTImage&#39;,
+        &#39;RCTNetwork&#39;,
+        &#39;RCTText&#39;,
+        &#39;RCTWebSocket&#39;,
+        &#39;RCTLinkingIOS&#39;,
+]
+# 这是一份基础的添加库列表
+</code></pre>
+
+<p><a href="https://github.com/facebook/react-native/issues/8449"></a></p>
+
+<h4 id="toc_9">4. 编译出现 jschelpers/JavaScriptCore.h file not found ❗️</h4>
+
+<p>第一个可能的问题：cocoapods版本低于1.2.0，去网上查找升级cocoapods的方法解决<br/>
+第二个可能的问题：0.45 版本以后 React缺少依赖，更新Podfile解决</p>
+
+<pre><code class="language-text">pod &#39;Yoga&#39;,  :path =&gt; &#39;../node_modules/react-native/ReactCommon/yoga&#39;
+pod &#39;React&#39;, :path =&gt; &#39;../node_modules/react-native&#39;, :subspecs =&gt; [
+         &#39;Core&#39;,
+         &#39;BatchedBridge&#39;, # 0.45 版本以后需要添加
+         &#39;RCTText&#39;,
+         &#39;RCTWebSocket&#39;,
+         &#39;RCTNetwork&#39;,
+    ]
+</code></pre>
+
+<p>(真的坑啊。。。)</p>
+
+<h4 id="toc_10">5. 出现 error: bundling: UnableToResolveError: Unable to resolve module <code>AccessibilityInfo</code></h4>
+
+<p>详细信息：</p>
+
+<pre><code class="language-text">error: bundling: UnableToResolveError: Unable to resolve module `AccessibilityInfo` from `/Users/Test/Desktop/cardloan_react/node_modules/react-native/Libraries/react-native/react-native-implementation.js`: Module does not exist in the module map or in these directories:
+  /Users/Test/Desktop/cardloan_react/node_modules/react-native/node_modules
+,   /Users/Test/Desktop/cardloan_react/node_modules
+</code></pre>
+
+<p>解决办法：<br/>
+调用<code>npm start -- --reset-cache</code> 重新开启服务，重新运行解决<br/>
+<br></p>
+
+<h4 id="toc_11">6. 出现 <code>Unhandled JS Exception: Cannot read property &#39;string&#39; of undefined</code></h4>
+
+<p>报错到系统的js文件：<br/>
+Unhandled JS Exception: Cannot read property &#39;string&#39; of undefined就是报错到系统的 <code>React.PropTypes.string</code><br/>
+遇到这种情况，你需要在js文件夹下执行下 <code>npm list</code> 如果过出现 <code>ERR</code> 就表明是依赖库错误，需要删除 <code>node_modules</code> 重新 <code>install</code> 一下</p>
+<br>
+<p>** 注意 **： 本文描述中出现的 <code>./node_modules/react-native</code> 记得替换成自己项目中的 <code>node_modules</code> 目录的路径<br/>
+** Tips **：<br/>
+<code>./ 为当前文件所在的文件夹</code><br/>
+<code>../ 为当前文件所在的文件夹的上级文件夹</code></p>
+
+<blockquote>
+<h6 id="toc_12">其他文章</h6>
+
+<p><a href="http://www.jianshu.com/p/c8550af92886">ReactNative入坑: ReactNative入门(一)</a><br/>
+<a href="http://www.jianshu.com/p/af0ac940a01d">ReactNative入坑: iOS原生项目集成ReactNavite(二)</a><br/>
+<a href="http://www.jianshu.com/p/27342c26f827">ReactNative入坑: react-navigation库(三)</a><br/>
+<a href="https://www.jianshu.com/p/ca199a7a0870">ReactNative入坑: codepush热更新(四)</a><br/>
+<a href="https://www.jianshu.com/p/7d3bf876cbd0">ReactNative入坑: 一些常用控件的使用(五)</a></p>
+</blockquote>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/05/14</span>
+                    
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="2017-05-12%2014%3A50%3A30.html">
+                
+                  <h1>ReactNative入坑: ReactNative入门(一)</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h3 id="toc_0">初识React Native</h3>
+
+<blockquote>
+<p>React Native (简称RN)是Facebook于2015年4月开源的跨平台移动应用开发框架，是Facebook早先开源的UI框架 React 在原生移动应用平台的衍生产物，目前支持iOS和安卓两大平台。RN使用Javascript语言，类似于HTML的JSX，以及CSS来开发移动应用，因此熟悉Web前端开发的技术人员只需很少的学习就可以进入移动应用开发领域。(百度百科)</p>
+</blockquote>
+
+<p>作为一个iOS开发人员的一些小看法：</p>
+
+<ol>
+<li><del>React Native的学习还是有点麻烦的，需要先学习JS、Html、ES6语法，然后可以接触React Native的开发了</del>
+React Native的学习还是有点麻烦的，需要先学习JS、Html、ES6语法、React 然后可以接触React Native的开发了 (当然直接跳过也是可以的，反正最后还会回来查 😂)</li>
+<li>如果使用React Native，作为主力开发可以开发一些动画效果不多，列表展示不多的App。或者当做组件开发一些两端通用的界面</li>
+<li>JS和原生的交互是异步的，一些交互通信比较麻烦，一些组件联动效果不好实现</li>
+<li>React Native仍然不完善，文档还不全，虽然Facebook推的力度不大，但是国内对这块需求比较高，对前景看好</li>
+</ol>
+
+<h3 id="toc_1">工欲善其事，必先利其器</h3>
+
+<h4 id="toc_2">开发环境搭建</h4>
+
+<p>RN的版本差异较大，下面的工具做好全部安装最新的，否则新旧版本之间的配合，可能出现始料不及的问题</p>
+
+<h6 id="toc_3">安装Node</h6>
+
+<p>运行<code>brew install node</code> 使用Homebrew来安装<a href="https://nodejs.org/">Node.js</a> , 安装最新的就好</p>
+
+<p>安装完node后建议设置npm镜像以加速后面的过程（或使用科学上网工具）。注意：不要使用cnpm！cnpm安装的模块路径比较奇怪，packager不能正常识别！<br/>
+ <code>npm config set registry https://registry.npm.taobao.org --global</code><br/>
+<code>npm config set disturl https://npm.taobao.org/dist --global</code></p>
+
+<h6 id="toc_4">Yarn、React Native的命令行工具</h6>
+
+<p><a href="http://yarnpkg.com/">Yarn</a>是Facebook提供的替代npm的工具，可以加速node模块的下载。React Native的命令行工具用于执行创建、初始化、更新项目、运行打包服务（packager）等任务。<br/>
+<code>npm install -g yarn react-native-cli</code></p>
+
+<p>安装完yarn后同理也要设置镜像源：<br/>
+<code>yarn config set registry https://registry.npm.taobao.org --global</code><br/>
+<code>yarn config set disturl https://npm.taobao.org/dist --global</code></p>
+
+<h4 id="toc_5">开发ReactNative自然需要编辑器</h4>
+
+<ol>
+<li>###### Sublime Text 3
+<del>初始的练习，推荐Sublime Text 3，多敲下代码，练练手</del>
+首先在Sublime Text 安装 <a href="https://packagecontrol.io/installation">Package Control</a> 然后在Package Control 搜索安装插件<br/>
+建议安装的插件:
+<strong><a href="https://github.com/babel/babel-sublime">Babel</a></strong>：提供JSX的ES6语法格式和提示 
+<strong><a href="https://github.com/sergeche/emmet-sublime">Emmet</a></strong>：提供CSS和HTML的提示
+<strong><a href="https://github.com/Shrugs/react-native-snippets">react-native-snippets</a></strong>：提供RN的代码片段</li>
+<li>###### WebStorm<br/>
+实际开发的时候可以使用WebStorm 代码编写运行都非常方便， 调试嘛，不如atom方便 <a href="https://www.jetbrains.com/webstorm/">WebStorm下载</a><br/>
+这里有两篇blog，讲如何设置WebStorm 便于开发ReactNative 
+<a href="https://blog.jetbrains.com/webstorm/2016/12/developing-mobile-apps-with-react-native-in-webstorm/">Developing mobile apps with React Native in WebStorm</a>
+<a href="https://blog.jetbrains.com/webstorm/2015/10/working-with-reactjs-in-webstorm-coding-assistance/">Working with ReactJS in WebStorm: Coding Assistance</a></li>
+<li>###### Atom<br/>
+Atom是Facebook官方推荐的开发工具, <a href="https://nuclide.io/docs/quick-start/getting-started/">指导文章在这里</a>, Atom可以直接调试RN的代码，打断点Debug，这一点上还是比使用Chrome调试方便了很多<br/>
+我最近开发的话也是使用的Atom</li>
+</ol>
+<br>
+<h6 id="toc_6">其他文章</h6>
+
+<p><a href="http://www.jianshu.com/p/c8550af92886">ReactNative入坑: ReactNative入门(一)</a><br/>
+<a href="http://www.jianshu.com/p/af0ac940a01d">ReactNative入坑: iOS原生项目集成ReactNavite(二)</a><br/>
+<a href="http://www.jianshu.com/p/27342c26f827">ReactNative入坑: react-navigation库(三)</a><br/>
+<a href="https://www.jianshu.com/p/ca199a7a0870">ReactNative入坑: codepush热更新(四)</a><br/>
+<a href="https://www.jianshu.com/p/7d3bf876cbd0">ReactNative入坑: 一些常用控件的使用(五)</a></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/05/12</span>
+                    
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="2017-05-04%2015%3A50%3A55.html">
+                
+                  <h1>iOS给字符串添加删除线，下划线效果</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>本来以为挺简单的效果，没想到居然有点小坑🙄，写下来跟大家分享下</p>
+
+<h3 id="toc_0">给字符串添加删除线效果</h3>
+
+<h5 id="toc_1">1. 给字符串&quot;123456&quot;添加删除线效果</h5>
+
+<p>设置<code>@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleSingle)}</code></p>
+
+<pre><code class="language-text">NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@&quot;123456&quot;
+                                                                            attributes:@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleSingle)}];
+label.attributedText = attrStr;
+</code></pre>
+
+<p>在iOS 8.1，9.0，10.3系统的模拟器，呈现出一样的效果，如下：<br/>
+<img src="http://upload-images.jianshu.io/upload_images/1300265-8901dcfdac4f08c7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/250" alt="iOS 8.1，9.0，10.3系统的效果"/></p>
+
+<h5 id="toc_2">2. 只给字符串某一部分添加删除线</h5>
+
+<p>如：字符串&quot;123456&quot;，只给“456”添加删除线</p>
+
+<pre><code class="language-text">NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@&quot;123456&quot;];
+[attrStr setAttributes:@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleSingle)}
+                 range:NSMakeRange(3, 3)];
+label.attributedText = attrStr;
+</code></pre>
+
+<p>继续使用上面的方法得到效果如下：<br/>
+在iOS 8.1，10.3系统的模拟器效果（NSStrikethroughStyleAttributeName在iOS 10.3、8.1不管用）：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-113b7e8fc6a5185a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/250" alt="iOS 8.1，10.3系统的效果"/><br/>
+在iOS 9.0系统的模拟器效果：<br/>
+<img src="http://upload-images.jianshu.io/upload_images/1300265-92f1a59cfb4a5930.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/250" alt="iOS 9.0系统的效果"/></p>
+
+<h5 id="toc_3">问题出现了，如何在8.0和10.0的系统里面使方法生效？</h5>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-c4c95675be05c339.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/155" alt="表情.jpg"/><br/>
+不懂就要查喽，经过搜索以后，找到了最简单方便的解决办法：</p>
+
+<blockquote>
+<p>在iOS 8 需要额外给其他字符串设置<code>@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleNone)}</code>，才能正常显示<br/>
+在iOS 10  需要额外给其他字符串设置<code>@{NSBaselineOffsetAttributeName : @0}</code>，才能正常显示</p>
+
+<ul>
+<li>注：@(NSUnderlineStyleNone) 和 @0均是默认值</li>
+</ul>
+</blockquote>
+
+<p>两者综合一下，<br/>
+代码：</p>
+
+<pre><code class="language-text">NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@&quot;123456&quot;
+                                                                                attributes:@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleNone)}];
+[attrStr setAttributes:@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleSingle),
+                             NSBaselineOffsetAttributeName : @0}
+                     range:NSMakeRange(3, 3)];
+label.attributedText = attrStr;
+</code></pre>
+
+<p>效果：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-11fd094f0d170432.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/310" alt="QQ20170504-140132@2x.png"/><br/>
+在 iOS 8.1、9.0 和 iOS 10.3均能正常显示，使用其他方法也可以,但是要保证上面的属性设置上</p>
+
+<h3 id="toc_4">给字符串添加下划线效果</h3>
+
+<h5 id="toc_5">1. 给字符串&quot;123456&quot;添加下划线效果</h5>
+
+<p>设置<code>@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}</code></p>
+
+<pre><code class="language-text">NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@&quot;123456&quot;
+                                                                                attributes:@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}];
+label.attributedText = attrStr;
+</code></pre>
+
+<p>在iOS 8.1，9.0，10.3系统的模拟器，正常显示：<br/>
+<img src="http://upload-images.jianshu.io/upload_images/1300265-35baf41f74e02303.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/250" alt="QQ20170504-143253@2x.png"/></p>
+
+<h5 id="toc_6">2. 只给字符串某一部分添加下划线效果</h5>
+
+<p>如：字符串&quot;123456&quot;，只给“456”添加下划线</p>
+
+<pre><code class="language-text">NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@&quot;123456&quot;];
+[attrStr setAttributes:@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}
+                 range:NSMakeRange(3, 3)];
+label.attributedText = attrStr;
+</code></pre>
+
+<p>在iOS 9.0、 iOS 10.3显示如下：<br/>
+<img src="http://upload-images.jianshu.io/upload_images/1300265-af100dadac64b99a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/250" alt="QQ20170504-151351@2x.png"/></p>
+
+<p>在iOS 8.1显示如下（NSUnderlineStyleAttributeName在iOS 8.1不管用）：<br/>
+<img src="http://upload-images.jianshu.io/upload_images/1300265-4d62708aa66f3ba4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/250" alt="QQ20170504-151604@2x.png"/></p>
+
+<h5 id="toc_7">如何在iOS 8的系统里面使添加下划线方法生效？</h5>
+
+<blockquote>
+<p>在iOS 8 需要额外给其他字符串设置@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleNone)}，才能正常显示</p>
+</blockquote>
+
+<p>代码：</p>
+
+<pre><code class="language-text">NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@&quot;123456&quot;
+                                                                            attributes:@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleNone)}];
+[attrStr setAttributes:@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}
+                 range:NSMakeRange(3, 3)];
+label.attributedText = attrStr;
+</code></pre>
+
+<p>效果：<br/>
+<img src="http://upload-images.jianshu.io/upload_images/1300265-22e1dbb23d008228.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/250" alt="QQ20170504-152134@2x.png"/></p>
+
+<h4 id="toc_8">总结：</h4>
+
+<ol>
+<li>给整个字符串添加效果
+<ul>
+<li>删除线：设置<code>@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleSingle)}</code></li>
+<li>下划线：设置<code>@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}</code></li>
+</ul></li>
+<li>  给部分字符添加效果
+<ul>
+<li>删除线：<br/>
+给全部字符串设置<code>@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleNone)}</code><br/>
+添加删除线的字符串设置<code>@{NSStrikethroughStyleAttributeName : @(NSUnderlineStyleSingle), NSBaselineOffsetAttributeName : @0}</code></li>
+<li>下划线：<br/>
+给全部字符串设置<code>@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleNone)}</code><br/>
+添加下划线的字符串设置<code>@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)</code></li>
+</ul></li>
+</ol>
+
+<h6 id="toc_9">参考链接</h6>
+
+<p><a href="http://stackoverflow.com/questions/43074652/ios-10-3-nsstrikethroughstyleattributename-is-not-rendered-if-applied-to-a-sub">stackoverflow</a></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/05/04</span>
+                    
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="2017-03-29%2019%3A30%3A53.html">
+                
+                  <h1>iOS使用OCLint做静态代码分析</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">初识OCLint</h2>
+
+<blockquote>
+<p>OCLint是一个静态代码分析工具,提高质量和减少缺陷通过检查C 、C++ 和Objective-C 代码和寻找潜在的问题,如:</p>
+
+<ul>
+<li>可能的缺陷 - 空的if / else / try / catch / finally语句</li>
+<li>未使用的代码 - 未使用的局部变量和参数</li>
+<li>复杂的代码 - 很高的圈复杂度,NPath复杂性和太高的NCSS</li>
+<li>代码异味 - 长方法和参数列表</li>
+<li>长方法和参数列表不好的实践——倒逻辑和参数重新分配</li>
+<li>…<br/>
+静态代码分析是一个来检测对于编译不可见的缺陷的关键技术。</li>
+</ul>
+</blockquote>
+
+<p>注：* NPath <em>复杂度是一个方法中各种可能的执行路径总和 ；</em> NCSS * 有效代码行 <br/>
+以上翻译自<a href="http://oclint.org/">OCLint官网</a></p>
+
+<h2 id="toc_1">安装</h2>
+
+<p>使用第三方的软件会比使用xcodebuild方便些<br/>
+最新xctool的build方法已经弃用，不能配合OCLint使用，推荐使用<a href="http://docs.oclint.org/en/stable/guide/xcpretty">xcpretty</a></p>
+
+<pre><code class="language-text">// 安装OCLint
+brew tap oclint/formulae
+brew install oclint
+// 安装xcpretty
+gem install xcpretty
+</code></pre>
+
+<p>如果未安装<a href="https://brew.sh/index_zh-cn.html">home brew</a>，自行去官网按提示安装</p>
+
+<h4 id="toc_2">更新</h4>
+
+<pre><code class="language-text">// 以后可能需要更新
+brew update
+brew upgrade oclint
+</code></pre>
+
+<h2 id="toc_3">使用</h2>
+
+<p>在终端进入项目目录，然后替换workspace的名字和scheme的名字，将修改好的命令粘贴到终端执行，等待命令执行完毕</p>
+
+<pre><code class="language-text">myworkspace=haha.xcworkspace # 替换workspace的名字
+myscheme=haha # 替换scheme的名字
+xcodebuild -workspace $myworkspace -scheme $myscheme clean&amp;&amp;
+xcodebuild -workspace $myworkspace -scheme $myscheme \
+-configuration Debug \
+| xcpretty -r json-compilation-database -o compile_commands.json&amp;&amp;
+oclint-json-compilation-database -e Pods -- \
+-report-type html -o oclint_result.html \
+-rc LONG_LINE=200 \
+-max-priority-1=100000 \
+-max-priority-2=100000 \
+-max-priority-3=100000; \
+rm compile_commands.json;
+if [ -f ./oclint_result.html ]; then echo &#39;-----分析完毕-----&#39;
+else echo &quot;-----分析失败-----&quot;; fi
+</code></pre>
+
+<p>中间可能会在<code>Build Succeeded</code>后面等待一段时间，这是因为OCLint在分析文件<br/>
+等待命令执行完成，终端会打印出<code>-----分析完毕-----</code>字样，<br/>
+打开项目目录，会看到目录下会多出一个** oclint_result.html **的文件</p>
+
+<p><strong>如果</strong>没有使用cocoapods，则去掉<code>myworkspace=haha.xcworkspace</code>、<code>-workspace $myworkspace</code>、<code>-workspace $myworkspace</code>，然后再在终端执行<br/><br/>
+另外可以自己建一个xx.sh的文件，将上面代码粘贴进去，每次在命令行进入xx.sh所在目录执行<code>bash xx.sh</code>就可以了</p>
+
+<h2 id="toc_4">查看</h2>
+
+<p>双击打开oclint_result.html文件，样式如下<br/>
+OCLint的分析结果：<br/>
+ 优先级的级别是从<code>Priority 1, Priority 2, Priority 3</code> 依次降低的<br/>
+<code>Total Files</code> 总文件数<br/>
+<code>Files with Violations</code> 违规文件数<br/>
+<code>Compiler Warnings</code> 表示项目中的警告⚠️<br/>
+<code>Compiler Errors</code> 表示编译错误<br/>
+<code>Location</code> 表示警告的位置<br/>
+报告中的描述其实非常清晰，一般找到代码位置，结合代码理解下，自己基本都能明白了<br/>
+可以直接复制路径到Chrome打开查看，右击查看源码就有行号<br/>
+<img src="http://upload-images.jianshu.io/upload_images/1300265-c27dff270b5f1b34.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"/></p>
+
+<h2 id="toc_5">自定义规则</h2>
+
+<p>上面的命令中<br/>
+<code>-e Pods</code> 表示移除Pods文件夹里代码的分析, 如果有继续<code>-e Debug.m</code><br/>
+<code>-report-type html</code> 表示分析后输出的文件类型为HTML，<a href="http://docs.oclint.org/en/stable/howto/selectreporters.html">查看其他支持的文件类型</a><br/>
+<code>-o oclint_result.html</code> 表示输出到<code>oclint_result.html</code>这个文件中()<br/>
+<code>-rc LONG_LINE=200</code> 表示每行最大字节长度为200（默认值为100，感觉在OC中100完全不够用啊）</p>
+
+<h6 id="toc_6">一些常用规则的注释</h6>
+
+<pre><code class="language-text"># --命名
+# 变量名字最长字节
+#-rc=LONG_VARIABLE_NAME=20 \
+# 变量名字最短字节
+#-disable-rule ShortVariableName \
+# --size
+# 圈复杂度
+#-re=CYCLOMATIC_COMPLEXITY=10 \
+# 每个类最行数
+#-rc=LONG_CLASS=700 \
+# 每行字节数量
+#-rc=LONG_LINE=200 \
+# 每个方法行数
+#-rc=LONG_METHOD=80 \
+# 忽略注释后括号后的有效代码行数
+#-rc=NCSS_METHOD=40 \
+# 嵌套深度
+#-rc=NESTED_BLOCK_DEPTH=5 \
+# 字段数量
+#-rc=TOO_MANY_FIELDS=20 \
+# 方法数量
+#-rc=TOO_MANY_METHODS=30 \
+# 方法参数
+#-rc=TOO_MANY_PARAMETERS=6
+</code></pre>
+
+<p><a href="http://docs.oclint.org/en/stable/manual/oclint-json-compilation-database.html">oclint-json-compilation-database命令手册</a><br/>
+<a href="http://docs.oclint.org/en/stable/manual/oclint.html">oclint命令手册</a><br/>
+<a href="http://oclint-docs.readthedocs.io/en/stable/howto/thresholds.html">OCLint自定义规则介绍</a><br/>
+<a href="http://docs.oclint.org/en/stable/rules/index.html">OCLint全部规则介绍</a><br/>
+文档里面有每个规则的demo和对应的命令名字，上面没介绍到的大家可以去文档查询</p>
+
+<h2 id="toc_7">Xcode集成OCLint</h2>
+
+<p>这里有官网指导网址，十分简单<br/>
+<a href="http://oclint-docs.readthedocs.io/en/stable/guide/xcode.html">http://oclint-docs.readthedocs.io/en/stable/guide/xcode.html</a><br/>
+但是有点小坑：可能出现下面错误</p>
+
+<h6 id="toc_8">in `===&#39;: invalid byte sequence in US-ASCII</h6>
+
+<p>此时你需要在xcode的脚本的最前面，加上：</p>
+
+<pre><code class="language-text"># 指定编码
+export LANG=&quot;zh_CN.UTF-8&quot;
+export LC_COLLATE=&quot;zh_CN.UTF-8&quot;
+export LC_CTYPE=&quot;zh_CN.UTF-8&quot;
+export LC_MESSAGES=&quot;zh_CN.UTF-8&quot;
+export LC_MONETARY=&quot;zh_CN.UTF-8&quot;
+export LC_NUMERIC=&quot;zh_CN.UTF-8&quot;
+export LC_TIME=&quot;zh_CN.UTF-8&quot;
+export LC_ALL=
+</code></pre>
+
+<p>我写了一个简单的脚本文件<a href="https://github.com/harddog/oclint_apply">oclint_xcode</a>大家可以自己下载，可替换的变量，已经在脚本中使用注释标注了出来</p>
+
+<p>创建一个OCLint的Aggregate，将脚本放到项目工程根目录下，在Run Script中加入以下代码，点击运行即可</p>
+
+<pre><code class="language-text">bash ./oclint.sh
+</code></pre>
+
+<h2 id="toc_9">Jenkins集成OCLint</h2>
+
+<h6 id="toc_10">1. 创建一个<code>PMDOclint.sh</code>的文件, 将下述代码拷贝到文件中，并将文件放入到jenkins的根目录下 (例如我的就是<code>/Users/buildWork/.jenkins/PMDOclint.sh</code>) , 我自己使用的脚本放到了仓库中<a href="https://github.com/harddog/oclint_apply">oclint_apply</a>，可以去里面下载<code>apply_jenkins/PMDOclint.sh</code></h6>
+
+<h6 id="toc_11">2. jenkins需要安装<code>PMD Plugin</code>插件</h6>
+
+<h6 id="toc_12">3. jenkins新建一个项目，Git配置成需要代码分析的代码库</h6>
+
+<h6 id="toc_13">4. 剩下的按照下图配置，（将<code>PMDOclint.sh</code>放到Jenkins的主目录，如果出现问题，涉及到的路径，请注意检查一下）</h6>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-7fff0c8f482d4cbc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="QQ20170628-170241.png"/></p>
+
+<h6 id="toc_14">5. 效果</h6>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-2abc5615c7298b2c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="效果图"/></p>
+<br/>
+<h4 id="toc_15">Warning❗️</h4>
+
+<p>(一). xcodebuild命令不好用的时候，使用<code>com + opt + shift + k</code> 和 <code>com + shift + k</code> 有80%的可能解决😂<br/>
+(二).  <code>oclint: error: one compiler command contains multiple jobs:</code> <br/>
+   解决方案：<br/><br/>
+   ###### 1. 如果电脑里面安装了两个Xcode的话可能会报上面错误，删掉其他只剩一个<br/>
+   ###### xcode9以后(OCLint version 0.13, Version 9.2 beta (9C34b) 测试可用)：<br/><br/>
+   ###### 2.1 更新到最新的<code>oclint</code>, <code>brew upgrade oclint</code><br/>
+   ######  2.2 去github下载最新的<a href="https://github.com/harddog/oclint_apply">oclint.sh</a>，替换掉旧的<br/>
+   ###### 3.  试试手动将 工程=&gt; <code>Build Settings</code> =&gt; 搜索<code>COMPILER_INDEX_STORE_ENABLE</code> 该配置设成NO<br/>
+<br/><br/>
+<a href="https://github.com/harddog/oclint_apply">oclint_apply仓库地址</a></p>
+
+<h5 id="toc_16">参考文章：</h5>
+
+<p><a href="http://blog.csdn.net/uxyheaven/article/details/50818107">用OCLint给iOS代码做静态分析</a><br/>
+<a href="https://segmentfault.com/a/1190000005155260"><a href="https://segmentfault.com/a/1190000005155260">OCLint 规则与结果分析</a></a>e&#39;e&#39;e</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/03/29</span>
+                    
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="2017-03-24%2013%3A35%3A29.html">
+                
+                  <h1>UIBarButtonItem点击范围过大</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">解决NavgationBar里面UIBarButtonItem点击范围过大的问题</h2>
+
+<h4 id="toc_1">问题</h4>
+
+<p>大家肯定都自定义过NavgationBar的返回按钮吧，按照下面方法设置的时候，会有点击范围过大的问题</p>
+
+<pre><code class="language-text">    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    leftButton.frame = CGRectMake(0, 0, 30, 30);
+    leftButton.backgroundColor = [UIColor redColor];
+    [leftButton addTarget:self action:@selector(leftButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
+    self.navigationItem.leftBarButtonItem = leftItem;
+</code></pre>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-938e2cd15c73f60a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/200" alt="Paste_Image.png"/></p>
+
+<h4 id="toc_2">解决</h4>
+
+<p>在Button外面包一层View就可以了，就会是正常的Button的点击范围了</p>
+
+<pre><code class="language-text">    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    leftButton.frame = CGRectMake(0, 0, 30, 30);
+    leftButton.backgroundColor = [UIColor redColor];
+    [leftButton addTarget:self action:@selector(leftButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIView *menuButtonContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+    [menuButtonContainer addSubview:leftButton];
+    
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:menuButtonContainer];
+    self.navigationItem.leftBarButtonItem = leftItem;
+</code></pre>
+
+<h2 id="toc_3">观察</h2>
+
+<p>尝试了好多应用，基本上都有这个现象，不是很细心的人根本发现不了，但是我开发的APP返回按钮给的图片太小了😂    效果十分明显的，找到解决方法以后，发现按钮太小了，button的frame是根据图片大小来的，不打算改成正常的了  (;￢＿￢)   </p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/03/24</span>
+                    
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="2017-03-23%2023%3A01%3A14.html">
+                
+                  <h1>H5页面不响应WebView代理方法</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">问题</h2>
+
+<p>在项目中接入了WKWebView，在调试网页的过程中碰到一个问题：<br/>
+在点击a标签的时候，不会触发webView的<code>navigationDelegate</code>代理方法，如：<br/>
+<code>webView:decidePolicyForNavigationAction:decisionHandler:</code><br/>
+<code>webView:decidePolicyForNavigationResponse:decisionHandler:</code>等等，<br/>
+原本我是在网页加载完成后更新下网页的返回按钮的，这下不起作用了。</p>
+
+<h4 id="toc_1">a标签的代码</h4>
+
+<h6 id="toc_2">（a标签的事件已经被拦截，网页使用的是vue）</h6>
+
+<pre><code class="language-text">&lt;a class=&quot;activity-item-wrapper&quot; href=&quot;/activity-detail/588425470926a819f7b8d61d&quot;&gt;  &lt;/a&gt;
+</code></pre>
+
+<h2 id="toc_3">曲线救国</h2>
+
+<p>虽然代理方法不会响应，但是经过尝试<code>canGoBack</code>这个属性的值还是会随着页面的变化而变化的，所以我直接监听这个属性，也可以达到我想要的效果</p>
+
+<pre><code class="language-text">[self.webView.realWebView addObserver:self forKeyPath:@&quot;canGoBack&quot; options:NSKeyValueObservingOptionNew context:nil];
+</code></pre>
+
+<h2 id="toc_4">为什么会出现这种问题</h2>
+
+<p>经过请教我司前端的同学后，了解到原网页使用的是H5的History Api，应该是在不刷新页面的情况下切换Url，导致WKWebView没有Call代理方法，但是canGoBack和canGoForward属性是可以检测到的。现在H5的体验越来越好，许多SPA应用都是采用的这种方法。</p>
+
+<blockquote>
+<p>大概流程：</p>
+
+<ol>
+<li>在A页面 通过发AJAX请求 请求页面中的B数据。</li>
+<li>在页面A中通过JS装载相应的信息到相应的位置来。</li>
+<li>通过History API在不刷新页面的情况下在浏览器的地址栏中从页面A的URL地址切换到页面B的URL地址。</li>
+</ol>
+</blockquote>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/03/23</span>
+                    
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="2017-02-22%2023%3A38%3A48.html">
+                
+                  <h1>iOS8 WKWebView 在特定情况下的崩溃</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>iOS8系统是苹果第一次引入WKWebView，所以有好多东西还不完善，下面记录一次碰到的Crash</p>
+
+<p>在iOS 8下， 先设置WKWebView的</p>
+
+<pre><code class="language-text">webView.allowsBackForwardNavigationGestures = YES;
+</code></pre>
+
+<p>然后再设置为NO的话</p>
+
+<pre><code class="language-text">webView.allowsBackForwardNavigationGestures = NO;
+</code></pre>
+
+<p>只要手指一碰屏幕，就会出现Crash，日志主要如下：</p>
+
+<pre><code class="language-text">
+#0 Thread
+NSInvalidArgumentException
+-[UIView gestureRecognizer:shouldReceiveTouch:]: unrecognized selector sent to instance 0x125da47f0
+</code></pre>
+
+<p>或者：</p>
+
+<pre><code class="language-text">
+#0 Thread
+NSInvalidArgumentException
+-[WKCompositingView gestureRecognizer:shouldReceiveTouch:]: unrecognized selector sent to instance 0x12fc17550
+</code></pre>
+
+<h2 id="toc_0">注</h2>
+
+<p>以上情况只会在iOS 8出现，在8以上版本没有问题。</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/02/22</span>
+                    
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="2017-02-16%2014%3A04%3A30.html">
+                
+                  <h1>View.layer.mask属性的应用(画圆角，画心)</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h4 id="toc_0">前言</h4>
+
+<p>看到什么app，脑子里都会不自觉的想这个东西是怎么实现的。哔哩哔哩作为我用来偶尔看看鬼畜，追追新番的一个应用，感觉它某些细节的设计确实不错。例如下图中的标注<strong>①</strong>处的圆角</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-b6424aac39015512.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/310" alt="哔哩哔哩的iOS客户端首页截图"/></p>
+
+<h4 id="toc_1">设置View的四个角都为圆角</h4>
+
+<p>像图中<strong>②</strong>处的4个角都为圆角，这都是一些基础的东西感觉就没必要写了，什么你还不知道？特别简单，只需要设置下面的属性就可以了，产生圆角引发的性能问题此处不做讨论，这样写一般应用是没有问题的</p>
+
+<pre><code class="language-text">view.layer.cornerRadius = 10;
+view.layer.masksToBounds = YES;
+</code></pre>
+
+<h4 id="toc_2">设置View的两个角都为圆角</h4>
+
+<p>像图<strong>①</strong>中的两个圆角，当然就实现效果来说，方法有很多种，此处讲一个，使用CALayer的mask属性：</p>
+
+<pre><code class="language-text">UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
+                                                   byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight
+                                                         cornerRadii:CGSizeMake(15, 15)];
+CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+maskLayer.frame = self.bounds;
+maskLayer.path = maskPath.CGPath;
+self.layer.mask = maskLayer;
+</code></pre>
+
+<h4 id="toc_3">设置View显示一个心形❤️</h4>
+
+<p>其实和显示两个圆角的方法差不多，只不过就是绘制图形的路径不一样<br/>
+下图的图片上使用两根贝塞尔曲线绘制了一个心形❤️，曲线的算式，想要看的可以看下<a href="https://github.com/harddog/Test-LayerDrawMask">github的工程</a><br/>
+<img src="http://upload-images.jianshu.io/upload_images/1300265-025bc1bf98319863.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/310" alt="各个形状的展示"/></p>
+
+<h4 id="toc_4">总结</h4>
+
+<p><strong>mask属性是做什么的？</strong><br/>
+看下苹果文档的描述：</p>
+
+<pre><code class="language-text">The layer’s alpha channel determines how much of the layer’s content and background shows through. Fully or partially opaque pixels allow the underlying content to show through but fully transparent pixels block that content.
+
+The default value of this property is nil nil. When configuring a mask, remember to set the size and position of the mask layer to ensure it is aligned properly with the layer it masks.
+</code></pre>
+
+<p>翻译成中文就是：</p>
+
+<blockquote>
+<p>这个layer的alpha通道决定展示多少layer的内容和背景，完全或部分不透明的像素允许下面的内容展示出来，但是完全透明的像素会阻碍内容</p>
+</blockquote>
+
+<p><strong>为什么用<code>CAShapeLayer</code> + <code>UIBezierPath</code>哪？</strong></p>
+
+<blockquote>
+<p>UIBezierPath是系统对画图方法的封装，可以很方便的调用，获取路径path<br/>
+<code>@property(nonatomic) CGPathRef CGPath;</code></p>
+
+<p>CAShapeLayer有path属性<br/>
+<code>@property(nullable) CGPathRef path;</code><br/>
+可以很方便的将你画的path绘制到layer上</p>
+</blockquote>
+
+<p>这两个搭配简直就是珠连璧合、相得益彰、相辅相成、不好意思没词了。。。</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/02/16</span>
+                    
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="2017-02-13%2017%3A38%3A28.html">
+                
+                  <h1>强迫症福音！iOS7以上方便的改变状态栏颜色</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>在iOS 9以后设置状态栏颜色不建议使用UIApplication来改变了，警告⚠️不能忍<br/>
+<code>- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated NS_DEPRECATED_IOS(2_0, 9_0, &quot;Use -[UIViewController preferredStatusBarStyle]&quot;)</code></p>
+
+<p>1.在导航控制器里面实现下面方法：</p>
+
+<pre><code class="language-text">//一般在BaseNavigationController里面实现
+/**
+ 设置显示栈顶控制器的状态栏颜色
+ */
+- (UIViewController *)childViewControllerForStatusBarStyle {
+    return self.topViewController;
+}
+</code></pre>
+
+<p>2.在子控制器里面实现</p>
+
+<pre><code class="language-text">- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
+</code></pre>
+
+<p>这样系统push到某个控制器的时候就会显示此控制器<code>preferredStatusBarStyle</code>方法返回状态栏style，不写默认显示黑色字体的状态栏</p>
+
+<h4 id="toc_0">如何动态的改变状态栏颜色？</h4>
+
+<p>项目中有业务需求需要动态的改变状态栏颜色，StatusBarStyle可能在两种状态之间替换，最简单的是拿全局变量控制，但是为了以后调用方便，就写个分类，使用runtime 动态替换方法，当做一个小练习吧，以后用着也方便</p>
+
+<p>贴一下代码：</p>
+
+<pre><code class="language-text">// UIViewController+ForcedChangeStatusBarColor.h
+#import &lt;UIKit/UIKit.h&gt;
+
+@interface UIViewController (ForcedChangeStatusBarColor)
+
+@property (nonatomic, strong) NSNumber *fcsb_statusBarStyle;
+
+@property (nonatomic, strong) NSNumber *fcsb_hasChange;
+
+/**
+ @brief 控制器强制替换StatusBarStyle
+ 只对自定义系统导航栏的控制器生效
+ */
+- (void)forcedChangeStatusBarStyle:(UIStatusBarStyle)style;
+
+@end
+
+</code></pre>
+
+<pre><code class="language-text">#import &quot;UIViewController+ForcedChangeStatusBarColor.h&quot;
+#import &quot;NSObject+CEHook.h&quot;
+
+@implementation UIViewController (ForcedChangeStatusBarColor)
+
+- (void)forcedChangeStatusBarStyle:(UIStatusBarStyle)style {
+    
+    @synchronized (self) {
+        if (self.fcsb_hasChange == nil) {
+            // 这行代码在替换方法， 可以替换
+            [self cehook_instanceMethodSwizzling:@selector(preferredStatusBarStyle) to:@selector(fcsb_preferredStatusBarStyle)];
+            self.fcsb_hasChange = @(YES);
+        }
+    }
+    
+    self.fcsb_statusBarStyle = @(style);
+    
+    // 刷新 StatusBar
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (UIStatusBarStyle)fcsb_preferredStatusBarStyle {
+    return [self.fcsb_statusBarStyle integerValue];
+}
+
+#pragma mark - get &amp; set
+static char kAssociatedObjectKey_HasChange;
+- (void)setFcsb_hasChange:(NSNumber *)fcsb_hasChange {
+    objc_setAssociatedObject(self, &amp;kAssociatedObjectKey_HasChange, fcsb_hasChange, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSNumber *)fcsb_hasChange {
+    return (NSNumber *)objc_getAssociatedObject(self, &amp;kAssociatedObjectKey_HasChange);
+}
+
+static void *FCSBOrgiKey = &amp;FCSBOrgiKey;
+ - (NSNumber *)fcsb_statusBarStyle {
+    return objc_getAssociatedObject(self, &amp;FCSBOrgiKey);
+}
+
+- (void)setFcsb_statusBarStyle:(NSNumber *)fcsb_statusBarStyle {
+    objc_setAssociatedObject(self,
+                             &amp;FCSBOrgiKey,
+                             fcsb_statusBarStyle,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+
+</code></pre>
+
+<pre><code class="language-text">#import &quot;NSObject+CEHook.h&quot;
+
+@implementation NSObject (CEHook)
+
+- (void)cehook_instanceMethodSwizzling:(SEL)originSelector to:(SEL)swizzleSelector {
+    Class class = [self class];
+    
+    Method originMethod = class_getInstanceMethod(class, originSelector);
+    Method swizzleMethod = class_getInstanceMethod(class, swizzleSelector);
+    
+    if (!originMethod || !swizzleMethod) {
+        return;
+    }
+    
+    class_addMethod(class,
+                    originSelector,
+                    method_getImplementation(originMethod),
+                    method_getTypeEncoding(originMethod));
+    class_addMethod(class,
+                    swizzleSelector,
+                    method_getImplementation(swizzleMethod),
+                    method_getTypeEncoding(swizzleMethod));
+    
+    ///&lt; 添加完了之后要重新赋值，因为原来的两个method都是父类的。参考自见https://github.com/rentzsch/jrswizzle/blob/semver-1.x/JRSwizzle.m
+    /// addMethod 返回 true 时，需要重新取 Method
+    Method originMethod2 = class_getInstanceMethod(class, originSelector);
+    Method swizzleMethod2 = class_getInstanceMethod(class, swizzleSelector);
+    
+    // NSLog(@&quot;instanceMethodSwizzling: %p, %p, %p, %p&quot;, originMethod, originMethod2, swizzleMethod, swizzleMethod2);
+    method_exchangeImplementations(originMethod2, swizzleMethod2);
+}
+@end
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/02/13</span>
+                    
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="2017-01-31%2023%3A57%3A21.html">
+                
+                  <h1>解决Charles和Shadowsocks冲突</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">问题：</h2>
+
+<p>由于没有买iOS上的番(fan)茄(qiang)App，有的时候电脑打开Charles，想走电脑的Shadow\(socks\)的代理，百度是没有问题的，但是google就走不通了。</p>
+
+<h3 id="toc_1">解决方法：</h3>
+
+<h6 id="toc_2">第一步</h6>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-5f2d48c4790abbb5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"/></p>
+
+<h6 id="toc_3">第二步</h6>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-308962058ff45bce.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"/></p>
+
+<h2 id="toc_4">环境：</h2>
+
+<p>Shadow\(socks\)X v2.6.3<br/>
+Charles v4.0</p>
+
+<h6 id="toc_5">文章参考 :</h6>
+
+<p><a href="http://www.wangjiawen.com/skill/shadowsocks-work-with-charles">Charles和Shadow\(socks\)共同使用</a></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2017/01/31</span>
+                    
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+              
+
+
+			<div class="row">
+			  <div class="large-6 columns">
+			  <p class="text-left" style="padding-top:25px;">
+			   <a href="all_1.html">&laquo; Prev Page</a>  
+			  </p>
+			  </div>
+			  <div class="large-6 columns">
+			<p class="text-right" style="padding-top:25px;">
+			 <a href="all_3.html">&raquo; Next Page</a> 
+			</p>
+			  </div>
+			</div>
+		</div>
+	</div><!-- large 8 -->
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>doge1024</h1>
+                <div class="site-des">网站描述</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+
+
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="2020-05-27%2010%3A54%3A36.html">WebStorm调试ReactNative</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="2020-05-27%2010%3A45%3A10.html">codepush服务变更，连接不上</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="2020-03-28%2014%3A20%3A52.html">小米手机安装linuxdeploy碰到的问题</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="2020-01-19%2001%3A09%3A37.html">macOS 10.15 pip 安装库失败提示SSL</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="2019-08-06%2001%3A24%3A23.html">读《时间简史》— 解释你无聊时的那些遐想</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+figure{margin: 0;padding: 0;}
+figcaption{text-align:center;}
+
+/* PrismJS 1.14.0
+ http://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: black;
+    background: none;
+    text-shadow: 0 1px white;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+    text-shadow: none;
+    background:#b3d4fc;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+    text-shadow: none;
+    background: #b3d4fc;
+}
+
+@media print {
+    code[class*="language-"],
+    pre[class*="language-"] {
+        text-shadow: none;
+    }
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+    padding: 1em;
+    margin: .5em 0;
+    overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+    background: #F7F7F7;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+    padding: .1em;
+    border-radius: .3em;
+    white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: slategray;
+}
+
+.token.punctuation {
+    color: #999;
+}
+
+.namespace {
+    opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: #9a6e3a;
+    background: hsla(0, 0%, 100%, .5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: #07a;
+}
+
+.token.function,
+.token.class-name {
+    color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: #e90;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+
+pre[class*="language-"].line-numbers {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+    position: relative;
+    white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em; /* works for line-numbers below 1000 lines */
+    letter-spacing: -1px;
+    border-right: 1px solid #999;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+    .line-numbers-rows > span {
+        pointer-events: none;
+        display: block;
+        counter-increment: linenumber;
+    }
+
+        .line-numbers-rows > span:before {
+            content: counter(linenumber);
+            color: #999;
+            display: block;
+            padding-right: 0.8em;
+            text-align: right;
+        }
+
+</style>
+
+  
+    
+
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+
+
+  </body>
+</html>

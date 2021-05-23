@@ -1,0 +1,701 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  iOS使用OCLint做静态代码分析 - doge1024
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="doge1024" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+ 
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site: ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; doge1024</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="self" href="index.html">Home</a></li>
+        
+        <li><a target="_self" href="archives.html">Archives</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>iOS使用OCLint做静态代码分析</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2017/03/29</span>
+
+          
+           
+         
+          <span class="comments">
+            
+
+            
+          </span>
+
+        </div>
+      </div><!-- article -->
+
+      <div class="article-content">
+      <h2 id="toc_0">初识OCLint</h2>
+
+<blockquote>
+<p>OCLint是一个静态代码分析工具,提高质量和减少缺陷通过检查C 、C++ 和Objective-C 代码和寻找潜在的问题,如:</p>
+
+<ul>
+<li>可能的缺陷 - 空的if / else / try / catch / finally语句</li>
+<li>未使用的代码 - 未使用的局部变量和参数</li>
+<li>复杂的代码 - 很高的圈复杂度,NPath复杂性和太高的NCSS</li>
+<li>代码异味 - 长方法和参数列表</li>
+<li>长方法和参数列表不好的实践——倒逻辑和参数重新分配</li>
+<li>…<br/>
+静态代码分析是一个来检测对于编译不可见的缺陷的关键技术。</li>
+</ul>
+</blockquote>
+
+<p>注：* NPath <em>复杂度是一个方法中各种可能的执行路径总和 ；</em> NCSS * 有效代码行 <br/>
+以上翻译自<a href="http://oclint.org/">OCLint官网</a></p>
+
+<h2 id="toc_1">安装</h2>
+
+<p>使用第三方的软件会比使用xcodebuild方便些<br/>
+最新xctool的build方法已经弃用，不能配合OCLint使用，推荐使用<a href="http://docs.oclint.org/en/stable/guide/xcpretty">xcpretty</a></p>
+
+<pre><code class="language-text">// 安装OCLint
+brew tap oclint/formulae
+brew install oclint
+// 安装xcpretty
+gem install xcpretty
+</code></pre>
+
+<p>如果未安装<a href="https://brew.sh/index_zh-cn.html">home brew</a>，自行去官网按提示安装</p>
+
+<h4 id="toc_2">更新</h4>
+
+<pre><code class="language-text">// 以后可能需要更新
+brew update
+brew upgrade oclint
+</code></pre>
+
+<h2 id="toc_3">使用</h2>
+
+<p>在终端进入项目目录，然后替换workspace的名字和scheme的名字，将修改好的命令粘贴到终端执行，等待命令执行完毕</p>
+
+<pre><code class="language-text">myworkspace=haha.xcworkspace # 替换workspace的名字
+myscheme=haha # 替换scheme的名字
+xcodebuild -workspace $myworkspace -scheme $myscheme clean&amp;&amp;
+xcodebuild -workspace $myworkspace -scheme $myscheme \
+-configuration Debug \
+| xcpretty -r json-compilation-database -o compile_commands.json&amp;&amp;
+oclint-json-compilation-database -e Pods -- \
+-report-type html -o oclint_result.html \
+-rc LONG_LINE=200 \
+-max-priority-1=100000 \
+-max-priority-2=100000 \
+-max-priority-3=100000; \
+rm compile_commands.json;
+if [ -f ./oclint_result.html ]; then echo &#39;-----分析完毕-----&#39;
+else echo &quot;-----分析失败-----&quot;; fi
+</code></pre>
+
+<p>中间可能会在<code>Build Succeeded</code>后面等待一段时间，这是因为OCLint在分析文件<br/>
+等待命令执行完成，终端会打印出<code>-----分析完毕-----</code>字样，<br/>
+打开项目目录，会看到目录下会多出一个** oclint_result.html **的文件</p>
+
+<p><strong>如果</strong>没有使用cocoapods，则去掉<code>myworkspace=haha.xcworkspace</code>、<code>-workspace $myworkspace</code>、<code>-workspace $myworkspace</code>，然后再在终端执行<br/><br/>
+另外可以自己建一个xx.sh的文件，将上面代码粘贴进去，每次在命令行进入xx.sh所在目录执行<code>bash xx.sh</code>就可以了</p>
+
+<h2 id="toc_4">查看</h2>
+
+<p>双击打开oclint_result.html文件，样式如下<br/>
+OCLint的分析结果：<br/>
+ 优先级的级别是从<code>Priority 1, Priority 2, Priority 3</code> 依次降低的<br/>
+<code>Total Files</code> 总文件数<br/>
+<code>Files with Violations</code> 违规文件数<br/>
+<code>Compiler Warnings</code> 表示项目中的警告⚠️<br/>
+<code>Compiler Errors</code> 表示编译错误<br/>
+<code>Location</code> 表示警告的位置<br/>
+报告中的描述其实非常清晰，一般找到代码位置，结合代码理解下，自己基本都能明白了<br/>
+可以直接复制路径到Chrome打开查看，右击查看源码就有行号<br/>
+<img src="http://upload-images.jianshu.io/upload_images/1300265-c27dff270b5f1b34.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"/></p>
+
+<h2 id="toc_5">自定义规则</h2>
+
+<p>上面的命令中<br/>
+<code>-e Pods</code> 表示移除Pods文件夹里代码的分析, 如果有继续<code>-e Debug.m</code><br/>
+<code>-report-type html</code> 表示分析后输出的文件类型为HTML，<a href="http://docs.oclint.org/en/stable/howto/selectreporters.html">查看其他支持的文件类型</a><br/>
+<code>-o oclint_result.html</code> 表示输出到<code>oclint_result.html</code>这个文件中()<br/>
+<code>-rc LONG_LINE=200</code> 表示每行最大字节长度为200（默认值为100，感觉在OC中100完全不够用啊）</p>
+
+<h6 id="toc_6">一些常用规则的注释</h6>
+
+<pre><code class="language-text"># --命名
+# 变量名字最长字节
+#-rc=LONG_VARIABLE_NAME=20 \
+# 变量名字最短字节
+#-disable-rule ShortVariableName \
+# --size
+# 圈复杂度
+#-re=CYCLOMATIC_COMPLEXITY=10 \
+# 每个类最行数
+#-rc=LONG_CLASS=700 \
+# 每行字节数量
+#-rc=LONG_LINE=200 \
+# 每个方法行数
+#-rc=LONG_METHOD=80 \
+# 忽略注释后括号后的有效代码行数
+#-rc=NCSS_METHOD=40 \
+# 嵌套深度
+#-rc=NESTED_BLOCK_DEPTH=5 \
+# 字段数量
+#-rc=TOO_MANY_FIELDS=20 \
+# 方法数量
+#-rc=TOO_MANY_METHODS=30 \
+# 方法参数
+#-rc=TOO_MANY_PARAMETERS=6
+</code></pre>
+
+<p><a href="http://docs.oclint.org/en/stable/manual/oclint-json-compilation-database.html">oclint-json-compilation-database命令手册</a><br/>
+<a href="http://docs.oclint.org/en/stable/manual/oclint.html">oclint命令手册</a><br/>
+<a href="http://oclint-docs.readthedocs.io/en/stable/howto/thresholds.html">OCLint自定义规则介绍</a><br/>
+<a href="http://docs.oclint.org/en/stable/rules/index.html">OCLint全部规则介绍</a><br/>
+文档里面有每个规则的demo和对应的命令名字，上面没介绍到的大家可以去文档查询</p>
+
+<h2 id="toc_7">Xcode集成OCLint</h2>
+
+<p>这里有官网指导网址，十分简单<br/>
+<a href="http://oclint-docs.readthedocs.io/en/stable/guide/xcode.html">http://oclint-docs.readthedocs.io/en/stable/guide/xcode.html</a><br/>
+但是有点小坑：可能出现下面错误</p>
+
+<h6 id="toc_8">in `===&#39;: invalid byte sequence in US-ASCII</h6>
+
+<p>此时你需要在xcode的脚本的最前面，加上：</p>
+
+<pre><code class="language-text"># 指定编码
+export LANG=&quot;zh_CN.UTF-8&quot;
+export LC_COLLATE=&quot;zh_CN.UTF-8&quot;
+export LC_CTYPE=&quot;zh_CN.UTF-8&quot;
+export LC_MESSAGES=&quot;zh_CN.UTF-8&quot;
+export LC_MONETARY=&quot;zh_CN.UTF-8&quot;
+export LC_NUMERIC=&quot;zh_CN.UTF-8&quot;
+export LC_TIME=&quot;zh_CN.UTF-8&quot;
+export LC_ALL=
+</code></pre>
+
+<p>我写了一个简单的脚本文件<a href="https://github.com/harddog/oclint_apply">oclint_xcode</a>大家可以自己下载，可替换的变量，已经在脚本中使用注释标注了出来</p>
+
+<p>创建一个OCLint的Aggregate，将脚本放到项目工程根目录下，在Run Script中加入以下代码，点击运行即可</p>
+
+<pre><code class="language-text">bash ./oclint.sh
+</code></pre>
+
+<h2 id="toc_9">Jenkins集成OCLint</h2>
+
+<h6 id="toc_10">1. 创建一个<code>PMDOclint.sh</code>的文件, 将下述代码拷贝到文件中，并将文件放入到jenkins的根目录下 (例如我的就是<code>/Users/buildWork/.jenkins/PMDOclint.sh</code>) , 我自己使用的脚本放到了仓库中<a href="https://github.com/harddog/oclint_apply">oclint_apply</a>，可以去里面下载<code>apply_jenkins/PMDOclint.sh</code></h6>
+
+<h6 id="toc_11">2. jenkins需要安装<code>PMD Plugin</code>插件</h6>
+
+<h6 id="toc_12">3. jenkins新建一个项目，Git配置成需要代码分析的代码库</h6>
+
+<h6 id="toc_13">4. 剩下的按照下图配置，（将<code>PMDOclint.sh</code>放到Jenkins的主目录，如果出现问题，涉及到的路径，请注意检查一下）</h6>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-7fff0c8f482d4cbc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="QQ20170628-170241.png"/></p>
+
+<h6 id="toc_14">5. 效果</h6>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-2abc5615c7298b2c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="效果图"/></p>
+<br/>
+<h4 id="toc_15">Warning❗️</h4>
+
+<p>(一). xcodebuild命令不好用的时候，使用<code>com + opt + shift + k</code> 和 <code>com + shift + k</code> 有80%的可能解决😂<br/>
+(二).  <code>oclint: error: one compiler command contains multiple jobs:</code> <br/>
+   解决方案：<br/><br/>
+   ###### 1. 如果电脑里面安装了两个Xcode的话可能会报上面错误，删掉其他只剩一个<br/>
+   ###### xcode9以后(OCLint version 0.13, Version 9.2 beta (9C34b) 测试可用)：<br/><br/>
+   ###### 2.1 更新到最新的<code>oclint</code>, <code>brew upgrade oclint</code><br/>
+   ######  2.2 去github下载最新的<a href="https://github.com/harddog/oclint_apply">oclint.sh</a>，替换掉旧的<br/>
+   ###### 3.  试试手动将 工程=&gt; <code>Build Settings</code> =&gt; 搜索<code>COMPILER_INDEX_STORE_ENABLE</code> 该配置设成NO<br/>
+<br/><br/>
+<a href="https://github.com/harddog/oclint_apply">oclint_apply仓库地址</a></p>
+
+<h5 id="toc_16">参考文章：</h5>
+
+<p><a href="http://blog.csdn.net/uxyheaven/article/details/50818107">用OCLint给iOS代码做静态分析</a><br/>
+<a href="https://segmentfault.com/a/1190000005155260"><a href="https://segmentfault.com/a/1190000005155260">OCLint 规则与结果分析</a></a>e&#39;e&#39;e</p>
+
+
+    
+
+      </div>
+
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="2017-05-04%2015%3A50%3A55.html" 
+          title="Previous Post: iOS给字符串添加删除线，下划线效果">&laquo; iOS给字符串添加删除线，下划线效果</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="2017-03-24%2013%3A35%3A29.html" 
+          title="Next Post: UIBarButtonItem点击范围过大">UIBarButtonItem点击范围过大 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>doge1024</h1>
+                <div class="site-des">网站描述</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+
+
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="2020-05-27%2010%3A54%3A36.html">WebStorm调试ReactNative</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="2020-05-27%2010%3A45%3A10.html">codepush服务变更，连接不上</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="2020-03-28%2014%3A20%3A52.html">小米手机安装linuxdeploy碰到的问题</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="2020-01-19%2001%3A09%3A37.html">macOS 10.15 pip 安装库失败提示SSL</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="2019-08-06%2001%3A24%3A23.html">读《时间简史》— 解释你无聊时的那些遐想</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="asset/prism.js"></script>
+
+
+<style type="text/css">
+figure{margin: 0;padding: 0;}
+figcaption{text-align:center;}
+
+/* PrismJS 1.14.0
+ http://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: black;
+    background: none;
+    text-shadow: 0 1px white;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+    text-shadow: none;
+    background:#b3d4fc;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+    text-shadow: none;
+    background: #b3d4fc;
+}
+
+@media print {
+    code[class*="language-"],
+    pre[class*="language-"] {
+        text-shadow: none;
+    }
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+    padding: 1em;
+    margin: .5em 0;
+    overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+    background: #F7F7F7;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+    padding: .1em;
+    border-radius: .3em;
+    white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: slategray;
+}
+
+.token.punctuation {
+    color: #999;
+}
+
+.namespace {
+    opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: #9a6e3a;
+    background: hsla(0, 0%, 100%, .5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: #07a;
+}
+
+.token.function,
+.token.class-name {
+    color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: #e90;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+
+pre[class*="language-"].line-numbers {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+    position: relative;
+    white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em; /* works for line-numbers below 1000 lines */
+    letter-spacing: -1px;
+    border-right: 1px solid #999;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+    .line-numbers-rows > span {
+        pointer-events: none;
+        display: block;
+        counter-increment: linenumber;
+    }
+
+        .line-numbers-rows > span:before {
+            content: counter(linenumber);
+            color: #999;
+            display: block;
+            padding-right: 0.8em;
+            text-align: right;
+        }
+
+</style>
+
+  
+    
+
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+
+
+  </body>
+</html>

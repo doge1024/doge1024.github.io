@@ -1,0 +1,562 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  越狱第四章：免越狱企业微信抢红包功能 - doge1024
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="doge1024" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+ 
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site: ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; doge1024</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="self" href="index.html">Home</a></li>
+        
+        <li><a target="_self" href="archives.html">Archives</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>越狱第四章：免越狱企业微信抢红包功能</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2018/01/14</span>
+
+          
+           
+         
+          <span class="comments">
+            
+
+            
+          </span>
+
+        </div>
+      </div><!-- article -->
+
+      <div class="article-content">
+      <h1 id="toc_0">免越狱企业微信抢红包功能</h1>
+
+<p>写这个，主要是为了：认真工作的时候却错过了老板的红包，心里不爽😂</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-176ca5d79f1358ee.gif?imageMogr2/auto-orient/strip" alt="红包测试"/></p>
+
+<h2 id="toc_1">点击去 <a href="https://github.com/doge1024/MyWeWork.git">仓库地址</a> Star 和 运行</h2>
+
+<h3 id="toc_2">使用</h3>
+
+<h6 id="toc_3">- 测试使用</h6>
+
+<ol>
+<li>将脱壳后的企业微信ipa解压取得.app文件放到<code>MyWeWork/TargetApp/wework.app</code><br/></li>
+<li>选择自己的BundleID和证书<br/></li>
+<li>插上手机，<code>cmd+R</code><br/></li>
+<li>聊天会话页面右上角有个开关，打开后，如果人发红包红包的话，会自动抢（默认打开）<br/></li>
+</ol>
+
+<h6 id="toc_4">- 正式使用</h6>
+
+<ol>
+<li>编译Release版<code>cmd+shift+i</code>，待编译完成</li>
+<li>双击<code>LatestBuild/createIPA.command</code>，待进程完成后，文件夹下面会多一个ipa文件，拿去用吧</li>
+</ol>
+
+<h3 id="toc_5">效果</h3>
+
+<ol>
+<li>自动打开红包，功能只能在聊天会话页面使用，但是可以在后台，继续抢</li>
+<li>仔细想了想应该不会封号，还能把你开除企业么？🤔 </li>
+</ol>
+
+<h3 id="toc_6">注意</h3>
+
+<ol>
+<li>非越狱手机推送是不可能推送的，这辈子都不会有推送</li>
+<li><a href="https://github.com/harddog/MyWeWork">MyWeWork仓库地址</a></li>
+</ol>
+
+<h3 id="toc_7">感谢</h3>
+
+<ol>
+<li>感谢 <a href="https://github.com/AloneMonkey/MonkeyDev">MonkeyDev</a>，在没有越狱机的情况下还能简单的调试编写</li>
+<li>感谢同事的1分钱测试红包</li>
+</ol>
+
+<p>抢红包算是完成了，issue随机更新ヽ(^o^)丿</p>
+
+
+    
+
+      </div>
+
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="2018-03-18%2023%3A19%3A46.html" 
+          title="Previous Post: 黑苹果升级13.3.3后，显示卡顿延迟解决办法">&laquo; 黑苹果升级13.3.3后，显示卡顿延迟解决办法</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="2017-09-19%2010%3A41%3A09.html" 
+          title="Next Post: 适配iOS 11 与 iPhone X">适配iOS 11 与 iPhone X &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>doge1024</h1>
+                <div class="site-des">网站描述</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+
+
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="2020-05-27%2010%3A54%3A36.html">WebStorm调试ReactNative</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="2020-05-27%2010%3A45%3A10.html">codepush服务变更，连接不上</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="2020-03-28%2014%3A20%3A52.html">小米手机安装linuxdeploy碰到的问题</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="2020-01-19%2001%3A09%3A37.html">macOS 10.15 pip 安装库失败提示SSL</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="2019-08-06%2001%3A24%3A23.html">读《时间简史》— 解释你无聊时的那些遐想</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+figure{margin: 0;padding: 0;}
+figcaption{text-align:center;}
+
+/* PrismJS 1.14.0
+ http://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: black;
+    background: none;
+    text-shadow: 0 1px white;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+    text-shadow: none;
+    background:#b3d4fc;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+    text-shadow: none;
+    background: #b3d4fc;
+}
+
+@media print {
+    code[class*="language-"],
+    pre[class*="language-"] {
+        text-shadow: none;
+    }
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+    padding: 1em;
+    margin: .5em 0;
+    overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+    background: #F7F7F7;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+    padding: .1em;
+    border-radius: .3em;
+    white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: slategray;
+}
+
+.token.punctuation {
+    color: #999;
+}
+
+.namespace {
+    opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: #9a6e3a;
+    background: hsla(0, 0%, 100%, .5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: #07a;
+}
+
+.token.function,
+.token.class-name {
+    color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: #e90;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+
+pre[class*="language-"].line-numbers {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+    position: relative;
+    white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em; /* works for line-numbers below 1000 lines */
+    letter-spacing: -1px;
+    border-right: 1px solid #999;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+    .line-numbers-rows > span {
+        pointer-events: none;
+        display: block;
+        counter-increment: linenumber;
+    }
+
+        .line-numbers-rows > span:before {
+            content: counter(linenumber);
+            color: #999;
+            display: block;
+            padding-right: 0.8em;
+            text-align: right;
+        }
+
+</style>
+
+  
+    
+
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+
+
+  </body>
+</html>
