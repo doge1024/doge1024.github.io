@@ -1,0 +1,419 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  View.layer.mask属性的应用(画圆角，画心) - doge1024
+  
+  </title>
+ <meta name="description" content="网站描述">
+ <link href="atom.xml" rel="alternate" title="doge1024" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+    <script src="asset/highlightjs/highlight.pack.js"></script>
+    <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+<div id="header">
+    <h1><a href="index.html">doge1024</a></h1>
+</div>
+
+</nav>
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; doge1024</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+      <li><a href="index.html">Home</a></li>
+      
+
+      
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+        <section id="main-content" role="main" class="scroll-container">
+
+          <div class="row">
+            <div class="large-3 medium-3 columns">
+              <div class="hide-for-small">
+                <div class="sidebar">
+                <nav>
+                  <ul id="side-nav" class="side-nav">
+
+                    
+
+                    
+                  </ul>
+                </nav>
+                </div>
+              </div>
+            </div>
+            <div class="large-9 medium-9 columns">
+
+ <div class="markdown-body">
+<h1>View.layer.mask属性的应用(画圆角，画心)</h1>
+
+<h4 id="toc_0">前言</h4>
+
+<p>看到什么app，脑子里都会不自觉的想这个东西是怎么实现的。哔哩哔哩作为我用来偶尔看看鬼畜，追追新番的一个应用，感觉它某些细节的设计确实不错。例如下图中的标注<strong>①</strong>处的圆角</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1300265-b6424aac39015512.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/310" alt="哔哩哔哩的iOS客户端首页截图"/></p>
+
+<h4 id="toc_1">设置View的四个角都为圆角</h4>
+
+<p>像图中<strong>②</strong>处的4个角都为圆角，这都是一些基础的东西感觉就没必要写了，什么你还不知道？特别简单，只需要设置下面的属性就可以了，产生圆角引发的性能问题此处不做讨论，这样写一般应用是没有问题的</p>
+
+<pre><code class="language-text">view.layer.cornerRadius = 10;
+view.layer.masksToBounds = YES;
+</code></pre>
+
+<h4 id="toc_2">设置View的两个角都为圆角</h4>
+
+<p>像图<strong>①</strong>中的两个圆角，当然就实现效果来说，方法有很多种，此处讲一个，使用CALayer的mask属性：</p>
+
+<pre><code class="language-text">UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
+                                                   byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight
+                                                         cornerRadii:CGSizeMake(15, 15)];
+CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+maskLayer.frame = self.bounds;
+maskLayer.path = maskPath.CGPath;
+self.layer.mask = maskLayer;
+</code></pre>
+
+<h4 id="toc_3">设置View显示一个心形❤️</h4>
+
+<p>其实和显示两个圆角的方法差不多，只不过就是绘制图形的路径不一样<br/>
+下图的图片上使用两根贝塞尔曲线绘制了一个心形❤️，曲线的算式，想要看的可以看下<a href="https://github.com/harddog/Test-LayerDrawMask">github的工程</a><br/>
+<img src="http://upload-images.jianshu.io/upload_images/1300265-025bc1bf98319863.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/310" alt="各个形状的展示"/></p>
+
+<h4 id="toc_4">总结</h4>
+
+<p><strong>mask属性是做什么的？</strong><br/>
+看下苹果文档的描述：</p>
+
+<pre><code class="language-text">The layer’s alpha channel determines how much of the layer’s content and background shows through. Fully or partially opaque pixels allow the underlying content to show through but fully transparent pixels block that content.
+
+The default value of this property is nil nil. When configuring a mask, remember to set the size and position of the mask layer to ensure it is aligned properly with the layer it masks.
+</code></pre>
+
+<p>翻译成中文就是：</p>
+
+<blockquote>
+<p>这个layer的alpha通道决定展示多少layer的内容和背景，完全或部分不透明的像素允许下面的内容展示出来，但是完全透明的像素会阻碍内容</p>
+</blockquote>
+
+<p><strong>为什么用<code>CAShapeLayer</code> + <code>UIBezierPath</code>哪？</strong></p>
+
+<blockquote>
+<p>UIBezierPath是系统对画图方法的封装，可以很方便的调用，获取路径path<br/>
+<code>@property(nonatomic) CGPathRef CGPath;</code></p>
+
+<p>CAShapeLayer有path属性<br/>
+<code>@property(nullable) CGPathRef path;</code><br/>
+可以很方便的将你画的path绘制到layer上</p>
+</blockquote>
+
+<p>这两个搭配简直就是珠连璧合、相得益彰、相辅相成、不好意思没词了。。。</p>
+
+
+</div>
+
+<br /><br />
+<hr />
+
+<div class="row clearfix">
+  <div class="large-6 columns">
+	<div class="text-left" style="padding:15px 0px;">
+		
+	        <a href="2017-02-22%2023%3A38%3A48.html"  title="Previous Post: iOS8 WKWebView 在特定情况下的崩溃">&laquo; iOS8 WKWebView 在特定情况下的崩溃</a>
+	    
+	</div>
+  </div>
+  <div class="large-6 columns">
+	<div class="text-right" style="padding:15px 0px;">
+		
+	        <a href="2017-02-13%2017%3A38%3A28.html" 
+	        title="Next Post: 强迫症福音！iOS7以上方便的改变状态栏颜色">强迫症福音！iOS7以上方便的改变状态栏颜色 &raquo;</a>
+	    
+	</div>
+  </div>
+</div>
+
+<div class="row">
+<div style="padding:0px 0.93em;" class="share-comments">
+
+</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		var currentURL = '2017-02-16%2014%3A04%3A30.html';
+		$('#side-nav a').each(function(){
+			if($(this).attr('href') == currentURL){
+				$(this).parent().addClass('active');
+			}
+		});
+	});
+</script>  
+</div></div>
+
+
+<div class="page-bottom">
+  <div class="row">
+  <hr />
+  <div class="small-9 columns">
+  <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+  <div class="small-3 columns">
+  <p class="copyright text-right"><a href="#header">TOP</a></p>
+  </div>
+   
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+    
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="asset/prism.js"></script>
+
+
+<style type="text/css">
+figure{margin: 0.4em 0;padding: 0;}
+  figcaption{text-align:center;}
+
+/* PrismJS 1.14.0
+ http://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: black;
+    background: none;
+    text-shadow: 0 1px white;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+    text-shadow: none;
+    background:#b3d4fc;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+    text-shadow: none;
+    background: #b3d4fc;
+}
+
+@media print {
+    code[class*="language-"],
+    pre[class*="language-"] {
+        text-shadow: none;
+    }
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+    padding: 1em;
+    margin: .5em 0;
+    overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+    background: #F7F7F7;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+    padding: .1em;
+    border-radius: .3em;
+    white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: slategray;
+}
+
+.token.punctuation {
+    color: #999;
+}
+
+.namespace {
+    opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: #9a6e3a;
+    background: hsla(0, 0%, 100%, .5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: #07a;
+}
+
+.token.function,
+.token.class-name {
+    color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: #e90;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+
+pre[class*="language-"].line-numbers {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+    position: relative;
+    white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em; /* works for line-numbers below 1000 lines */
+    letter-spacing: -1px;
+    border-right: 1px solid #999;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+    .line-numbers-rows > span {
+        pointer-events: none;
+        display: block;
+        counter-increment: linenumber;
+    }
+
+        .line-numbers-rows > span:before {
+            content: counter(linenumber);
+            color: #999;
+            display: block;
+            padding-right: 0.8em;
+            text-align: right;
+        }
+
+
+</style>
+    
+    <script src="asset/js/foundation.min.js"></script>
+    <script src="asset/js/foundation/foundation.offcanvas.js"></script>
+    <script>
+      $(document).foundation();
+
+     
+    </script>
+
+
+  </body>
+</html>
